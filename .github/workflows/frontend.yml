@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend.yml"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend.yml"
+  workflow_dispatch:
+
+defaults:
+ run:
+  working-directory: ./frontend
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.3.0
+      - run: npm ci
+      - run: npm run build
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.3.0
+      - run: npm ci
+      - run: npm lint
