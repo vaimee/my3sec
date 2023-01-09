@@ -13,6 +13,14 @@
 
 *Yet to be defined*
 
+### Core feature list (tentative)
+1. Create a distributed Curriculum Vitae on chain 
+2. Validating and enriching items on your Curriculum Vitae with **proof of time** spent
+3. Extracting **skill** scores from CVs in a decentralized and transparent way
+5. Issues certificates based on achived **skill** scores
+4. Exposing an API with a shared data model described by an ontology
+
+
 ## Main Innovation
 
 In its core, My3Sec introduces novelty in changing the traditional working relations between companies and employees. Through the usage of blockchain, it enables to create a trustworthy environment, in which workers can objectively know the tasks that they need to perform and companies have an immutable record of the amount of hours spent in each task. Further, it also employs a feedback mechanism to evaluate the quality of the delivered task. This functionality allows users to have a reliable way to track their personal growth in different skills. It is also beneficial to companies that optimize their task allocation, by matching the expertise of the employees to the set of required abilities to perform a particular task. 
