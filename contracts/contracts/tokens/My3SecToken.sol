@@ -10,11 +10,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 /**
  * @title My3SecToken contract
  * @dev This is the implementation of the ERC20 My3Sec Token.
- * 
+ *
  * The token is initially owned by the deployer address that can mint tokens to create the initial
  * distribution. For convenience, an initial supply can be passed in the constructor that will be
  * assigned to the deployer.
- * 
+ *
  * The My3Sec rewards system (to be defined) should be added as a minter to distribute rewards to the users.
  */
 contract My3SecToken is ERC20, ERC20Burnable, AccessControl, ERC20Permit, ERC20Votes {
@@ -41,24 +41,15 @@ contract My3SecToken is ERC20, ERC20Burnable, AccessControl, ERC20Permit, ERC20V
 
     // The following functions are overrides required by Solidity.
 
-    function _afterTokenTransfer(address from, address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
+    function _afterTokenTransfer(address from, address to, uint256 amount) internal override(ERC20, ERC20Votes) {
         super._afterTokenTransfer(from, to, amount);
     }
 
-    function _mint(address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
+    function _mint(address to, uint256 amount) internal override(ERC20, ERC20Votes) {
         super._mint(to, amount);
     }
 
-    function _burn(address account, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
+    function _burn(address account, uint256 amount) internal override(ERC20, ERC20Votes) {
         super._burn(account, amount);
     }
 }

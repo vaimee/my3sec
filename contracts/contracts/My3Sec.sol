@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract My3Sec {
-    
-}
+contract My3Sec {}
