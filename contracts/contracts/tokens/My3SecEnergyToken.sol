@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "./IMy3SecEnergyToken.sol";
+import "../interfaces/IMy3SecEnergyToken.sol";
 
 /**
  * @title My3SecEnergyToken contract
