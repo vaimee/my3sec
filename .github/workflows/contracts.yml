@@ -6,12 +6,12 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "contracts/**"
+      - "protocol/**"
       - ".github/workflows/contracts.yml"
   pull_request:
     branches: [ "main" ]
     paths:
-      - "contracts/**"
+      - "protocol/**"
       - ".github/workflows/contracts.yml"
   workflow_dispatch:
 
