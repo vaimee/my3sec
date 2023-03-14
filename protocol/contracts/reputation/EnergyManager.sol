@@ -48,6 +48,7 @@ contract EnergyManager is IEnergyManager, Ownable {
 
     /// @inheritdoc IEnergyManager
     function giveEnergyTo(address account, uint256 amount) external override {
+        require(account != msg.sender, "Cannot give energy to yourself");
         require(amount <= freeEnergyOf(msg.sender), "Insufficient energy");
         _allocatedEnergy[msg.sender] += amount;
         _energyAllocationMap[msg.sender][account] += amount;
