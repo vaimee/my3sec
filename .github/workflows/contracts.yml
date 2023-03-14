@@ -17,7 +17,7 @@ on:
 
 defaults:
  run:
-  working-directory: ./contracts
+  working-directory: ./protocol
 jobs:
   build:
     runs-on: ubuntu-latest
