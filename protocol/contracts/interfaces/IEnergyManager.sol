@@ -2,11 +2,6 @@
 pragma solidity ^0.8.9;
 
 interface IEnergyManager {
-    struct EnergyInfo {
-        address account;
-        uint256 energy;
-    }
-
     function totalEnergyOf(address account) external view returns (uint256);
 
     function freeEnergyOf(address account) external view returns (uint256);
@@ -15,9 +10,13 @@ interface IEnergyManager {
 
     function receivedEnergyOf(address account) external view returns (uint256);
 
-    function energizedBy(address account) external view returns (EnergyInfo[] memory);
+    function energizedBy(address account, uint256 index) external view returns (address, uint256);
 
-    function energizersOf(address account) external view returns (EnergyInfo[] memory);
+    function energizersOf(address account, uint256 index) external view returns (address, uint256);
+
+    function totalEnergizedBy(address account) external view returns (uint256);
+
+    function totalEnergizersOf(address account) external view returns (uint256);
 
     function giveEnergyTo(address account, uint256 amount) external;
 
