@@ -18,8 +18,14 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 const material = [
+  MatSelectModule,
+  MatInputModule,
+  MatFormFieldModule,
   MatTabsModule,
   MatChipsModule,
   MatSnackBarModule,
