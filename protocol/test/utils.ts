@@ -15,3 +15,7 @@ export async function getTestResources(): Promise<TestResources> {
     deployerAddress,
   };
 }
+
+export function getRandomAddress(): string {
+  return ethers.Wallet.createRandom().address;
+}
