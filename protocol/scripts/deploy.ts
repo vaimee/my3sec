@@ -2,17 +2,17 @@ import { writeFileSync } from "fs";
 import { ethers } from "hardhat";
 
 async function main() {
-  const My3sec = await ethers.getContractFactory("My3Sec");
-  const my3sec = await My3sec.deploy();
+  const My3SecHub = await ethers.getContractFactory("My3SecHub");
+  const my3secHub = await My3SecHub.deploy();
 
-  await my3sec.deployed();
+  await my3secHub.deployed();
 
-  console.log(`My3Sec deployed to ${my3sec.address}`);
+  console.log(`My3SecHub deployed to ${my3secHub.address}`);
 
   writeFileSync(
     "./deployed.json",
     JSON.stringify({
-      my3sec: my3sec.address,
+      my3sec: my3secHub.address,
     })
   );
 }
