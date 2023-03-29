@@ -4,20 +4,21 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
+import "../common/access/Whitelistable.sol";
 import "../interfaces/IEnergyManager.sol";
 
 /**
  * @title EnergyManager contract
  * @dev This is the implementation of the Energy Manager.
  */
-contract EnergyManager is IEnergyManager, Ownable {
-    using EnumerableMap for EnumerableMap.AddressToUintMap;
+contract EnergyManager is IEnergyManager, Whitelistable {
+    using EnumerableMap for EnumerableMap.UintToUintMap;
 
-    mapping(address => uint256) private _totalEnergy;
-    mapping(address => uint256) private _allocatedEnergy;
-    mapping(address => uint256) private _receivedEnergy;
-    mapping(address => EnumerableMap.AddressToUintMap) private _energyAllocationMap;
-    mapping(address => EnumerableMap.AddressToUintMap) private _reverseEnergyAllocationMap;
+    mapping(uint256 => uint256) private _totalEnergy;
+    mapping(uint256 => uint256) private _allocatedEnergy;
+    mapping(uint256 => uint256) private _receivedEnergy;
+    mapping(uint256 => EnumerableMap.UintToUintMap) private _energyAllocationMap;
+    mapping(uint256 => EnumerableMap.UintToUintMap) private _reverseEnergyAllocationMap;
 
     /**
      * Energy Manager Contract Constructor.
@@ -25,81 +26,81 @@ contract EnergyManager is IEnergyManager, Ownable {
     constructor() {}
 
     /// @inheritdoc IEnergyManager
-    function totalEnergyOf(address account) external view override returns (uint256) {
-        return _totalEnergy[account];
+    function totalEnergyOf(uint256 profileId) external view override returns (uint256) {
+        return _totalEnergy[profileId];
     }
 
     /// @inheritdoc IEnergyManager
-    function freeEnergyOf(address account) public view override returns (uint256) {
-        return _totalEnergy[account] - _allocatedEnergy[account];
+    function freeEnergyOf(uint256 profileId) public view override returns (uint256) {
+        return _totalEnergy[profileId] - _allocatedEnergy[profileId];
     }
 
     /// @inheritdoc IEnergyManager
-    function allocatedEnergyOf(address account) external view override returns (uint256) {
-        return _allocatedEnergy[account];
+    function allocatedEnergyOf(uint256 profileId) external view override returns (uint256) {
+        return _allocatedEnergy[profileId];
     }
 
     /// @inheritdoc IEnergyManager
-    function receivedEnergyOf(address account) external view override returns (uint256) {
-        return _receivedEnergy[account];
+    function receivedEnergyOf(uint256 profileId) external view override returns (uint256) {
+        return _receivedEnergy[profileId];
     }
 
     /// @inheritdoc IEnergyManager
-    function energizedBy(address account, uint256 index) external view override returns (address, uint256) {
-        return _energyAllocationMap[account].at(index);
+    function energizedBy(uint256 profileId, uint256 index) external view override returns (uint256, uint256) {
+        return _energyAllocationMap[profileId].at(index);
     }
 
     /// @inheritdoc IEnergyManager
-    function energizersOf(address account, uint256 index) external view override returns (address, uint256) {
-        return _reverseEnergyAllocationMap[account].at(index);
+    function energizersOf(uint256 profileId, uint256 index) external view override returns (uint256, uint256) {
+        return _reverseEnergyAllocationMap[profileId].at(index);
     }
 
     /// @inheritdoc IEnergyManager
-    function totalEnergizedBy(address account) external view returns (uint256) {
-        return _energyAllocationMap[account].length();
+    function totalEnergizedBy(uint256 profileId) external view returns (uint256) {
+        return _energyAllocationMap[profileId].length();
     }
 
     /// @inheritdoc IEnergyManager
-    function totalEnergizersOf(address account) external view returns (uint256) {
-        return _reverseEnergyAllocationMap[account].length();
+    function totalEnergizersOf(uint256 profileId) external view returns (uint256) {
+        return _reverseEnergyAllocationMap[profileId].length();
     }
 
     /// @inheritdoc IEnergyManager
-    function giveEnergyTo(address account, uint256 amount) external override {
-        require(account != msg.sender, "Cannot give energy to yourself");
-        require(amount <= freeEnergyOf(msg.sender), "Insufficient energy");
+    function giveEnergy(uint256 from, uint256 to, uint256 amount) external override onlyWhitelisted {
+        require(to != from, "Cannot give energy to yourself");
+        require(amount <= freeEnergyOf(from), "Insufficient energy");
 
-        _allocatedEnergy[msg.sender] += amount;
-        (, uint256 currentAllocatedEnergy) = _energyAllocationMap[msg.sender].tryGet(account);
+        _allocatedEnergy[from] += amount;
+        (, uint256 currentAllocatedEnergy) = _energyAllocationMap[from].tryGet(to);
         uint256 nextAllocatedEnergy = currentAllocatedEnergy + amount;
-        _energyAllocationMap[msg.sender].set(account, nextAllocatedEnergy);
-        _reverseEnergyAllocationMap[account].set(msg.sender, nextAllocatedEnergy);
+        _energyAllocationMap[from].set(to, nextAllocatedEnergy);
+        _reverseEnergyAllocationMap[to].set(from, nextAllocatedEnergy);
 
-        _receivedEnergy[account] += amount;
+        _receivedEnergy[to] += amount;
     }
 
     /// @inheritdoc IEnergyManager
-    function removeEnergyFrom(address account, uint256 amount) external override {
-        require(_energyAllocationMap[msg.sender].contains(account), "Account not referenced");
-        require(amount <= _energyAllocationMap[msg.sender].get(account), "Exceeded given energy");
+    function removeEnergy(uint256 from, uint256 to, uint256 amount) external override onlyWhitelisted {
+        require(_energyAllocationMap[to].contains(from), "Profile not referenced");
+        require(amount <= _energyAllocationMap[to].get(from), "Exceeded given energy");
 
-        _receivedEnergy[account] -= amount;
-        uint256 nextAllocatedEnergy = _energyAllocationMap[msg.sender].get(account) - amount;
-        _energyAllocationMap[msg.sender].set(account, nextAllocatedEnergy);
-        _reverseEnergyAllocationMap[account].set(msg.sender, nextAllocatedEnergy);
+        _receivedEnergy[from] -= amount;
+        uint256 nextAllocatedEnergy = _energyAllocationMap[to].get(from) - amount;
+        _energyAllocationMap[to].set(from, nextAllocatedEnergy);
+        _reverseEnergyAllocationMap[from].set(to, nextAllocatedEnergy);
 
-        _allocatedEnergy[msg.sender] -= amount;
+        _allocatedEnergy[to] -= amount;
     }
 
     /// @inheritdoc IEnergyManager
-    function createEnergyFor(address account, uint256 amount) external override onlyOwner {
-        _totalEnergy[account] += amount;
+    function createEnergyFor(uint256 profileId, uint256 amount) external override onlyWhitelisted {
+        _totalEnergy[profileId] += amount;
     }
 
     /// @inheritdoc IEnergyManager
-    function destroyEnergyFor(address account, uint256 amount) external override onlyOwner {
-        require(amount <= freeEnergyOf(account), "Exceeded free energy");
-        require(amount <= _totalEnergy[account], "Exceeded total energy");
-        _totalEnergy[account] -= amount;
+    function destroyEnergyFor(uint256 profileId, uint256 amount) external override onlyWhitelisted {
+        require(amount <= freeEnergyOf(profileId), "Exceeded free energy");
+        require(amount <= _totalEnergy[profileId], "Exceeded total energy");
+        _totalEnergy[profileId] -= amount;
     }
 }
