@@ -11,4 +11,8 @@ interface IMy3SecHub {
     function setDefaultProfile(uint256 profileId) external;
 
     function createProfile(DataTypes.CreateProfileData calldata args) external returns (uint256);
+
+    function giveEnergyTo(uint256 profileId, uint256 amount) external;
+
+    function removeEnergyFrom(uint256 profileId, uint256 amount) external;
 }

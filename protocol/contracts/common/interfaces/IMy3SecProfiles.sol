@@ -6,7 +6,7 @@ interface IMy3SecProfiles {
 
     function setDefaultProfile(address account, uint256 profileId) external;
 
-    function createProfile(address to, string memory uri) external returns(uint256);
+    function createProfile(address to, string memory uri) external returns (uint256);
 
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
