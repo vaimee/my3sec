@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 import "../common/access/Whitelistable.sol";
-import "../interfaces/IEnergyManager.sol";
+import "../common/interfaces/IEnergyManager.sol";
 
 /**
  * @title EnergyManager contract

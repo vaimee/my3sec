@@ -6,8 +6,8 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 import "../common/access/Whitelistable.sol";
-import "../interfaces/IMy3SecProfiles.sol";
-import "../libraries/Errors.sol";
+import "../common/interfaces/IMy3SecProfiles.sol";
+import "../common/libraries/Errors.sol";
 
 contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIStorage, Whitelistable {
     uint256 private _tokenIdCounter;

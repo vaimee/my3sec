@@ -3,10 +3,10 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "./interfaces/IMy3SecHub.sol";
-import "./interfaces/IMy3SecProfiles.sol";
-import "./interfaces/IEnergyManager.sol";
-import "./libraries/DataTypes.sol";
+import "./common/interfaces/IMy3SecHub.sol";
+import "./common/interfaces/IMy3SecProfiles.sol";
+import "./common/interfaces/IEnergyManager.sol";
+import "./common/libraries/DataTypes.sol";
 
 import "./tokens/My3SecProfiles.sol";
 import "./reputation/EnergyManager.sol";
