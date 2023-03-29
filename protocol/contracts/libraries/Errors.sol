@@ -5,4 +5,5 @@ library Errors {
     error InitParamsInvalid();
     error NotHub();
     error NotProfileOwner();
+    error NotWhitelisted();
 }

@@ -4,26 +4,16 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
+import "../common/access/Whitelistable.sol";
 import "../interfaces/IMy3SecProfiles.sol";
 import "../libraries/Errors.sol";
 
-contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
-    address public immutable HUB;
-
+contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIStorage, Whitelistable {
     uint256 private _tokenIdCounter;
     mapping(address => uint256) private _defaultProfileByAddress;
 
-    modifier onlyHub() {
-        if (msg.sender != HUB) revert Errors.NotHub();
-        _;
-    }
-
-    constructor(address hub) ERC721("My3Sec Profiles", "M3SP") {
-        if (hub == address(0)) revert Errors.InitParamsInvalid();
-        HUB = hub;
-    }
+    constructor() ERC721("My3Sec Profiles", "M3SP") {}
 
     /// @inheritdoc IMy3SecProfiles
     function getDefaultProfileId(address account) external view override returns (uint256) {
@@ -31,12 +21,12 @@ contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIS
     }
 
     /// @inheritdoc IMy3SecProfiles
-    function setDefaultProfile(address account, uint256 profileId) external override onlyHub {
+    function setDefaultProfile(address account, uint256 profileId) external override onlyWhitelisted {
         _setDefaultProfile(account, profileId);
     }
 
     /// @inheritdoc IMy3SecProfiles
-    function createProfile(address to, string memory uri) external override onlyHub returns (uint256) {
+    function createProfile(address to, string memory uri) external override onlyWhitelisted returns (uint256) {
         uint256 tokenId = _tokenIdCounter;
         _tokenIdCounter++;
         _safeMint(to, tokenId);
