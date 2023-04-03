@@ -27,8 +27,7 @@ contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIS
 
     /// @inheritdoc IMy3SecProfiles
     function createProfile(address to, string memory uri) external override onlyWhitelisted returns (uint256) {
-        uint256 tokenId = _tokenIdCounter;
-        _tokenIdCounter++;
+        uint256 tokenId = ++_tokenIdCounter;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
         bool isFirstProfile = balanceOf(to) == 1;
