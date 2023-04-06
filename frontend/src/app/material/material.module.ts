@@ -21,6 +21,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatRippleModule } from '@angular/material/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const material = [
   MatSelectModule,
@@ -45,10 +47,21 @@ const material = [
   MatSliderModule,
   MatExpansionModule,
   MatTooltipModule,
+  ReactiveFormsModule,
+  FormsModule,
+  MatButtonModule,
+  MatInputModule,
+  MatRippleModule,
+  MatFormFieldModule,
+  MatTooltipModule,
+  MatSelectModule,
+  MatIconModule,
+  MatDialogModule,
+  MatTableModule,
 ];
 
 @NgModule({
   imports: material,
   exports: material,
 })
-export class MaterialModule {}
+export class MaterialModule { }
