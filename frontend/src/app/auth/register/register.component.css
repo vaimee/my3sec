@@ -1,0 +1,73 @@
+.dark-wrapper {
+  background-color: #ddd;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.login-page-block {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 50%;
+    margin: 0 auto;
+}
+.logo-img img {
+width: 80px;
+margin: 0 auto;
+}
+
+.avatar {
+    
+    margin: .5em auto;
+    position: relative;
+  }
+  .avatar input {
+    width: 20%;
+    height: 50px;
+    opacity: 0;
+    display: block; 
+    cursor: pointer;
+    margin: 0 auto;
+  }
+  .avatar .avatar-lable {
+    text-align: center;
+    color: #000;
+    font-size: 16px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .avatar .mat-icon {
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+    color: #aaa;
+  }
+
+
+
+  @media screen and (max-device-width: 640px) {
+    
+    .dark-wrapper {
+      padding: 20px !important;
+      height: auto;
+    }
+    .login-page-block {
+      width: 100%;
+    }
+
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .dark-wrapper {
+      height: auto;
+    }
+    .login-page-block {
+      width: 100%;
+    }
+
+  }

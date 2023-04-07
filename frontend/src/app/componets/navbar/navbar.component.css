@@ -1,0 +1,35 @@
+.navbar-brand img {
+    width: 30px;
+}
+
+.mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align.ng-tns-c237-0 {
+    display: none !important;
+}
+
+.navbar .form-select {
+    background-color: #a8a8a8;
+    border-radius: 6px 0px 0px 6px;
+    border:0;
+    width: 150px;
+}
+.navbar .form-control {
+    border-radius: 0;
+    border:0;
+    width: 500px;
+}
+.navbar .btn {
+    border-radius: 0 6px 6px 0;
+    border:0;
+    background-color: #a8a8a8;
+    height: 40px;
+    line-height: 40px;
+}
+.navbar .btn .mat-icon {
+    color: #000;
+}
+.navbar .form-select, .navbar .form-control {
+    height: 40px;
+}
+
+
+

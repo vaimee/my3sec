@@ -4,6 +4,10 @@ import { ProfileComponent } from './profile.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatIconModule } from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+
 
 
 const routes: Routes = [
@@ -19,6 +23,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     SharedModule,
+    MatIconModule,
+    MatCardModule,
+    MatProgressBarModule,
   ]
 })
 export class ProfileModule { }

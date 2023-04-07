@@ -23,6 +23,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRippleModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
+
+
 
 const material = [
   MatSelectModule,
@@ -58,6 +62,7 @@ const material = [
   MatIconModule,
   MatDialogModule,
   MatTableModule,
+  MatCheckboxModule,
 ];
 
 @NgModule({

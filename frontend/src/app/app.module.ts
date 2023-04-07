@@ -38,6 +38,7 @@ import { RouterModule } from "@angular/router";
 		SharedModule
 
 	],
+
 	providers: [SharedService, AuthService, {
 		provide: HTTP_INTERCEPTORS,
 		useClass: AuthInterceptor,
