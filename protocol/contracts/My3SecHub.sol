@@ -9,8 +9,8 @@ import "./common/interfaces/IEnergyManager.sol";
 import "./common/libraries/Constants.sol";
 import "./common/libraries/DataTypes.sol";
 
-import "./tokens/My3SecProfiles.sol";
-import "./reputation/EnergyManager.sol";
+import "./profiles/My3SecProfiles.sol";
+import "./profiles/EnergyManager.sol";
 
 contract My3SecHub is IMy3SecHub, Ownable {
     IMy3SecProfiles internal _my3SecProfiles;
