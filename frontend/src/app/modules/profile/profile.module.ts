@@ -7,6 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { MatIconModule } from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTableModule} from '@angular/material/table';
 
 
 
@@ -26,6 +27,7 @@ const routes: Routes = [
     MatIconModule,
     MatCardModule,
     MatProgressBarModule,
+    MatTableModule,
   ]
 })
 export class ProfileModule { }

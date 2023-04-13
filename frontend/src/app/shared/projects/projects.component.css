@@ -1,0 +1,90 @@
+
+.profileProjectTable table tr td {
+    padding: 0;
+}
+.profileProjectTable table tr td:nth-child(1) {
+    background-color: #000;
+    height: 56px;
+    width: 56px;
+    line-height: 56px;
+    border-radius: 6px;
+}
+.profileProjectTable table tr td:nth-child(8) {
+    padding-right: 15px;
+}
+
+
+.profileMultiUserBlock {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 6px;
+}
+.profileMultiUserBlock ul li {
+    list-style: none;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+}
+
+.profileMultiUserBlock ul li .mat-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+    color: #fff;
+}
+.profileMultiUserBlock ul li:nth-child(1) {
+    left: 10px;
+}
+.profileMultiUserBlock ul li:nth-child(2) {
+    left: 25px;
+}
+.profileMultiUserBlock ul li:nth-child(3) {
+    left: 40px;
+}
+.profileMultiUserBlock ul li:nth-child(4) {
+    left: 55px;
+}
+
+
+
+
+@media screen and (max-device-width: 640px) {
+    .profileProjectTable table tr td {
+        width: 200px;
+    }
+    .profileMultiUserBlock br {
+        display: none;
+    }
+    table .profileMultiUserBlock {
+        display: flex;
+        align-items: baseline;
+    }
+
+}
+
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    
+    .timeline-min-height {
+        width: 100% !important;
+    }
+    .profileProjectTable table tr td {
+        width: 200px;
+    }
+    table .profileMultiUserBlock {
+        display: flex;
+        align-items: baseline;
+    }
+    .profileMultiUserBlock br {
+        display: none;
+    }
+    
+    
+}
+

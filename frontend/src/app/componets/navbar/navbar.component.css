@@ -21,17 +21,21 @@
     border-radius: 0 6px 6px 0;
     border:0;
     background-color: #a8a8a8;
-    height: 40px;
-    line-height: 40px;
+    height: 48px;
+    line-height: 48px;
 }
 .navbar .btn .mat-icon {
     color: #000;
 }
 .navbar .form-select, .navbar .form-control {
-    height: 40px;
+    height: 48px;
 }
 
-
+/* ::ng-deep.mat-mdc-text-field-wrapper {
+    height: 48px !important;
+    max-height: 48px !important;
+    min-height: 48px !important;
+} */
 
 
 @media screen and (max-device-width: 640px) {
