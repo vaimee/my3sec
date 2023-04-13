@@ -22,32 +22,7 @@
     height: 100vh;
     background-color: #d9d9d9 !important;
 }
-.certificateCardBlock {
-    position: relative;
-}
-.certificateCardBlock .mat-icon {
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    font-size: 40px;
-    background: #f9f9f9;
-    border-radius: 50%;
-    text-align: center;
-}
-.certificateCardBlock .certificatesItemIcon {
-    position: absolute;
-    top: 10px;
-    right: 10px
-}
-.certificateCardBlock .certificatesItemIcon .mat-icon {
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    background: #f9f9f9;
-    border-radius: 50%;
-    line-height: 30px;
-    text-align: center;
-}
+
 .cardCountBlock {
     background-color: #f3edf7;
 }
@@ -95,20 +70,6 @@
 }
 
 
-
-.profileProjectTable table tr td {
-    padding: 0;
-}
-.profileProjectTable table tr td:nth-child(1) {
-    background-color: #000;
-    height: 56px;
-    width: 56px;
-    line-height: 56px;
-    border-radius: 6px;
-}
-.profileProjectTable table tr td:nth-child(8) {
-    padding-right: 15px;
-}
 
 .profileMainBlock {
     display: flex;
@@ -159,10 +120,6 @@
         margin-bottom: 0 !important;
     }
 
-    table .profileMultiUserBlock {
-        display: flex;
-        align-items: baseline;
-    }
 }
 
 
@@ -189,10 +146,6 @@
         margin-top:15px;
         display: inline-block;
     }
-    table .profileMultiUserBlock {
-        display: flex;
-        align-items: baseline;
-    }
     .profileMultiUserBlock br {
         display: none;
     }
@@ -211,10 +164,6 @@
     }
     .cardCountBlock {
         margin-top: 40px;
-    }
-
-    .certificateCardBlock .cards .d-flex {
-        display: block !important;
     }
     
 }

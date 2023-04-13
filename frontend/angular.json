@@ -28,7 +28,9 @@
               "src/custom-theme.scss",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
