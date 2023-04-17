@@ -14,7 +14,7 @@ export class IsMetamskGuard implements CanActivate {
     if (this.metaMaskId.isMetamaskInstalled) {
       return true;
     } else {
-      return this.router.parseUrl('/notconnected');
+      return this.router.parseUrl('/disconnected');
     }
   }
 

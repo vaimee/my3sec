@@ -1,40 +1,39 @@
+<div class="dark-wrapper">
 <div class="container">
-    <div *ngIf="!isMetamaskInstalled" class="centerDiv">
-        <h1>Oops! Metamask is not installed! sadasd</h1>
-        <h3>
-            <a href="https://metamask.io/" target="_blank" style="font-weight: bold">Metamask</a>
-            is a browser extension that enables user interactions and experience on
-            Web3. <br />
-            Please, install it and refresh the page.
-        </h3>
-        <a href="https://metamask.io/download/" target="_blank" class="horizontalCenter">
-            <button mat-raised-button color="primary">
-                Install the Metamask extension
-            </button>
-        </a>
-    </div>
+    <div class="container-content">
+        <div  class="centerDiv text-center" *ngIf="!isMetamaskInstalled">
+            <div class="logo-img">
+                <img src="../../../assets/my3sec-logo-cropped.png">
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <img src="../../../assets/MetaMask_Fox.svg.png">
+            </div>
+            <h1>Looks like you don't have <br> Metamask installed </h1>
+            <p>
+                My3Sec utilizer Metamask to authenticate users in the blockchain
+            </p>
+            <div class="btn-block">
+                <a href="https://metamask.io/download/" target="_blank" class="btn btn-dark text-uppercase" >
+                        Install Metamask 
+                </a>
+            </div>
+        </div>
 
-    <div *ngIf="isMetamaskInstalled && !isLoggedIn" class="centerDiv">
-        <h1>Oops! Your Metamask account is disconnected!</h1>
-        <h3>Click on the button below to open Metamask's login popup.</h3>
-        <button class="horizontalCenter" mat-raised-button color="primary" (click)="loginToMetamask()">
-            Log-in
-        </button>&nbsp;
-        <button class="horizontalCenter" mat-raised-button color="primary" (click)="signUp()">
-            Sign Up
-        </button>
+        <div  class="centerDiv" *ngIf="isMetamaskInstalled && !isLoggedIn">
+            <h1>Welcome to My3Sec</h1>
+            <div class="btn-block">
+                <button class="btn btn-dark text-uppercase" (click)="loginToMetamask()">
+                    <img src="../../../assets/MetaMask_Fox.svg.png"> <span>Log-in</span>
+                </button>&nbsp;
+                <button class="btn btn-dark text-uppercase" (click)="signUp()">
+                    Sign Up
+                </button>
+            </div>
+            
+        </div>
     </div>
-
-    <div *ngIf="isMetamaskInstalled && isLoggedIn && !isVivianiChain" class="centerDiv">
-        <h1>Oops! Wrong blockchain selected!</h1>
-        <h3>
-            This application works by interacting with a couple of smart<br />
-            contracts which are deployed on
-            <a href="https://iex.ec/" target="_blank" style="font-weight: bold">Viviani chain (by iExec)</a>.
-        </h3>
-        <h3>Click on the button below to switch to Viviani chain:</h3>
-        <button class="horizontalCenter" mat-raised-button color="primary" (click)="switchToViviani()">
-            Switch to Viviani chain
-        </button>
-    </div>
+</div>
 </div>

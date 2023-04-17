@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
 }
+
 .login-page-block {
   background-color: #fff;
   border-radius: 16px;
@@ -47,20 +48,48 @@
   color: #aaa;
 }
 
+
+/*Custom CSS*/
+.login-input-col-2 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+.login-input-col-2 mat-form-field {
+  width: 50%;
+}
+.login-input-col-1  mat-form-field {
+  flex-grow: 1;
+}
+
+
 @media screen and (max-device-width: 640px) {
   .dark-wrapper {
     padding: 20px !important;
-    height: auto;
   }
   .login-page-block {
     width: 100%;
+    padding: 20px;
   }
+  .login-input-col-2 {
+    flex-direction: column;
+    gap: 0px;
+  }
+  .login-input-col-1  mat-form-field, .login-input-col-2  mat-form-field {
+    width: 100%;
+  }
+  .avatar .avatar-lable {
+    justify-content: start;
+  }
+  .btn {
+    width: 100%;
+  }
+  
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .dark-wrapper {
-    height: auto;
-  }
+
   .login-page-block {
     width: 100%;
   }
