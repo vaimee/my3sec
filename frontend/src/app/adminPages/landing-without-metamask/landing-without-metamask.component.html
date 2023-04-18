@@ -1,39 +1,39 @@
 <div class="dark-wrapper">
-<div class="container">
-    <div class="container-content">
-        <div  class="centerDiv text-center" *ngIf="!isMetamaskInstalled">
-            <div class="logo-img">
-                <img src="../../../assets/my3sec-logo-cropped.png">
-                <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
-                <img src="../../../assets/MetaMask_Fox.svg.png">
+    <div class="container">
+        <div class="container-content">
+            <div class="centerDiv text-center" *ngIf="!isMetamaskInstalled">
+                <div class="logo-img">
+                    <img src="../../../assets/my3sec-logo-cropped.png">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                    <img src="../../../assets/MetaMask_Fox.svg.png">
+                </div>
+                <h1>Looks like you don't have <br> Metamask installed </h1>
+                <p>
+                    My3Sec utilizer Metamask to authenticate users in the blockchain
+                </p>
+                <div class="btn-block">
+                    <a href="https://metamask.io/download/" target="_blank" class="btn btn-dark text-uppercase">
+                        Install Metamask
+                    </a>
+                </div>
             </div>
-            <h1>Looks like you don't have <br> Metamask installed </h1>
-            <p>
-                My3Sec utilizer Metamask to authenticate users in the blockchain
-            </p>
-            <div class="btn-block">
-                <a href="https://metamask.io/download/" target="_blank" class="btn btn-dark text-uppercase" >
-                        Install Metamask 
-                </a>
-            </div>
-        </div>
 
-        <div  class="centerDiv" *ngIf="isMetamaskInstalled && !isLoggedIn">
-            <h1>Welcome to My3Sec</h1>
-            <div class="btn-block">
-                <button class="btn btn-dark text-uppercase" (click)="loginToMetamask()">
-                    <img src="../../../assets/MetaMask_Fox.svg.png"> <span>Log-in</span>
-                </button>&nbsp;
-                <button class="btn btn-dark text-uppercase" (click)="signUp()">
-                    Sign Up
-                </button>
+            <div class="centerDiv" *ngIf="isMetamaskInstalled && !isLoggedIn">
+                <h1>Welcome to My3Sec</h1>
+                <div class="btn-block">
+                    <button class="btn btn-dark text-uppercase" (click)="loginToMetamask()">
+                        <img src="../../../assets/MetaMask_Fox.svg.png"> <span>Log-in</span>
+                    </button>&nbsp;
+                    <button class="btn btn-dark text-uppercase" (click)="signUp()">
+                        Sign Up
+                    </button>
+                </div>
+
             </div>
-            
         </div>
     </div>
-</div>
 </div>

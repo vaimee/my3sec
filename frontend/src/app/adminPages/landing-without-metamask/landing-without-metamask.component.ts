@@ -28,10 +28,6 @@ export class LandingWithoutMetamaskComponent implements OnInit {
     return this.metaMaskId.isLoggedIn;
   }
 
-  public get isVivianiChain(): boolean {
-    return this.metaMaskId.isVivianiChain;
-  }
-
   public async loginToMetamask(): Promise<void> {
     try {
       await this.metaMaskId.loginToMetamask();
@@ -82,18 +78,13 @@ export class LandingWithoutMetamaskComponent implements OnInit {
   private checkRedirectCondition(): void {
     if (
       this.metaMaskId.isMetamaskInstalled &&
-      this.metaMaskId.isLoggedIn &&
-      this.metaMaskId.isVivianiChain
+      this.metaMaskId.isLoggedIn
     ) {
       // There's no reason to display this page:
       // let's move to the application's home.
       this.router.navigate(['/']);
     }
   }
-
-
-
-
 
 
 

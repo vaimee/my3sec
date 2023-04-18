@@ -12,27 +12,35 @@ import { SharedModule } from "./shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
 import { LandingWithoutMetamaskComponent } from './adminPages/landing-without-metamask/landing-without-metamask.component';
 import { AdminComponent } from "./adminPages/admin/admin.component";
+import { IsLoginGuard } from "./guards/is-login.guard";
+import { IsMetamskGuard } from "./guards/is-metamsk.guard";
 
 
 const routes: Routes = [
     {
         path: '',
+        redirectTo: 'profile',
+        pathMatch: 'full',
+    },
+    {
+        path: 'notconnected',
         component: LandingWithoutMetamaskComponent,
     },
     {
         path: 'signup',
         component: SignUpComponent,
     },
-    // {
-    //     path: '',
-    //     component: AdminComponent,
-    //     children: [
-    //         {
-    //             path: '',
-    //             loadChildren: () => import('./adminPages/admin/admin.module').then(m => m.AdminModule)
-    //         }
-    //     ]
-    // }
+    {
+        path: '',
+        component: AdminComponent,
+        canActivate: [IsLoginGuard, IsMetamskGuard],
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('./adminPages/admin/admin.module').then(m => m.AdminModule)
+            }
+        ]
+    }
 ];
 
 @NgModule({
