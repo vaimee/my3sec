@@ -12,6 +12,26 @@
   padding-right: 15px;
 }
 
+.mdc-data-table__row {
+  border: 1px solid #000;
+    margin-bottom: 20px !important;
+    display: flex;
+    gap: 0px;
+    justify-content: space-between;
+    padding: 0px;
+    height: auto;
+    align-items: center;
+    border-radius: 10px;
+}
+.profileMultiUserBlockBlack {
+  width: 100px;
+}
+.profileMultiUserBlockBlack .mat-icon {
+  color: #000 !important;
+}
+.mat-mdc-header-row {
+  display: none;
+}
 .profileMultiUserBlock {
   margin: 0;
   padding: 0;
@@ -49,6 +69,24 @@
   left: 55px;
 }
 
+
+
+/*Add New CSS*/
+.projectHeadingBlock {
+  display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ProjectActive {
+  text-transform: uppercase;
+  color: green;
+  font-weight: bold;
+}
+.ProjectClose {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
 @media screen and (max-device-width: 640px) {
   .profileProjectTable table tr td {
     width: 200px;
@@ -60,6 +98,28 @@
     display: flex;
     align-items: baseline;
   }
+  .profileMultiUserBlockBlack ul  {
+    padding: 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+  .profileMultiUserBlockBlack {
+    width: auto;
+  }
+  .profileMultiUserBlockBlack ul li {
+    position: unset;
+  }
+  .profileMultiUserBlock  ul  li .mat-icon {
+    width: 25px;
+    height: 24px;
+    font-size: 22px;
+}
+.profileProjectTable tr td:nth-child(7) {
+  width: auto !important;
+}
+.profileProjectTable tr td:nth-child(8) {
+  text-align: center;
+}
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -76,4 +136,26 @@
   .profileMultiUserBlock br {
     display: none;
   }
+  .profileMultiUserBlockBlack ul  {
+    padding: 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+  .profileMultiUserBlockBlack {
+    width: auto;
+  }
+  .profileMultiUserBlockBlack ul li {
+    position: unset;
+  }
+  .profileMultiUserBlock  ul  li .mat-icon {
+    width: 25px;
+    height: 24px;
+    font-size: 22px;
+}
+.profileProjectTable tr td:nth-child(7) {
+  width: auto !important;
+}
+.profileProjectTable tr td:nth-child(8) {
+  text-align: center;
+}
 }

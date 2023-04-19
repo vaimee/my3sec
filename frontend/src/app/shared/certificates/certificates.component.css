@@ -25,8 +25,31 @@
   text-align: center;
 }
 
+
+.certificateCardContentRow {
+  display: flex;
+  align-items: center;
+}
+.certificateCardContentRow .flex-shrink-0 {
+  flex-shrink: 0 !important;
+}
+.certificateCardContentRow .flex-grow-1 {
+  flex-grow: 1 !important;
+}
+.skill-min-height {
+  height: 450px;
+}
+
+
 @media (min-width: 768px) and (max-width: 1024px) {
   .certificateCardBlock .cards .d-flex {
     display: block !important;
   }
+  .certificateCardContentRow {
+    flex-direction: column;
+  }
+  .skill-min-height {
+    height: auto;
+  }
+  
 }

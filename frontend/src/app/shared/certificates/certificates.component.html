@@ -1,15 +1,15 @@
 <div class="certificateCardBlock p-4 bg-white skill-min-height">
-    <h2 class=" d-flex justify-content-between align-items-center mb-3">Certificates </h2>
+    <h2 class="mb-3">Certificates </h2>
     <mat-card class="border p-3 cards bg-dark text-white rounded-3 mb-3 border-0"
         *ngFor="let certificate of certificateData">
-        <div class="d-flex align-items-center">
+        <div class="certificateCardContentRow">
             <div class="flex-shrink-0">
                 <mat-icon class="text-dark">{{certificate.label}}</mat-icon>
             </div>
-            <div class="flex-grow-1 ms-3">
+            <div class="flex-grow-1 ms-3 ms-md-0 ms-lg-3">
                 <h6>{{certificate.cource}} </h6>
                 <small class="text-Light text-end">{{certificate.achivement}}</small>
-                <small class="text-Light text-end d-block">{{certificate.date}}</small>
+                <small class="text-Light text-start text-lg-end d-block">{{certificate.date}}</small>
             </div>
         </div>
         <div class="certificatesItemIcon">

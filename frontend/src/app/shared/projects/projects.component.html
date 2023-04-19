@@ -1,5 +1,5 @@
 <div class="profileProjectTable mt-4 bg-white p-4">
-    <h2 class=" d-flex justify-content-between align-items-center mb-3">Project <a href="javascript:void(0)"
+    <h2 class="projectHeadingBlock mb-3">Project <a href="javascript:void(0)"
             class="btn btn-outline-dark">ALL PROJECT</a></h2>
     <div class="table-responsive">
         <!-- <table class="table ">
@@ -10,25 +10,25 @@
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">My3Sec</h5>
+                            <h6 class="mb-0">My3Sec</h6>
                             <small>Tracking time and</small>
                         </div>
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">25</h5>
+                            <h6 class="mb-0">25</h6>
                             <small>Tasks</small>
                         </div>
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">VAIMEE</h5>
+                            <h6 class="mb-0">VAIMEE</h6>
                             <span><mat-icon>account_circle</mat-icon> </span>
                         </div>
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">5/10</h5>
+                            <h6 class="mb-0">5/10</h6>
                             <small>Months completed</small>
                         </div>
                     </td>
@@ -53,7 +53,7 @@
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0 text-success">ACTIVE</h5>
+                            <h6 class="mb-0 text-success">ACTIVE</h6>
                         </div>
                     </td>
                 </tr>
@@ -64,25 +64,25 @@
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">My3Sec</h5>
+                            <h6 class="mb-0">My3Sec</h6>
                             <small>Tracking time and</small>
                         </div>
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">25</h5>
+                            <h6 class="mb-0">25</h6>
                             <small>Tasks</small>
                         </div>
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">VAIMEE</h5>
+                            <h6 class="mb-0">VAIMEE</h6>
                             <span><mat-icon>account_circle</mat-icon> </span>
                         </div>
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0">5/10</h5>
+                            <h6 class="mb-0">5/10</h6>
                             <small>Months completed</small>
                         </div>
                     </td>
@@ -107,7 +107,7 @@
                     </td>
                     <td class="border-0">
                         <div class="d-flex flex-column text-center">
-                            <h5 class="mb-0 text-success">ACTIVE</h5>
+                            <h6 class="mb-0 text-success">ACTIVE</h6>
                         </div>
                     </td>
                 </tr>
@@ -116,65 +116,79 @@
 
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <ng-container matColumnDef="No">
-                <th mat-header-cell *matHeaderCellDef> No. </th>
-                <td mat-cell *matCellDef="let element"> {{element.No}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> No. </th>
+                <td mat-cell *matCellDef="let element" class="text-center bg-dark rounded-3 text-white fs-3"> 84h</td>
             </ng-container>
 
 
             <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef> Title </th>
-                <td mat-cell *matCellDef="let element">
-                    <h5 class="mb-0">{{element.title}}</h5>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> Title </th>
+                <td mat-cell *matCellDef="let element" class="text-center border-0">
+                    <h6 class="mb-0">{{element.title}}</h6>
                     <small>Tracking time and web3</small>
                 </td>
             </ng-container>
 
 
             <ng-container matColumnDef="tasks">
-                <th mat-header-cell *matHeaderCellDef> Tasks </th>
-                <td mat-cell *matCellDef="let element">
-                    <h5 class="mb-0">{{element.tasks}}</h5>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> Tasks </th>
+                <td mat-cell *matCellDef="let element" class="text-center border-0">
+                    <h6 class="mb-0">{{element.tasks}}</h6>
                     <small>Tasks Completed</small>
                 </td>
             </ng-container>
 
 
             <ng-container matColumnDef="project">
-                <th mat-header-cell *matHeaderCellDef> Projects </th>
-                <td mat-cell *matCellDef="let element">
-                    <h5 class="mb-0">{{element.project}}</h5>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> Projects </th>
+                <td mat-cell *matCellDef="let element" class="text-center border-0">
+                    <h6 class="mb-0 text-uppercase">{{element.project}}</h6>
                     <span><mat-icon>account_circle</mat-icon> </span>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="months">
-                <th mat-header-cell *matHeaderCellDef> Months </th>
-                <td mat-cell *matCellDef="let element">
-                    <h5 class="mb-0">{{element.months}}</h5>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> Months </th>
+                <td mat-cell *matCellDef="let element" class="text-center border-0">
+                    <h6 class="mb-0">{{element.months}}</h6>
                     <small>Months completed</small>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="workers">
-                <th mat-header-cell *matHeaderCellDef> Workers </th>
-                <td mat-cell *matCellDef="let element"> {{element.workers}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> Workers </th>
+                <td mat-cell *matCellDef="let element" class="text-center border-0"> 
+                    <div class="profileMultiUserBlock profileMultiUserBlockBlack">
+                        <ul class="mb-0 mb-lg-4">
+                            <li><mat-icon class="">account_circle</mat-icon></li>
+                            <li><mat-icon class="">account_circle</mat-icon></li>
+                            <li><mat-icon class="">account_circle</mat-icon></li>
+                            <li><mat-icon class="">account_circle</mat-icon></li>
+                        </ul>
+                    </div>
+                    <span>{{element.workers}}</span>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="manager">
-                <th mat-header-cell *matHeaderCellDef> Manager </th>
-                <td mat-cell *matCellDef="let element">
-                    <span><mat-icon>account_circle</mat-icon> </span>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> Manager </th>
+                <td mat-cell *matCellDef="let element" class="text-center border-0">
+                    <mat-icon class="d-block mx-auto">account_circle</mat-icon>
                     <small>{{element.manager}}</small>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef> Status </th>
-                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center d-none"> Status </th>
+        
+
+                <td mat-cell *matCellDef="let element" class="border-0">
+                    <span class="tag" [ngClass]="{'ProjectActive': element.status === 'Active', 'ProjectClose': element.status === 'Closed'}"> {{element.status}} </span>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></tr>
         </table>
     </div>
 </div>

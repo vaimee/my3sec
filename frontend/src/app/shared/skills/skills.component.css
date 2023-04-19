@@ -1,0 +1,27 @@
+.skillHeadingBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+  }
+.skillCardBlock {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}  
+.skillCardBlockInner {
+    width: 33.33333333%;
+}
+.skillCardBlock > * {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+
+@media screen and (max-device-width: 640px) {
+.skillCardBlockInner {
+    width: 100%;
+  }
+}

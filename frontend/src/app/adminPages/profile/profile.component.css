@@ -26,9 +26,7 @@
 .cardCountBlock {
   background-color: #f3edf7;
 }
-.skill-min-height {
-  height: 450px;
-}
+
 .timeline-min-height {
   height: 584px;
 }
@@ -72,6 +70,38 @@
 .profileMainBlock {
   display: flex;
 }
+
+/*CUstom CSS ADD*/
+.profile-left-block {
+  flex-grow: 1 !important;
+}
+.profileUser {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.profileUser-inner {
+  display: flex;
+  align-items: center;
+}
+
+.profileHeaderInnerBlock, .profileSkillSection {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+.profileHeaderInnerBlock .profileHeaderLeft, .profileSkillSection .profileSkillSectionLeft {
+  width: 70%;
+}
+.profileHeaderInnerBlock .profileHeaderRight, .profileSkillSection .profileSkillSectionRight {
+  width: 30%;
+}
+.profile-right-block {
+
+}
+
+
+
 
 @media screen and (max-device-width: 640px) {
   .profileMainBlock {
@@ -118,6 +148,18 @@
   .profileSkillSection .row.mb-4 {
     margin-bottom: 0 !important;
   }
+
+
+  .profileHeaderInnerBlock, .profileSkillSection, .skillCardBlock {
+    flex-direction: column;
+  }
+  .profileHeaderInnerBlock .profileHeaderLeft, .profileSkillSection .profileSkillSectionLeft, .profileHeaderInnerBlock .profileHeaderRight, .profileSkillSection .profileSkillSectionRight {
+    width: 100%;
+  }
+
+
+  
+
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {

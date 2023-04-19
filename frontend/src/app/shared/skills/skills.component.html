@@ -1,8 +1,8 @@
 <div class=" p-4 bg-white skill-min-height">
-    <h2 class=" d-flex justify-content-between align-items-center mb-3">Skill <a href="javascript:void(0)"
+    <h2 class="skillHeadingBlock mb-3">Skill <a href="javascript:void(0)"
             class="btn btn-outline-dark">All Skill</a></h2>
-    <div class="row">
-        <div class="col-md-4" *ngFor="let skils of skillData">
+    <div class="skillCardBlock">
+        <div class="skillCardBlockInner" *ngFor="let skils of skillData">
             <mat-card class="border p-3 py-4 cards rounded-3 mb-4">
                 <mat-card-title class="mb-2">{{skils.skillname}}</mat-card-title>
                 <mat-card-subtitle class="mb-2">{{skils.score}}</mat-card-subtitle>
