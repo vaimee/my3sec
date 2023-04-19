@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./certificates.component.css']
 })
 export class CertificatesComponent implements OnInit {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   certificateData: any = [];
   constructor() { }
 
@@ -15,20 +16,20 @@ export class CertificatesComponent implements OnInit {
     this.certificateData = [
       {
         label: 'video_label',
-        cource: 'Computer Scientist',
-        achivement: 'Hour based Achivement',
+        course: 'Computer Scientist',
+        achievement: 'Hour based Achievement',
         date: '04/04/2023',
       },
       {
         label: 'video_label',
-        cource: 'Computer Scientist',
-        achivement: 'Hour based Achivement',
+        course: 'Computer Scientist',
+        achievement: 'Hour based Achievement',
         date: '04/04/2023',
       },
       {
         label: 'video_label',
-        cource: 'Computer Scientist',
-        achivement: 'Hour based Achivement',
+        course: 'Computer Scientist',
+        achievement: 'Hour based Achievement',
         date: '04/04/2023',
       }
     ];
