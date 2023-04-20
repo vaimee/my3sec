@@ -7,11 +7,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { HttpClientModule } from "@angular/common/http";
-import { ComponetsModule } from "./componets/componets.module";
 import { SharedModule } from "./shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
 import { LandingWithoutMetamaskComponent } from './adminPages/landing-without-metamask/landing-without-metamask.component';
 import { AdminComponent } from "./adminPages/admin/admin.component";
+import { ComponentsModule } from "./component/component.module";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { IsMetamaskGuard } from "./guards/metaMask.guard";
+
 
 
 const routes: Routes = [
@@ -26,6 +29,7 @@ const routes: Routes = [
     // {
     //     path: '',
     //     component: AdminComponent,
+    //     canActivate: [IsMetamaskGuard],
     //     children: [
     //         {
     //             path: '',
@@ -46,11 +50,13 @@ const routes: Routes = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        ReactiveFormsModule,
+        FormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
         MaterialModule,
         HttpClientModule,
         MaterialModule,
-        ComponetsModule,
+        ComponentsModule,
         SharedModule
     ],
     exports: [RouterModule],

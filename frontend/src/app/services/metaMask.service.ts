@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, NgZone } from '@angular/core';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { Observable, Subject } from 'rxjs';
@@ -25,11 +26,14 @@ export class MetaMaskService {
   // Connection flags:
   private _isMetamaskInstalled = false;
   private _isLoggedIn = false;
-  private _isVivianiChain = false;
+
+  private _isVivianiChain = false; //new
+
 
   // Promises and observables:
   private IS_READY!: Promise<void>;
   private ACCOUNTS_CHANGED!: Subject<IAccountsChangedEvent>;
+  static metaMaskId: any;
 
   constructor(private ngZone: NgZone) {
     this.ACCOUNTS_CHANGED = new Subject<IAccountsChangedEvent>();
@@ -54,12 +58,12 @@ export class MetaMaskService {
     return this._isLoggedIn;
   }
 
-  public get isVivianiChain() {
-    return this._isVivianiChain;
-  }
-
   public get isMetamaskInstalled() {
     return this._isMetamaskInstalled;
+  }
+
+  public get isVivianiChain() {
+    return this._isVivianiChain;
   }
 
   // Promises and observables:
@@ -103,6 +107,11 @@ export class MetaMaskService {
       });
       this._isVivianiChain = chainId === '0x86';
 
+      // // Initialize SDK interfaces:
+      // this._walletSigner = new WalletSignerMetamask(this._ethProvider);
+      // this._desmoHub = new DesmoHub(this._walletSigner);
+      // this._desmo = new Desmo(this._walletSigner);
+
     } catch {
       this._isMetamaskInstalled = false;
       this._isLoggedIn = false;
@@ -120,6 +129,23 @@ export class MetaMaskService {
       window.location.reload();
       return;
     }
+
+    // if (
+    //   this._walletSigner !== undefined &&
+    //   this._desmoHub !== undefined &&
+    //   this._desmo !== undefined
+    // ) {
+    //   if (!this._walletSigner.isConnected) {
+    //     await this._walletSigner.connect();
+    //     this._desmoHub.connect();
+    //     this._desmo.connect();
+    //   }
+
+    //   if (this._desmoHub.isListening) {
+    //     this._desmoHub.stopListeners();
+    //     await this._desmoHub.startListeners();
+    //   }
+    // }
 
 
     // Update the user address and emit the event:

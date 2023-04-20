@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MetaMaskService } from './meta-mask.service';
+import { MetaMaskService } from './metaMask.service';
 
 describe('MetaMaskService', () => {
   let service: MetaMaskService;

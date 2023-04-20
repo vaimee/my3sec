@@ -1,13 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { IsMetamaskGuard } from './metaMask.guard';
 
-import { IsLoginGuard } from './is-login.guard';
 
-describe('IsLoginGuard', () => {
-  let guard: IsLoginGuard;
+
+describe('IsMetamskGuard', () => {
+  let guard: IsMetamaskGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(IsLoginGuard);
+    guard = TestBed.inject(IsMetamaskGuard);
   });
 
   it('should be created', () => {

@@ -21,4 +21,4 @@ import { MatSelectModule } from '@angular/material/select';
     NavbarComponent
   ]
 })
-export class ComponetsModule { }
+export class ComponentsModule { }
