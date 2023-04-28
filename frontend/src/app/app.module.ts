@@ -9,43 +9,36 @@ import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { HttpClientModule } from "@angular/common/http";
 import { SharedModule } from "./shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
-import { LandingWithoutMetamaskComponent } from './adminPages/landing-without-metamask/landing-without-metamask.component';
-import { AdminComponent } from "./adminPages/admin/admin.component";
-import { ComponentsModule } from "./component/component.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { IsMetamaskGuard } from "./guards/metaMask.guard";
-
-
+import { ComponentsModule } from "./components/components.module";
+import { PagesComponent } from "./pages/pages/pages.component";
 
 const routes: Routes = [
-    {
-        path: '',
-        component: LandingWithoutMetamaskComponent,
-    },
+    { path: '', pathMatch: 'full', redirectTo: 'landing' },
     {
         path: 'signup',
         component: SignUpComponent,
     },
-    // {
-    //     path: '',
-    //     component: AdminComponent,
-    //     canActivate: [IsMetamaskGuard],
-    //     children: [
-    //         {
-    //             path: '',
-    //             loadChildren: () => import('./adminPages/admin/admin.module').then(m => m.AdminModule)
-    //         }
-    //     ]
-    // }
+    {
+        path: 'landing',
+        loadChildren: () =>
+            import('../app/pages/landing-with-metamask/landing-with-metamask.module').then(m => m.LandingWithMetamaskModule)
+    },
+    {
+        path: '',
+        loadChildren: () => import('./pages/pages/pages.module').then(m => m.PagesModule)
+    },
+
 ];
+
+
 
 @NgModule({
     declarations: [
         AppComponent,
-        AdminComponent,
+        PagesComponent,
         ToolbarComponent,
         SignUpComponent,
-        LandingWithoutMetamaskComponent
     ],
     imports: [
         BrowserModule,

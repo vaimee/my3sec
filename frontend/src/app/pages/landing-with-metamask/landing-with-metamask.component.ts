@@ -1,18 +1,17 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { IMetamaskError, MetaMaskService } from 'app/services/metaMask.service';
 
-
 @Component({
-  selector: 'app-landing-without-metamask',
-  templateUrl: './landing-without-metamask.component.html',
-  styleUrls: ['./landing-without-metamask.component.css']
+  selector: 'app-landing-with-metamask',
+  templateUrl: './landing-with-metamask.component.html',
+  styleUrls: ['./landing-with-metamask.component.css']
 })
-export class LandingWithoutMetamaskComponent implements OnInit {
+export class LandingWithMetamaskComponent implements OnInit {
 
-  constructor(
-    private metaMaskId: MetaMaskService,
+  constructor(private metaMaskId: MetaMaskService,
     private snackBar: MatSnackBar,
     private router: Router) { }
 
@@ -82,15 +81,12 @@ export class LandingWithoutMetamaskComponent implements OnInit {
 
       // There's no reason to display this page:
       // let's move to the application's home.
-      this.router.navigate(['/']);
+      this.router.navigate(['/profile']);
     }
   }
 
   public async signUp() {
     this.router.navigate(['/signup'])
   }
+
 }
-
-
-
-
