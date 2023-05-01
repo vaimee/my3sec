@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { MetaMaskService } from 'app/services/metaMask.service';
+import { MetaMaskService } from 'app/landing-metamask/services/metaMask.service';
 
 
 @Injectable({

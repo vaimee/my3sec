@@ -5,13 +5,11 @@ import { AppComponent } from "./app.component";
 import { MaterialModule } from './material/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { HttpClientModule } from "@angular/common/http";
-import { SharedModule } from "./shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ComponentsModule } from "./components/components.module";
-import { PagesComponent } from "./pages/pages/pages.component";
+import { IsMetamaskGuard } from "./guards/metaMask.guard";
+import { SignUpComponent } from "./authentication/sign-up/sign-up.component";
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'landing' },
@@ -22,11 +20,12 @@ const routes: Routes = [
     {
         path: 'landing',
         loadChildren: () =>
-            import('../app/pages/landing-with-metamask/landing-with-metamask.module').then(m => m.LandingWithMetamaskModule)
+            import('../app/landing-metamask/landing-metamask.module').then(m => m.LandingMetamaskModule)
     },
     {
-        path: '',
-        loadChildren: () => import('./pages/pages/pages.module').then(m => m.PagesModule)
+        canActivate: [IsMetamaskGuard],
+        path: 'profile',
+        loadChildren: () => import('../app/user-profile/user-profile.module').then(m => m.UserProfileModule)
     },
 
 ];
@@ -36,7 +35,6 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        PagesComponent,
         ToolbarComponent,
         SignUpComponent,
     ],
@@ -49,8 +47,6 @@ const routes: Routes = [
         MaterialModule,
         HttpClientModule,
         MaterialModule,
-        ComponentsModule,
-        SharedModule
     ],
     exports: [RouterModule],
     providers: [],
