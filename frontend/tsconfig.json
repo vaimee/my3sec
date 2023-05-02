@@ -2,7 +2,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    //"baseUrl": "./",
+    "baseUrl": "src",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -14,6 +15,7 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
@@ -22,7 +24,41 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths" : {
+       "crypto": [
+        "../node_modules/crypto-browserify",
+      ],
+      "stream": [
+        "../node_modules/stream-browserify",
+      ],
+      "constants": [
+        "../node_modules/constants-browserify",
+      ],
+      "assert" : [
+        "../node_modules/assert",
+      ],
+      "buffer": [
+        "../node_modules/buffer",
+      ],
+      "process":[
+        "../node_modules/process/browser.js",
+      ],
+      "url": [
+        "../node_modules/url",
+      ],
+      "zlib": [
+        "../node_modules/browserify-zlib",
+      ],
+      "https": [
+        "../node_modules/https-browserify",
+      ],
+      "http": [
+        "../node_modules/stream-http",
+      ],
+    },
+    
+    
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
