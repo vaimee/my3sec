@@ -6,18 +6,23 @@ import { ProfileBodyComponent } from './components/profile-body/profile-body.com
 import { ProfileHeaderComponent } from './components/profile-header/profile-header.component';
 import { MaterialModule } from 'app/material/material.module';
 import { SharedModule } from 'app/shared/shared.module';
-
+import { SkillsComponent } from './components/skills/skills.component';
+import { CertificatesComponent } from './components/certificates/certificates.component';
+import { ProjectsComponent } from './components/projects/projects.component';
 
 @NgModule({
   declarations: [
     ProfileBodyComponent,
-    ProfileHeaderComponent
+    ProfileHeaderComponent,
+    SkillsComponent,
+    CertificatesComponent,
+    ProjectsComponent,
   ],
   imports: [
     CommonModule,
     UserProfileRoutingModule,
     MaterialModule,
-    SharedModule
-  ]
+    SharedModule,
+  ],
 })
-export class UserProfileModule { }
+export class UserProfileModule {}
