@@ -2,5 +2,5 @@ export interface Skill {
   skillName: string;
   category: string;
   icon: string;
-  progress: Number;
+  progress: number;
 }
