@@ -65,6 +65,7 @@ export class MetamaskService {
   private async init(): Promise<void> {
     try {
       this._ethProvider = await this.getEthereumProvider();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       this._ethProvider.on('chainChanged', (_chainId: number) =>
         window.location.reload()
       );
