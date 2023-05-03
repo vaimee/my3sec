@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { IMetamaskError, MetaMaskService } from './services/metaMask.service';
+import { IMetamaskError, MetamaskService } from './services/metamask.service';
 
 
 @Component({
@@ -11,30 +11,30 @@ import { IMetamaskError, MetaMaskService } from './services/metaMask.service';
 })
 export class LandingMetamaskComponent implements OnInit {
 
-  constructor(private metaMaskId: MetaMaskService,
+  constructor(private metamaskId: MetamaskService,
     private snackBar: MatSnackBar,
     private router: Router) { }
 
   async ngOnInit(): Promise<void> {
-    await this.metaMaskId.isReady;
+    await this.metamaskId.isReady;
     this.checkRedirectCondition();
   }
 
   public get isMetamaskInstalled(): boolean {
-    return this.metaMaskId.isMetamaskInstalled;
+    return this.metamaskId.isMetamaskInstalled;
   }
 
   public get isLoggedIn(): boolean {
-    return this.metaMaskId.isLoggedIn;
+    return this.metamaskId.isLoggedIn;
   }
 
   public get isVivianiChain(): boolean {
-    return this.metaMaskId.isVivianiChain;
+    return this.metamaskId.isVivianiChain;
   }
 
   public async loginToMetamask(): Promise<void> {
     try {
-      await this.metaMaskId.loginToMetamask();
+      await this.metamaskId.loginToMetamask();
       this.checkRedirectCondition();
     } catch (error: unknown) {
       const metamaskError = error as IMetamaskError;
@@ -47,7 +47,7 @@ export class LandingMetamaskComponent implements OnInit {
 
   public async switchToViviani(): Promise<void> {
     try {
-      await this.metaMaskId.switchToVivianiChain();
+      await this.metamaskId.switchToVivianiChain();
 
       this.checkRedirectCondition();
     } catch (error: unknown) {
@@ -55,7 +55,7 @@ export class LandingMetamaskComponent implements OnInit {
       if (metamaskError.code === 4902) {
         // This error code indicates that the chain has not been added to MetaMask.
         try {
-          await this.metaMaskId.addVivianiChain();
+          await this.metamaskId.addVivianiChain();
 
           this.checkRedirectCondition();
         } catch (error: unknown) {
@@ -74,9 +74,9 @@ export class LandingMetamaskComponent implements OnInit {
 
   private checkRedirectCondition(): void {
     if (
-      this.metaMaskId.isMetamaskInstalled &&
-      this.metaMaskId.isLoggedIn &&
-      this.metaMaskId.isVivianiChain
+      this.metamaskId.isMetamaskInstalled &&
+      this.metamaskId.isLoggedIn &&
+      this.metamaskId.isVivianiChain
     ) {
 
       // There's no reason to display this page:

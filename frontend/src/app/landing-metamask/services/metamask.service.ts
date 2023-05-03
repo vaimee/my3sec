@@ -3,7 +3,6 @@ import { Injectable, NgZone } from '@angular/core';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { Observable, Subject } from 'rxjs';
 
-
 export interface IMetamaskError {
   message: string;
   code: number;
@@ -16,10 +15,9 @@ export interface IAccountsChangedEvent {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
-export class MetaMaskService {
+export class MetamaskService {
   private _ethProvider: any;
   private _userAddress = 'NOT LOGGED IN';
 
@@ -29,11 +27,10 @@ export class MetaMaskService {
 
   private _isVivianiChain = false; //new
 
-
   // Promises and observables:
   private IS_READY!: Promise<void>;
   private ACCOUNTS_CHANGED!: Subject<IAccountsChangedEvent>;
-  static metaMaskId: any;
+  static metamaskId: any;
 
   constructor(private ngZone: NgZone) {
     this.ACCOUNTS_CHANGED = new Subject<IAccountsChangedEvent>();
@@ -47,7 +44,6 @@ export class MetaMaskService {
       }
     });
   }
-
 
   public get userAddress(): string {
     return this._userAddress;
@@ -78,7 +74,6 @@ export class MetaMaskService {
   private async init(): Promise<void> {
     try {
       this._ethProvider = await this.getEthereumProvider();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       this._ethProvider.on('chainChanged', (_chainId: number) =>
         window.location.reload()
       );
@@ -106,12 +101,6 @@ export class MetaMaskService {
         method: 'eth_chainId',
       });
       this._isVivianiChain = chainId === '0x86';
-
-      // // Initialize SDK interfaces:
-      // this._walletSigner = new WalletSignerMetamask(this._ethProvider);
-      // this._desmoHub = new DesmoHub(this._walletSigner);
-      // this._desmo = new Desmo(this._walletSigner);
-
     } catch {
       this._isMetamaskInstalled = false;
       this._isLoggedIn = false;
@@ -129,24 +118,6 @@ export class MetaMaskService {
       window.location.reload();
       return;
     }
-
-    // if (
-    //   this._walletSigner !== undefined &&
-    //   this._desmoHub !== undefined &&
-    //   this._desmo !== undefined
-    // ) {
-    //   if (!this._walletSigner.isConnected) {
-    //     await this._walletSigner.connect();
-    //     this._desmoHub.connect();
-    //     this._desmo.connect();
-    //   }
-
-    //   if (this._desmoHub.isListening) {
-    //     this._desmoHub.stopListeners();
-    //     await this._desmoHub.startListeners();
-    //   }
-    // }
-
 
     // Update the user address and emit the event:
     this.ACCOUNTS_CHANGED.next({
@@ -193,7 +164,4 @@ export class MetaMaskService {
     });
     return provider;
   }
-
-
-
 }
