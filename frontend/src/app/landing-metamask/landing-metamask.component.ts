@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { IMetamaskError, MetamaskService } from './services/metamask.service';
+import { MetamaskService } from './services/metamask.service';
+import { MetamaskError } from 'app/shared/interfaces';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class LandingMetamaskComponent implements OnInit {
       await this.metamaskId.loginToMetamask();
       this.checkRedirectCondition();
     } catch (error: unknown) {
-      const metamaskError = error as IMetamaskError;
+      const metamaskError = error as MetamaskError;
       this.snackBar.open(metamaskError.message, 'Dismiss', {
         duration: 3000,
       });
@@ -51,7 +52,7 @@ export class LandingMetamaskComponent implements OnInit {
 
       this.checkRedirectCondition();
     } catch (error: unknown) {
-      const metamaskError = error as IMetamaskError;
+      const metamaskError = error as MetamaskError;
       if (metamaskError.code === 4902) {
         // This error code indicates that the chain has not been added to MetaMask.
         try {
@@ -59,7 +60,7 @@ export class LandingMetamaskComponent implements OnInit {
 
           this.checkRedirectCondition();
         } catch (error: unknown) {
-          const metamaskError = error as IMetamaskError;
+          const metamaskError = error as MetamaskError;
           this.snackBar.open(metamaskError.message, 'Dismiss', {
             duration: 3000,
           });

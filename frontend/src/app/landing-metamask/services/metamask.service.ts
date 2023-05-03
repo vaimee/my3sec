@@ -1,18 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, NgZone } from '@angular/core';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { AccountsChangedEvent } from 'app/shared/interfaces';
 import { Observable, Subject } from 'rxjs';
 
-export interface IMetamaskError {
-  message: string;
-  code: number;
-  data?: unknown;
-}
-
-export interface IAccountsChangedEvent {
-  oldValue: string;
-  newValue: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -29,11 +20,11 @@ export class MetamaskService {
 
   // Promises and observables:
   private IS_READY!: Promise<void>;
-  private ACCOUNTS_CHANGED!: Subject<IAccountsChangedEvent>;
+  private ACCOUNTS_CHANGED!: Subject<AccountsChangedEvent>;
   static metamaskId: any;
 
   constructor(private ngZone: NgZone) {
-    this.ACCOUNTS_CHANGED = new Subject<IAccountsChangedEvent>();
+    this.ACCOUNTS_CHANGED = new Subject<AccountsChangedEvent>();
     // eslint-disable-next-line no-async-promise-executor
     this.IS_READY = new Promise<void>(async (resolve, reject) => {
       try {
@@ -67,7 +58,7 @@ export class MetamaskService {
     return this.IS_READY;
   }
 
-  public get accountsChanged(): Observable<IAccountsChangedEvent> {
+  public get accountsChanged(): Observable<AccountsChangedEvent> {
     return this.ACCOUNTS_CHANGED.asObservable();
   }
 
