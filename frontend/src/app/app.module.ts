@@ -8,6 +8,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { RouterModule, Routes } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SignUpComponent } from "./authentication/sign-up/sign-up.component";
+import { IsMetamaskGuard } from "./guards/metaMask.guard";
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'landing' },
@@ -19,7 +20,12 @@ const routes: Routes = [
         path: 'landing',
         loadChildren: () =>
             import('../app/landing-metamask/landing-metamask.module').then(m => m.LandingMetamaskModule)
-    }
+    },
+    {
+
+        path: 'profile',
+        loadChildren: () => import('../app/user-profile/user-profile.module').then(m => m.UserProfileModule)
+    },
 ];
 
 
@@ -37,7 +43,6 @@ const routes: Routes = [
         RouterModule.forRoot(routes, { useHash: true }),
         MaterialModule,
         HttpClientModule,
-        MaterialModule,
     ],
     exports: [RouterModule],
     providers: [],
