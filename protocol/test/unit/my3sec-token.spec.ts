@@ -10,8 +10,12 @@ describe("My3SecToken", () => {
   let contract: My3SecToken;
 
   beforeEach(async () => {
+    const accounts = await ethers.getSigners();
+    const deployer = accounts[0];
+    const deployerAddress = deployer.address;
+
     const contractFactory = await ethers.getContractFactory("My3SecToken");
-    contract = await contractFactory.deploy(ONE_MILLION);
+    contract = await contractFactory.deploy(deployerAddress, ONE_MILLION);
   });
 
   describe("Deployment", () => {

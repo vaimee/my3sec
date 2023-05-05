@@ -4,14 +4,14 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
-import "../common/access/Whitelistable.sol";
+import "../common/access/HubControllable.sol";
 import "../common/interfaces/IEnergyManager.sol";
 
 /**
  * @title EnergyManager contract
  * @dev This is the implementation of the Energy Manager.
  */
-contract EnergyManager is IEnergyManager, Whitelistable {
+contract EnergyManager is IEnergyManager, HubControllable {
     using EnumerableMap for EnumerableMap.UintToUintMap;
 
     mapping(uint256 => uint256) private _totalEnergy;
@@ -23,7 +23,7 @@ contract EnergyManager is IEnergyManager, Whitelistable {
     /**
      * Energy Manager Contract Constructor.
      */
-    constructor() {}
+    constructor(address hub) HubControllable(hub) {}
 
     /// @inheritdoc IEnergyManager
     function totalEnergyOf(uint256 profileId) external view override returns (uint256) {
@@ -66,7 +66,7 @@ contract EnergyManager is IEnergyManager, Whitelistable {
     }
 
     /// @inheritdoc IEnergyManager
-    function giveEnergy(uint256 from, uint256 to, uint256 amount) external override onlyWhitelisted {
+    function giveEnergy(uint256 from, uint256 to, uint256 amount) external override onlyHub {
         require(to != from, "Cannot give energy to yourself");
         require(amount <= freeEnergyOf(from), "Insufficient energy");
 
@@ -80,7 +80,7 @@ contract EnergyManager is IEnergyManager, Whitelistable {
     }
 
     /// @inheritdoc IEnergyManager
-    function removeEnergy(uint256 from, uint256 to, uint256 amount) external override onlyWhitelisted {
+    function removeEnergy(uint256 from, uint256 to, uint256 amount) external override onlyHub {
         require(_energyAllocationMap[to].contains(from), "Profile not referenced");
         require(amount <= _energyAllocationMap[to].get(from), "Exceeded given energy");
 
@@ -93,12 +93,12 @@ contract EnergyManager is IEnergyManager, Whitelistable {
     }
 
     /// @inheritdoc IEnergyManager
-    function createEnergyFor(uint256 profileId, uint256 amount) external override onlyWhitelisted {
+    function createEnergyFor(uint256 profileId, uint256 amount) external override onlyHub {
         _totalEnergy[profileId] += amount;
     }
 
     /// @inheritdoc IEnergyManager
-    function destroyEnergyFor(uint256 profileId, uint256 amount) external override onlyWhitelisted {
+    function destroyEnergyFor(uint256 profileId, uint256 amount) external override onlyHub {
         require(amount <= freeEnergyOf(profileId), "Exceeded free energy");
         require(amount <= _totalEnergy[profileId], "Exceeded total energy");
         _totalEnergy[profileId] -= amount;

@@ -15,23 +15,18 @@ async function main() {
   const my3secHub = await my3secHubFactory.deploy();
 
   console.log("\n\t-- Deploying My3SecToken --");
-  const my3secToken = await my3secTokenFactory.deploy(MY3SEC_TOKEN_INITIAL_SUPPLY);
+  const my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
 
   console.log("\n\t-- Deploying My3SecProfiles --");
-  const my3secProfiles = await my3secProfilesFactory.deploy();
+  const my3secProfiles = await my3secProfilesFactory.deploy(my3secHub.address);
 
   console.log("\n\t-- Deploying EnergyManager --");
-  const energyManager = await energyManagerFactory.deploy();
+  const energyManager = await energyManagerFactory.deploy(my3secHub.address);
 
   // Initializations
   console.log("\n\t-- Initializing My3SecHub --");
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setEnergyManagerContract(energyManager.address);
-
-  console.log("\n\t-- Whitelisting contracts --");
-  await my3secToken.addToWhitelist(my3secHub.address);
-  await my3secProfiles.addToWhitelist(my3secHub.address);
-  await energyManager.addToWhitelist(my3secHub.address);
 
   // Save and logs addresses
   const addrs = {

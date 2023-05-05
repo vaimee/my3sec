@@ -5,15 +5,15 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-import "../common/access/Whitelistable.sol";
+import "../common/access/HubControllable.sol";
 import "../common/interfaces/IMy3SecProfiles.sol";
 import "../common/libraries/Errors.sol";
 
-contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIStorage, Whitelistable {
+contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIStorage, HubControllable {
     uint256 private _tokenIdCounter;
     mapping(address => uint256) private _defaultProfileByAddress;
 
-    constructor() ERC721("My3Sec Profiles", "M3SP") {}
+    constructor(address hub) ERC721("My3Sec Profiles", "M3SP") HubControllable(hub) {}
 
     /// @inheritdoc IMy3SecProfiles
     function getDefaultProfileId(address account) external view override returns (uint256) {
@@ -21,12 +21,12 @@ contract My3SecProfiles is IMy3SecProfiles, ERC721, ERC721Enumerable, ERC721URIS
     }
 
     /// @inheritdoc IMy3SecProfiles
-    function setDefaultProfile(address account, uint256 profileId) external override onlyWhitelisted {
+    function setDefaultProfile(address account, uint256 profileId) external override onlyHub {
         _setDefaultProfile(account, profileId);
     }
 
     /// @inheritdoc IMy3SecProfiles
-    function createProfile(address to, string memory uri) external override onlyWhitelisted returns (uint256) {
+    function createProfile(address to, string memory uri) external override onlyHub returns (uint256) {
         uint256 tokenId = ++_tokenIdCounter;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);

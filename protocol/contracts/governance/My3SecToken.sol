@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
-import "../common/access/Whitelistable.sol";
+import "../common/access/HubControllable.sol";
 
 /**
  * @title My3SecToken contract
@@ -18,12 +18,15 @@ import "../common/access/Whitelistable.sol";
  *
  * The My3Sec rewards system (to be defined) should be added as a minter to distribute rewards to the users.
  */
-contract My3SecToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Votes, Whitelistable {
+contract My3SecToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Votes, HubControllable {
     /**
      * @dev My3Sec Token Contract Constructor.
      * @param initialSupply Initial supply of M3S
      */
-    constructor(uint256 initialSupply) ERC20("My3Sec Token", "M3S") ERC20Permit("My3Sec Token") {
+    constructor(
+        address hub,
+        uint256 initialSupply
+    ) ERC20("My3Sec Token", "M3S") ERC20Permit("My3Sec Token") HubControllable(hub) {
         _mint(msg.sender, initialSupply * 10 ** decimals());
     }
 
@@ -32,7 +35,7 @@ contract My3SecToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Votes, Whitelist
      * @param to Address to send the newly minted tokens
      * @param amount Amount of tokens to mint
      */
-    function mint(address to, uint256 amount) public onlyWhitelisted {
+    function mint(address to, uint256 amount) public onlyHub {
         _mint(to, amount);
     }
 

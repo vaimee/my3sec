@@ -42,17 +42,11 @@ before(async () => {
 
   // Deployments
   my3secHub = await my3secHubFactory.deploy();
-  my3secToken = await my3secTokenFactory.deploy(MY3SEC_TOKEN_INITIAL_SUPPLY);
-  my3secProfiles = await my3secProfilesFactory.deploy();
-  energyManager = await energyManagerFactory.deploy();
+  my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
+  my3secProfiles = await my3secProfilesFactory.deploy(my3secHub.address);
+  energyManager = await energyManagerFactory.deploy(my3secHub.address);
 
   // Initializations
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setEnergyManagerContract(energyManager.address);
-
-  await my3secToken.addToWhitelist(my3secHub.address);
-
-  await my3secProfiles.addToWhitelist(my3secHub.address);
-
-  await energyManager.addToWhitelist(my3secHub.address);
 });

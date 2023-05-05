@@ -19,9 +19,7 @@ describe("EnergyManager", () => {
     const deployerAddress = deployer.address;
 
     const contractFactory = await ethers.getContractFactory("EnergyManager");
-    contract = await contractFactory.deploy();
-
-    await contract.addToWhitelist(deployerAddress);
+    contract = await contractFactory.deploy(deployerAddress);
   });
 
   describe("Deployment", () => {
