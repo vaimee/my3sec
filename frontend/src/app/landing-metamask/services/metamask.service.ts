@@ -2,8 +2,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { AccountsChangedEvent } from 'app/shared/interfaces';
+import { environment } from 'environments/environment';
 import { Observable, Subject } from 'rxjs';
-
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ import { Observable, Subject } from 'rxjs';
 export class MetamaskService {
   private _ethProvider: any;
   private _userAddress = 'NOT LOGGED IN';
-
+  private _chain = environment.chain;
   // Connection flags:
   private _isMetamaskInstalled = false;
   private _isLoggedIn = false;
@@ -92,7 +92,7 @@ export class MetamaskService {
       const chainId: string = await this._ethProvider.request({
         method: 'eth_chainId',
       });
-      this._isVivianiChain = chainId === '0x86';
+      this._isVivianiChain = chainId === this._chain.chainId;
     } catch {
       this._isMetamaskInstalled = false;
       this._isLoggedIn = false;
@@ -126,25 +126,14 @@ export class MetamaskService {
   public async switchToVivianiChain(): Promise<void> {
     await this._ethProvider.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: '0x86' }],
+      params: [{ chainId: this._chain.chainId }],
     });
   }
 
   public async addVivianiChain(): Promise<void> {
     await this._ethProvider.request({
       method: 'wallet_addEthereumChain',
-      params: [
-        {
-          chainId: '0x86',
-          chainName: 'bellecour',
-          rpcUrls: ['https://bellecour.iex.ec'],
-          blockExplorerUrls: ['https://blockscout-bellecour.iex.ec/'],
-          nativeCurrency: {
-            symbol: 'RLC',
-            decimals: 18,
-          },
-        },
-      ],
+      params: [this._chain],
     });
   }
 
