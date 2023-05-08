@@ -13,6 +13,7 @@
   width: 50%;
   margin: 0 auto;
 }
+
 .logo-img img {
   width: 80px;
   margin: 0 auto;
@@ -46,6 +47,10 @@
   width: 50px;
   height: 50px;
   color: #aaa;
+}
+
+.margin-top {
+  margin-top: 20px
 }
 
 /*Custom CSS*/
