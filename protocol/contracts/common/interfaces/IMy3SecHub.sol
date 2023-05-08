@@ -15,4 +15,14 @@ interface IMy3SecHub {
     function giveEnergyTo(uint256 profileId, uint256 amount) external;
 
     function removeEnergyFrom(uint256 profileId, uint256 amount) external;
+
+    function getOrganizationCount() external view returns (uint256);
+
+    function getOrganization(uint256 index) external view returns (address);
+
+    function registerOrganization(address organization) external;
+
+    function joinOrganization(address organizationAddress) external;
+
+    function leaveOrganization(address organizationAddress) external;
 }

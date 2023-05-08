@@ -21,7 +21,7 @@ abstract contract Whitelistable is Ownable {
         _whitelist[account] = false;
     }
 
-    function isWhitelisted(address account) external view returns (bool) {
+    function isWhitelisted(address account) public view virtual returns (bool) {
         return _whitelist[account];
     }
 }
