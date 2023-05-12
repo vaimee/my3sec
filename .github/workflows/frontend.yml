@@ -52,6 +52,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ github.event.ref }}
+          tags: vaimee/my3sec:${{github.ref_name}}
           context: ./frontend
       
