@@ -40,8 +40,6 @@ jobs:
     needs: [build, lint]
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
-      # When working on sub directories the default Git context is not working well for Buildx
-      - uses: actions/checkout@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to DockerHub
@@ -50,7 +48,7 @@ jobs:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
       - name: Build and push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v3
         with:
           push: true
           tags: ${{ github.event.ref }}
