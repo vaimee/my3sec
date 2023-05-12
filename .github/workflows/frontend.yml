@@ -54,5 +54,5 @@ jobs:
         with:
           push: true
           tags: ${{ github.event.ref }}
-          context: .
+          context: "{{defaultContext}}:frontend"
       
