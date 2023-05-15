@@ -22,5 +22,7 @@ interface IOrganization {
 
     // Overrides
 
+    function transferOwnership(address newOwner) external;
+
     function isWhitelisted(address account) external view returns (bool);
 }

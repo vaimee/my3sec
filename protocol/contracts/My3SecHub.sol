@@ -13,6 +13,7 @@ import "./common/libraries/Errors.sol";
 
 import "./profiles/My3SecProfiles.sol";
 import "./profiles/EnergyManager.sol";
+import "./organizations/Organization.sol";
 
 contract My3SecHub is IMy3SecHub, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -88,6 +89,14 @@ contract My3SecHub is IMy3SecHub, Ownable {
     function getOrganization(uint256 index) external view override returns (address) {
         if (index < 0 || index >= getOrganizationCount()) revert Errors.IndexOutOfBounds();
         return _organizations.at(index);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function createOrganization(string calldata metadataURI) external returns (address) {
+        IOrganization organization = new Organization(address(this), metadataURI);
+        organization.transferOwnership(msg.sender);
+        _organizations.add(address(organization));
+        return address(organization);
     }
 
     /// @inheritdoc IMy3SecHub
