@@ -20,6 +20,8 @@ interface IMy3SecHub {
 
     function getOrganization(uint256 index) external view returns (address);
 
+    function createOrganization(string calldata metadataURI) external returns (address);
+
     function registerOrganization(address organization) external;
 
     function joinOrganization(address organizationAddress) external;
