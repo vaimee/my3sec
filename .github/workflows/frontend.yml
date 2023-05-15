@@ -4,22 +4,22 @@ name: Frontend
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "frontend/**"
       - ".github/workflows/frontend.yml"
     tags:
       - "v*-frontend"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "frontend/**"
       - ".github/workflows/frontend.yml"
   workflow_dispatch:
 
 defaults:
- run:
-  working-directory: ./frontend
+  run:
+    working-directory: ./frontend
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,6 +28,9 @@ jobs:
       - uses: actions/setup-node@v3.3.0
       - run: npm ci
       - run: npm run build
+        with:
+          secrets: |
+            MY3SEC_IPFS_API_KEY = ${{ secrets.MY3SEC_IPFS_API_KEY }}
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -54,4 +57,5 @@ jobs:
           tags: ${{ github.event.ref }}
           context: ./frontend
           file: ./frontend/Dockerfile
-      
+          secrets: |
+            MY3SEC_IPFS_API_KEY = ${{ secrets.MY3SEC_IPFS_API_KEY }}

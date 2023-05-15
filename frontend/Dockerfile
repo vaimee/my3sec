@@ -1,7 +1,10 @@
 FROM node:16-alpine as build
 WORKDIR /app
 COPY ./package*.json .
-RUN npm ci
+
+RUN --mount=type=secret,id=MY3SEC_IPFS_API_KEY \
+    MY3SEC_IPFS_API_KEY=$(cat /run/secrets/MY3SEC_IPFS_API_KEY) \
+    npm ci
 
 COPY . .
 RUN npm run build --prod
