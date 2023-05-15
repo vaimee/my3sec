@@ -1,7 +1,9 @@
+import { LoadingService } from './loading.service';
 import { Injectable } from '@angular/core';
-import { ethers, providers } from 'ethers';
+import { ContractTransaction, ethers, providers } from 'ethers';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
+import { Observable, finalize, from, map, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,11 @@ export class My3secHubContractService {
   private provider: ethers.providers.JsonRpcProvider;
   private signer: ethers.Signer;
   private contract!: ethers.Contract;
-  constructor(private http: HttpClient) {
+
+  constructor(
+    private http: HttpClient,
+    private loadingService: LoadingService
+  ) {
     this.provider = new ethers.providers.Web3Provider(
       window.ethereum as providers.ExternalProvider,
       'any'
@@ -21,7 +27,6 @@ export class My3secHubContractService {
     this.http
       .get<ethers.ContractInterface>(environment.abiPaths.my3secHub)
       .subscribe((abi) => {
-        console.log(abi);
         this.contract = new ethers.Contract(
           this.contractAddress,
           abi,
@@ -29,38 +34,71 @@ export class My3secHubContractService {
         );
       });
   }
+  public getDefaultProfile(account: string): Observable<string[]> {
+    this.loadingService.show();
+    if (this.contract === undefined)
+      return this.initializeContract().pipe(
+        switchMap(() => from(this.contract['getDefaultProfile'](account))),
+        map((value) => value as string[]),
+        finalize(() => this.loadingService.hide())
+      );
 
-  async createProfile(uri: string): Promise<number> {
-    await this.provider.send('eth_requestAccounts', []);
-    const args = {
-      uri,
-    };
-    const tx = await this.contract['createProfile'](args);
-    const receipt = await tx.wait();
-    return receipt.events[0].args[0].toNumber();
+    return from(this.contract['getDefaultProfile'](account)).pipe(
+      map((value) => value as string[]),
+      finalize(() => this.loadingService.hide())
+    );
   }
 
-  async getDefaultProfile(account: string): Promise<{ uri: string }> {
-    const profile = await this.contract['getDefaultProfile'](account);
-    return {
-      uri: profile.uri,
-    };
+  public getProfile(profileId: number): Observable<unknown> {
+    return from(this.contract['getProfile'](profileId));
   }
 
-  async getProfile(profileId: number): Promise<{ uri: string }> {
-    const profile = await this.contract['getProfile'](profileId);
-    return {
-      uri: profile.uri,
-    };
+  public createProfile(uri: string): Observable<number> {
+    this.loadingService.show();
+    const args = { uri };
+
+    return from(this.contract['createProfile'](args)).pipe(
+      switchMap((tx) =>
+        (tx as ContractTransaction)
+          .wait()
+          .then((receipt: ethers.ContractReceipt) => {
+            const event = receipt.events?.[0];
+            if (!event) {
+              throw new Error('Event not found in transaction receipt');
+            }
+            return event.args?.['profileId'].toNumber();
+          })
+      ),
+      finalize(() => this.loadingService.hide())
+    );
   }
 
-  async giveEnergyTo(profileId: number, amount: number): Promise<void> {
-    const tx = await this.contract['giveEnergyTo'](profileId, amount);
-    await tx.wait();
+  public setDefaultProfile(profileId: number): Observable<unknown> {
+    return from(this.contract['setDefaultProfile'](profileId));
   }
 
-  async removeEnergyFrom(profileId: number, amount: number): Promise<void> {
-    const tx = await this.contract['removeEnergyFrom'](profileId, amount);
-    await tx.wait();
+  public giveEnergyTo(profileId: number, amount: number): Observable<unknown> {
+    return from(this.contract['giveEnergyTo'](profileId, amount));
+  }
+
+  public removeEnergyFrom(
+    profileId: number,
+    amount: number
+  ): Observable<unknown> {
+    return from(this.contract['removeEnergyFrom'](profileId, amount));
+  }
+
+  private initializeContract() {
+    return this.http
+      .get<ethers.ContractInterface>(environment.abiPaths.my3secHub)
+      .pipe(
+        map((abi) => {
+          this.contract = new ethers.Contract(
+            this.contractAddress,
+            abi,
+            this.signer
+          );
+        })
+      );
   }
 }

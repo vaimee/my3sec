@@ -19,4 +19,5 @@ export const environment = {
   abiPaths: {
     my3secHub: '../../../assets/contracts/my3sec-hub.abi.json',
   },
+  ipfs: { httpGateway: 'https://ipfs.io/ipfs', api_key: process.env["MY3SEC_IPFS_API_KEY"]},
 };

@@ -4,22 +4,22 @@ name: Frontend
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "frontend/**"
       - ".github/workflows/frontend.yml"
     tags:
       - "v*-frontend"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "frontend/**"
       - ".github/workflows/frontend.yml"
   workflow_dispatch:
 
 defaults:
- run:
-  working-directory: ./frontend
+  run:
+    working-directory: ./frontend
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +27,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.3.0
       - run: npm ci
-      - run: npm run build
+      - name: Build the project
+        run: npm run build
+        env:
+          MY3SEC_IPFS_API_KEY: ${{ secrets.MY3SEC_IPFS_API_KEY }}
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -54,4 +57,5 @@ jobs:
           push: true
           tags: vaimee/my3sec:${{github.ref_name}},vaimee/my3sec:latest
           context: ./frontend
-      
+          secrets: |
+            MY3SEC_IPFS_API_KEY = ${{ secrets.MY3SEC_IPFS_API_KEY }}

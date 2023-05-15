@@ -67,6 +67,10 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
 
     // Overrides
 
+    function transferOwnership(address newOwner) public override(IOrganization, Ownable) {
+        super.transferOwnership(newOwner);
+    }
+
     function isWhitelisted(address account) public view override(IOrganization, Whitelistable) returns (bool) {
         return super.isWhitelisted(account);
     }

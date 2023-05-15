@@ -22,15 +22,10 @@
 .avatar {
   margin: 0.5em auto;
   position: relative;
-}
-.avatar input {
-  width: 20%;
   height: 50px;
-  opacity: 0;
   display: block;
-  cursor: pointer;
-  margin: 0 auto;
 }
+
 .avatar .avatar-label {
   text-align: center;
   color: #000;
@@ -50,7 +45,11 @@
 }
 
 .margin-top {
-  margin-top: 20px
+  margin-top: 20px;
+}
+
+.file-input {
+  display: none;
 }
 
 /*Custom CSS*/
@@ -66,7 +65,9 @@
 .login-input-col-1 mat-form-field {
   flex-grow: 1;
 }
-
+.cursor-pointer {
+  cursor: pointer;
+}
 .profile-pic {
   background: #64b2db;
   border-radius: 50%;

@@ -28,6 +28,7 @@
     "crypto-browserify": "^3.12.0",
     "ethers": "^5.7.2",
     "https-browserify": "^1.0.0",
+    "nft.storage": "^7.0.3",
     "os-browserify": "^0.3.0",
     "process": "^0.11.10",
     "rxjs": "~7.8.0",
