@@ -1,0 +1,145 @@
+<div class="dark-wrapper p-5">
+  <div class="container">
+    <div class="login-page-block">
+      <div class="logo-img text-center mb-5">
+        <img src="../../../assets/images/my3sec-logo-cropped.png" />
+      </div>
+      <ng-container *ngIf="profileExists$ | async; else noProfile">
+        <app-profile-exists></app-profile-exists>
+      </ng-container>
+      <ng-template #noProfile>
+        <form
+          action="#"
+          class="form form-label-right"
+          [formGroup]="signUpForm"
+          (ngSubmit)="onSubmit()"
+        >
+          <div class="login-input-col-2">
+            <mat-form-field
+              class="example-form-field d-block"
+              appearance="outline"
+            >
+              <mat-label>First Name</mat-label>
+              <input
+                matInput
+                type="text"
+                name="firstName"
+                autocomplete="off"
+                formControlName="firstName"
+              />
+              <mat-error *ngIf="formError('firstName', 'required')"
+                >First Name is required</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field
+              class="example-form-field d-block"
+              appearance="outline"
+            >
+              <mat-label>Surname</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="surname"
+                autocomplete="off"
+              />
+              <mat-error *ngIf="formError('surname', 'required')"
+                >Surname is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div class="login-input-col-2 login-input-col-1">
+            <mat-form-field
+              class="example-form-field d-block"
+              appearance="outline"
+            >
+              <mat-label>Organization</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="off"
+                formControlName="organization"
+              />
+              <mat-error *ngIf="formError('organization', 'required')"
+                >Organization is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div class="login-input-col-2 login-input-col-1">
+            <mat-form-field
+              class="example-form-field d-block"
+              appearance="outline"
+            >
+              <mat-label>Role</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="off"
+                formControlName="role"
+              />
+              <mat-error *ngIf="formError('role', 'required')"
+                >Role is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <input
+            class="file-input"
+            type="file"
+            id="profileImage"
+            name="avatar"
+            accept="image/*"
+            formControlName="profileImage"
+            (change)="onFileSelected($event, fileInputLabel)"
+            #profileImageInput
+          />
+          <div class="avatar">
+            <div class="avatar-label">
+              <div class="profile-pic cursor-pointer">
+                <img
+                  src="../../../assets/images/user-profile.png"
+                  (click)="profileImageInput.click()"
+                />
+              </div>
+              <div
+                class="cursor-pointer"
+                (click)="profileImageInput.click()"
+                #fileInputLabel
+              >
+                your profile picture
+              </div>
+            </div>
+          </div>
+          <div class="margin-top text-center">
+            <mat-error
+              *ngIf="
+                formError('profileImage', 'required') &&
+                (profileImage?.touched || this.submitted)
+              "
+              >Upload a profile image</mat-error
+            >
+          </div>
+          <div class="mt-4">
+            <mat-checkbox
+              class="margin-top"
+              formControlName="regulationCheckbox"
+              >I certify that I am eligible to work according to my EU
+              regulation</mat-checkbox
+            >
+            <mat-error
+              *ngIf="
+                formError('regulationCheckbox', 'required') &&
+                (regulationCheckbox?.touched || this.submitted)
+              "
+              >User Check is required</mat-error
+            >
+          </div>
+
+          <div class="text-center mt-4">
+            <button class="btn btn-dark text-uppercase" type="submit">
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </ng-template>
+    </div>
+  </div>
+</div>
