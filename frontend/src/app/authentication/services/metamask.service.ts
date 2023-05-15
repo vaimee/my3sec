@@ -1,17 +1,18 @@
+import { LoadingService } from '../../shared/services/loading.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, NgZone } from '@angular/core';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { AccountsChangedEvent } from 'app/shared/interfaces';
+import { environment } from 'environments/environment';
 import { Observable, Subject } from 'rxjs';
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class MetamaskService {
   private _ethProvider: any;
-  private _userAddress = 'NOT LOGGED IN';
-
+  private _userAddress!: string;
+  private _chain = environment.chain;
   // Connection flags:
   private _isMetamaskInstalled = false;
   private _isLoggedIn = false;
@@ -23,14 +24,17 @@ export class MetamaskService {
   private ACCOUNTS_CHANGED!: Subject<AccountsChangedEvent>;
   static metamaskId: any;
 
-  constructor(private ngZone: NgZone) {
+  constructor(private ngZone: NgZone, private loadingService: LoadingService) {
     this.ACCOUNTS_CHANGED = new Subject<AccountsChangedEvent>();
+    this.loadingService.show();
     // eslint-disable-next-line no-async-promise-executor
     this.IS_READY = new Promise<void>(async (resolve, reject) => {
       try {
         await this.init();
+        this.loadingService.hide();
         resolve();
       } catch (error) {
+        this.loadingService.hide();
         reject(error);
       }
     });
@@ -92,7 +96,7 @@ export class MetamaskService {
       const chainId: string = await this._ethProvider.request({
         method: 'eth_chainId',
       });
-      this._isVivianiChain = chainId === '0x86';
+      this._isVivianiChain = chainId === this._chain.chainId;
     } catch {
       this._isMetamaskInstalled = false;
       this._isLoggedIn = false;
@@ -120,32 +124,31 @@ export class MetamaskService {
   }
 
   public async loginToMetamask(): Promise<void> {
+    this.loadingService.show();
     await this._ethProvider.request({ method: 'eth_requestAccounts' });
+    this.loadingService.hide();
   }
 
   public async switchToVivianiChain(): Promise<void> {
+    this.loadingService.show();
     await this._ethProvider.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: '0x86' }],
+      params: [{ chainId: this._chain.chainId }],
     });
+    const chainId: string = await this._ethProvider.request({
+      method: 'eth_chainId',
+    });
+    this._isVivianiChain = chainId === this._chain.chainId;
+    this.loadingService.hide();
   }
 
   public async addVivianiChain(): Promise<void> {
+    this.loadingService.show();
     await this._ethProvider.request({
       method: 'wallet_addEthereumChain',
-      params: [
-        {
-          chainId: '0x86',
-          chainName: 'bellecour',
-          rpcUrls: ['https://bellecour.iex.ec'],
-          blockExplorerUrls: ['https://blockscout-bellecour.iex.ec/'],
-          nativeCurrency: {
-            symbol: 'RLC',
-            decimals: 18,
-          },
-        },
-      ],
+      params: [this._chain],
     });
+    this.loadingService.hide();
   }
 
   private async getEthereumProvider(): Promise<unknown> {
