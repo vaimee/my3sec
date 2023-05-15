@@ -10,7 +10,7 @@ import { environment } from 'environments/environment.development';
   providedIn: 'root',
 })
 export class IpfsService {
-  private NFT_STORAGE_KEY = environment.ipfs.api_key;
+  private NFT_STORAGE_KEY = environment.ipfs.api_key as string;
 
   private httpGateway = environment.ipfs.httpGateway;
   private nftstorage!: NFTStorage;
