@@ -15,18 +15,25 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <form class="d-flex ms-auto me-auto">
-        <select class="form-select" aria-label="Default select example">
-          <option selected>Profile</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+      <form
+        class="d-flex ms-auto me-auto"
+        [formGroup]="searchForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          formControlName="category"
+        >
+          <option [value]="SearchBarCategory.PROFILE">Profile</option>
+          <option [value]="SearchBarCategory.ORGANIZATION">Organization</option>
         </select>
         <input
           class="form-control"
           type="search"
           placeholder="Search"
           aria-label="Search"
+          formControlName="searchText"
         />
         <button class="btn btn-outline-success" type="submit">
           <mat-icon class="">search</mat-icon>
