@@ -116,14 +116,14 @@ contract My3SecHub is IMy3SecHub, Ownable {
         if (codeSize == 0) revert Errors.InvalidContract();
 
         // 2. Check if the organization contract complies with the required interface
+        if(!_isOrganizationContract(organizationAddress)) revert Errors.InvalidContract();
         IOrganization organization = IOrganization(organizationAddress);
-        organization.getMemberCount(); // This will revert if not compliant
-
-        // 3. Check if the sender is whitelisted in the organization
+        
+         // 3. Check if the sender is whitelisted in the organization
         if (organization.isWhitelisted(msg.sender)) revert Errors.NotWhitelisted();
 
         _organizations.add(organizationAddress);
-        emit Events.OrganizationRegistered(address(organization));
+        emit Events.OrganizationRegistered(address(organization));  
     }
 
     /// @inheritdoc IMy3SecHub
@@ -138,5 +138,13 @@ contract My3SecHub is IMy3SecHub, Ownable {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
         organization.leave(senderProfileId);
+    }
+
+    function _isOrganizationContract(address organization) internal view returns (bool) {
+        try IOrganization(organization).getMemberCount() returns (uint256) {
+            return true;
+        } catch {
+            return false;
+        }
     }
 }
