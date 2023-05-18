@@ -1,6 +1,6 @@
 <app-profile-header></app-profile-header>
 <div class="profileComponentBlock bg-light h-100vh">
-  <div class="container-fluid">
+  <div class="container-fluid" *ngIf="this.profileData$ | async as profileData">
     <div class="profileMainBlock">
       <div class="profile-left-block flex-grow-1 mt-5 p-4 ps-0">
         <div class="profileHeaderBlock">
@@ -12,9 +12,11 @@
                 <div class="d-flex align-items-center">
                   <mat-icon class="text-white">account_circle</mat-icon>
                   <div class="profiletitleBlock">
-                    <h1 class="fw-bold">Ivan Zyrianoff</h1>
+                    <h1 class="fw-bold">
+                      {{ profileData.firstName }} {{ profileData.surname }}
+                    </h1>
                     <p>
-                      Lorem Ipsum is simply dummy text
+                      {{ userWalletAddress }}
                       <small class="bg-dark text-white p-2 rounded ms-4"
                         >ENDORSE</small
                       >

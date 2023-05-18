@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MetamaskError } from 'app/shared/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -9,16 +9,19 @@ import { MetamaskService } from 'app/authentication/services/metamask.service';
   templateUrl: './wrong-chain.component.html',
   styleUrls: ['./wrong-chain.component.css', '../../shared/styles.css'],
 })
-export class WrongChainComponent {
+export class WrongChainComponent implements OnInit {
   constructor(
     private metamaskService: MetamaskService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
 
+  ngOnInit(): void {
+    this.checkRedirectCondition();
+  }
+
   public async switchToViviani(): Promise<void> {
     this.checkRedirectCondition();
-
     try {
       await this.metamaskService.switchToVivianiChain();
       this.checkRedirectCondition();

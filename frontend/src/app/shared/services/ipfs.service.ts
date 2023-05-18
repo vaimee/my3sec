@@ -29,8 +29,8 @@ export class IpfsService {
     );
   }
 
-  retrieveJSON(cid: string): Observable<unknown> {
-    return this.http.get<unknown>(`${this.httpGateway}/${cid}`).pipe(
+  retrieveJSON<T>(cid: string): Observable<T> {
+    return this.http.get<T>(`${this.httpGateway}/${cid}`).pipe(
       map((response) => {
         return response;
       })

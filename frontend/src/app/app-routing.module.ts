@@ -30,6 +30,7 @@ const routes: Routes = [
     ],
     path: 'profile',
   },
+  { path: '**', redirectTo: 'profile' },
 ];
 
 @NgModule({

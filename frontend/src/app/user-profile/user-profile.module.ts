@@ -9,6 +9,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { SkillsComponent } from './components/skills/skills.component';
 import { CertificatesComponent } from './components/certificates/certificates.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
     UserProfileRoutingModule,
     MaterialModule,
     SharedModule,
+    ReactiveFormsModule,
   ],
 })
 export class UserProfileModule {}
