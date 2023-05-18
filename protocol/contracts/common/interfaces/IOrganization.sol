@@ -19,6 +19,8 @@ interface IOrganization {
     function leave(uint256 profileId) external;
 
     function approvePendingMember(uint256 profileId) external;
+    
+    function rejectPendingMember(uint256 profileId) external;
 
     // Overrides
 

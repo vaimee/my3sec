@@ -54,8 +54,17 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
 
     /// @inheritdoc IOrganization
     function leave(uint256 profileId) external virtual override onlyHub {
-        if (!_members.contains(profileId)) revert Errors.NotMember();
-        _members.remove(profileId);
+        if(_pendingMembers.contains(profileId)) {
+            _pendingMembers.remove(profileId);
+            return;
+        }
+        
+        if (_members.contains(profileId)) {
+            _members.remove(profileId);
+            return;
+        } 
+
+        revert Errors.NotMember();
     }
 
     /// @inheritdoc IOrganization
@@ -63,6 +72,12 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         if (!_pendingMembers.contains(profileId)) revert Errors.NotPendingMember();
         _pendingMembers.remove(profileId);
         _members.add(profileId);
+    }
+
+    /// @inheritdoc IOrganization
+    function rejectPendingMember(uint256 profileId) external virtual override onlyWhitelisted {
+        if (!_pendingMembers.contains(profileId)) revert Errors.NotPendingMember();
+        _pendingMembers.remove(profileId);
     }
 
     // Overrides
