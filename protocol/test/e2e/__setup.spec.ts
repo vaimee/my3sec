@@ -6,6 +6,7 @@ import { EnergyManager, My3SecHub, My3SecProfiles, My3SecToken } from "../../typ
 export const MY3SEC_TOKEN_INITIAL_SUPPLY = 10000;
 export const PROFILE_INITIAL_ENERGY = 10;
 export const MOCK_PROFILE_URI = "ipfs://bafkreihfyz2lialtpcscydvqxu5zwciahuk7wvgdphscnak4rg67snxsay";
+export const MOCK_ORG_METADATA_URI = "ipfs://bafkreihfyz2lialtpcscydvqxu5zwciahuk7wvgdphscnak4rg67snxsay";
 
 export let accounts: Signer[];
 export let deployer: Signer;
@@ -22,6 +23,9 @@ export let my3secToken: My3SecToken;
 export let my3secProfiles: My3SecProfiles;
 export let energyManager: EnergyManager;
 
+/**
+ * NOTE: this function is registered as a global before. This means that it will run once.
+ */
 before(async () => {
   accounts = await ethers.getSigners();
   deployer = accounts[0];
