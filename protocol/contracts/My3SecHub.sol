@@ -10,6 +10,7 @@ import "./common/interfaces/IOrganization.sol";
 import "./common/libraries/Constants.sol";
 import "./common/libraries/DataTypes.sol";
 import "./common/libraries/Errors.sol";
+import "./common/libraries/Events.sol";
 
 import "./profiles/My3SecProfiles.sol";
 import "./profiles/EnergyManager.sol";
@@ -95,8 +96,12 @@ contract My3SecHub is IMy3SecHub, Ownable {
     function createOrganization(string calldata metadataURI) external returns (address) {
         IOrganization organization = new Organization(address(this), metadataURI);
         organization.transferOwnership(msg.sender);
-        _organizations.add(address(organization));
-        return address(organization);
+
+        address organizationAddress = address(organization);
+        _organizations.add(organizationAddress);
+        emit Events.OrganizationRegistered(organizationAddress);
+        
+        return organizationAddress;
     }
 
     /// @inheritdoc IMy3SecHub
@@ -118,6 +123,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
         if (organization.isWhitelisted(msg.sender)) revert Errors.NotWhitelisted();
 
         _organizations.add(organizationAddress);
+        emit Events.OrganizationRegistered(address(organization));
     }
 
     /// @inheritdoc IMy3SecHub
