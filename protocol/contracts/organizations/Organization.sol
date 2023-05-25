@@ -112,7 +112,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function createProject(DataTypes.CreateProject calldata args) external returns (uint256) {
+    function createProject(DataTypes.CreateProject calldata args) external onlyWhitelisted returns (uint256) {
         uint256 newProjectId = _projects.length;
         _projects.push();
         DataTypes.Project storage project = _projects[newProjectId];
@@ -123,18 +123,18 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function updateProject(uint256 projectId, DataTypes.UpdateProject calldata args) external {
+    function updateProject(uint256 projectId, DataTypes.UpdateProject calldata args) external onlyWhitelisted {
         _projects[projectId].metadataURI = args.metadataURI;
         _projects[projectId].status = args.status;
     }
 
     /// @inheritdoc IOrganization
-    function addProjectMember(uint256 projectId, uint256 profileId) external {
+    function addProjectMember(uint256 projectId, uint256 profileId) external onlyWhitelisted {
         _projects[projectId].members.add(profileId);
     }
 
     /// @inheritdoc IOrganization
-    function removeProjectMember(uint256 projectId, uint256 profileId) external {
+    function removeProjectMember(uint256 projectId, uint256 profileId) external onlyWhitelisted {
         _projects[projectId].members.remove(profileId);
     }
 
@@ -167,7 +167,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external returns (uint256) {
+    function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external onlyWhitelisted returns (uint256) {
         uint256 newTasktId = _projects[projectId].tasks.length;
         _projects[projectId].tasks.push();
         DataTypes.Task storage task = _projects[projectId].tasks[newTasktId];
@@ -178,18 +178,18 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external {
+    function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external onlyWhitelisted {
         _projects[projectId].tasks[taskId].metadataURI = args.metadataURI;
         _projects[projectId].tasks[taskId].status = args.status;
     }
 
     /// @inheritdoc IOrganization
-    function addTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external {
+    function addTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external onlyWhitelisted {
         _projects[projectId].tasks[taskId].members.add(profileId);
     }
 
     /// @inheritdoc IOrganization
-    function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external {
+    function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external onlyWhitelisted {
         _projects[projectId].tasks[taskId].members.remove(profileId);
     }
 
