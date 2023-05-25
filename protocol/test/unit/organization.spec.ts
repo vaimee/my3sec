@@ -154,4 +154,140 @@ describe("Organization", () => {
       });
     });
   });
+
+  describe("Project", () => {
+    it("should create project", async () => {
+      const tx = await contract.createProject({
+        metadataURI: FAKE_METADATA_URI,
+      });
+      await tx.wait();
+
+      const count = await contract.getProjectCount();
+      const project = await contract.getProject(0);
+
+      expect(count).to.be.eq(1);
+      expect(project.metadataURI).to.be.eq(FAKE_METADATA_URI);
+      expect(project.status).to.be.eq(0);
+    });
+
+    it("should update project", async () => {
+      const UPDATED_METADATA_URI = "urn:dev:new:uri";
+      let tx = await contract.createProject({
+        metadataURI: FAKE_METADATA_URI,
+      });
+      await tx.wait();
+
+      tx = await contract.updateProject(0, { metadataURI: UPDATED_METADATA_URI, status: 1 });
+      await tx.wait();
+
+      const count = await contract.getProjectCount();
+      const project = await contract.getProject(0);
+
+      expect(count).to.be.eq(1);
+      expect(project.status).to.be.eq(1);
+      expect(project.metadataURI).to.be.eq(UPDATED_METADATA_URI);
+    });
+
+    it("should add member", async () => {
+      const PROFILE_ID = 1;
+      let tx = await contract.createProject({
+        metadataURI: FAKE_METADATA_URI,
+      });
+      await tx.wait();
+
+      tx = await contract.addProjectMember(0, PROFILE_ID);
+      await tx.wait();
+
+      const count = await contract.getProjectMemberCount(0);
+      const memberID = await contract.getProjectMember(0, 0);
+
+      expect(count).to.be.eq(1);
+      expect(memberID).to.be.eq(PROFILE_ID);
+    });
+
+    it("should remove member", async () => {
+      const PROFILE_ID = 1;
+      let tx = await contract.createProject({
+        metadataURI: FAKE_METADATA_URI,
+      });
+      await tx.wait();
+
+      tx = await contract.addProjectMember(0, PROFILE_ID);
+      await tx.wait();
+      tx = await contract.removeProjectMember(0, PROFILE_ID);
+      await tx.wait();
+
+      const count = await contract.getProjectMemberCount(0);
+
+      expect(count).to.be.eq(0);
+    });
+
+    describe("Task", () => {
+      const PROJECT_ID = 0;
+      beforeEach(async () => {
+        const tx = await contract.createProject({
+          metadataURI: FAKE_METADATA_URI,
+        });
+        await tx.wait();
+      });
+
+      it("should create task", async () => {
+        const tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI });
+        await tx.wait();
+
+        const count = await contract.getTaskCount(0);
+        const task = await contract.getTask(0, 0);
+
+        expect(count).to.be.eq(1);
+        expect(task.id).to.be.eq(0);
+        expect(task.metadataURI).to.be.eq(FAKE_METADATA_URI);
+        expect(task.status).to.be.eq(0);
+      });
+
+      it("should update task", async () => {
+        const UPDATED_METADATA_URI = "urn:dev:new:uri";
+        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI });
+        await tx.wait();
+
+        tx = await contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1 });
+        await tx.wait();
+
+        const task = await contract.getTask(0, 0);
+
+        expect(task.id).to.be.eq(0);
+        expect(task.metadataURI).to.be.eq(UPDATED_METADATA_URI);
+        expect(task.status).to.be.eq(1);
+      });
+
+      it("should add member", async () => {
+        const PROFILE_ID = 1;
+        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI });
+        await tx.wait();
+
+        tx = await contract.addTaskMember(0, 0, PROFILE_ID);
+        await tx.wait();
+
+        const count = await contract.getTaskMemberCount(0, 0);
+        const memberID = await contract.getTaskMember(0, 0, 0);
+
+        expect(count).to.be.eq(1);
+        expect(memberID).to.be.eq(PROFILE_ID);
+      });
+
+      it("should remove member", async () => {
+        const PROFILE_ID = 1;
+        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI });
+        await tx.wait();
+
+        tx = await contract.addTaskMember(0, 0, PROFILE_ID);
+        await tx.wait();
+        tx = await contract.removeTaskMember(0, 0, PROFILE_ID);
+        await tx.wait();
+
+        const count = await contract.getTaskMemberCount(0, 0);
+
+        expect(count).to.be.eq(0);
+      });
+    });
+  });
 });
