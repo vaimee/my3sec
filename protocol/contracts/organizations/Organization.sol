@@ -17,6 +17,8 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     EnumerableSet.UintSet internal _members;
     EnumerableSet.UintSet internal _pendingMembers;
 
+    DataTypes.Project[] internal _projects;
+
     constructor(address hub, string memory metadataURI) HubControllable(hub) {
         _metadataURI = metadataURI;
     }
@@ -54,15 +56,15 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
 
     /// @inheritdoc IOrganization
     function leave(uint256 profileId) external virtual override onlyHub {
-        if(_pendingMembers.contains(profileId)) {
+        if (_pendingMembers.contains(profileId)) {
             _pendingMembers.remove(profileId);
             return;
         }
-        
+
         if (_members.contains(profileId)) {
             _members.remove(profileId);
             return;
-        } 
+        }
 
         revert Errors.NotMember();
     }
@@ -78,6 +80,117 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     function rejectPendingMember(uint256 profileId) external virtual override onlyWhitelisted {
         if (!_pendingMembers.contains(profileId)) revert Errors.NotPendingMember();
         _pendingMembers.remove(profileId);
+    }
+
+    // Project
+
+    /// @inheritdoc IOrganization
+    function getProjectCount() external view returns (uint256) {
+        return _projects.length;
+    }
+
+    /// @inheritdoc IOrganization
+    function getProject(uint256 index) external view returns (DataTypes.ProjectView memory) {
+        DataTypes.Project storage project = _projects[index];
+        DataTypes.ProjectView memory projectView = DataTypes.ProjectView({
+            id: project.id,
+            metadataURI: project.metadataURI,
+            status: project.status,
+            taskCount: project.tasks.length
+        });
+        return projectView;
+    }
+
+    /// @inheritdoc IOrganization
+    function getProjectMemberCount(uint256 projectId) external view returns (uint256) {
+        return _projects[projectId].members.length();
+    }
+
+    /// @inheritdoc IOrganization
+    function getProjectMember(uint256 projectId, uint256 index) external view returns (uint256) {
+        return _projects[projectId].members.at(index);
+    }
+
+    /// @inheritdoc IOrganization
+    function createProject(DataTypes.CreateProject calldata args) external returns (uint256) {
+        uint256 newProjectId = _projects.length;
+        _projects.push();
+        DataTypes.Project storage project = _projects[newProjectId];
+        project.id = newProjectId;
+        project.metadataURI = args.metadataURI;
+        project.status = DataTypes.ProjectStatus.NOT_STARTED;
+        return newProjectId;
+    }
+
+    /// @inheritdoc IOrganization
+    function updateProject(uint256 projectId, DataTypes.UpdateProject calldata args) external {
+        _projects[projectId].metadataURI = args.metadataURI;
+        _projects[projectId].status = args.status;
+    }
+
+    /// @inheritdoc IOrganization
+    function addProjectMember(uint256 projectId, uint256 profileId) external {
+        _projects[projectId].members.add(profileId);
+    }
+
+    /// @inheritdoc IOrganization
+    function removeProjectMember(uint256 projectId, uint256 profileId) external {
+        _projects[projectId].members.remove(profileId);
+    }
+
+    // Task
+
+    /// @inheritdoc IOrganization
+    function getTaskCount(uint256 projectId) external view returns (uint256) {
+        return _projects[projectId].tasks.length;
+    }
+
+    /// @inheritdoc IOrganization
+    function getTask(uint256 projectId, uint256 index) external view returns (DataTypes.TaskView memory) {
+        DataTypes.Task storage task = _projects[projectId].tasks[index];
+        DataTypes.TaskView memory taskView = DataTypes.TaskView({
+            id: task.id,
+            metadataURI: task.metadataURI,
+            status: task.status
+        });
+        return taskView;
+    }
+
+    /// @inheritdoc IOrganization
+    function getTaskMemberCount(uint256 projectId, uint256 taskId) external view returns (uint256) {
+        return _projects[projectId].tasks[taskId].members.length();
+    }
+
+    /// @inheritdoc IOrganization
+    function getTaskMember(uint256 projectId, uint256 taskId, uint256 index) external view returns (uint256) {
+        return _projects[projectId].tasks[taskId].members.at(index);
+    }
+
+    /// @inheritdoc IOrganization
+    function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external returns (uint256) {
+        uint256 newTasktId = _projects[projectId].tasks.length;
+        _projects[projectId].tasks.push();
+        DataTypes.Task storage task = _projects[projectId].tasks[newTasktId];
+        task.id = newTasktId;
+        task.metadataURI = args.metadataURI;
+        task.status = DataTypes.TaskStatus.NOT_STARTED;
+        return newTasktId;
+    }
+
+    /// @inheritdoc IOrganization
+    function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external {
+        _projects[projectId].tasks[taskId].metadataURI = args.metadataURI;
+        _projects[projectId].tasks[taskId].status = args.status;
+    }
+
+    /// @inheritdoc IOrganization
+    function addTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external {
+        _projects[projectId].tasks[taskId].members.add(profileId);
+    }
+
+    /// @inheritdoc IOrganization
+    function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external {
+        _projects[projectId].tasks[taskId].members.remove(profileId);
     }
 
     // Overrides

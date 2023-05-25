@@ -19,8 +19,44 @@ interface IOrganization {
     function leave(uint256 profileId) external;
 
     function approvePendingMember(uint256 profileId) external;
-    
+
     function rejectPendingMember(uint256 profileId) external;
+
+    // Project
+
+    function getProjectCount() external view returns (uint256);
+
+    function getProject(uint256 index) external view returns (DataTypes.ProjectView memory);
+
+    function getProjectMemberCount(uint256 projectId) external view returns (uint256);
+
+    function getProjectMember(uint256 projectId, uint256 index) external view returns (uint256);
+
+    function createProject(DataTypes.CreateProject calldata args) external returns (uint256);
+
+    function updateProject(uint256 projectId, DataTypes.UpdateProject calldata args) external;
+
+    function addProjectMember(uint256 projectId, uint256 profileId) external;
+
+    function removeProjectMember(uint256 projectId, uint256 profileId) external;
+
+    // Task
+
+    function getTaskCount(uint256 projectId) external view returns (uint256);
+
+    function getTask(uint256 projectId, uint256 index) external view returns (DataTypes.TaskView memory);
+
+    function getTaskMemberCount(uint256 projectId, uint256 taskId) external view returns (uint256);
+
+    function getTaskMember(uint256 projectId, uint256 taskId, uint256 index) external view returns (uint256);
+
+    function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external returns (uint256);
+
+    function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external;
+
+    function addTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external;
+
+    function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external;
 
     // Overrides
 
