@@ -167,7 +167,10 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external onlyWhitelisted returns (uint256) {
+    function createTask(
+        uint256 projectId,
+        DataTypes.CreateTask calldata args
+    ) external onlyWhitelisted returns (uint256) {
         uint256 newTasktId = _projects[projectId].tasks.length;
         _projects[projectId].tasks.push();
         DataTypes.Task storage task = _projects[projectId].tasks[newTasktId];
@@ -178,7 +181,11 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external onlyWhitelisted {
+    function updateTask(
+        uint256 projectId,
+        uint256 taskId,
+        DataTypes.UpdateTask calldata args
+    ) external onlyWhitelisted {
         _projects[projectId].tasks[taskId].metadataURI = args.metadataURI;
         _projects[projectId].tasks[taskId].status = args.status;
     }

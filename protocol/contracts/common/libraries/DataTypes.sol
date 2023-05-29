@@ -4,11 +4,11 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 library DataTypes {
-    struct CreateProfileData {
+    struct CreateProfile {
         string uri;
     }
 
-    struct ProfileStruct {
+    struct ProfileView {
         string uri;
     }
 

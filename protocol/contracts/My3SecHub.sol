@@ -37,15 +37,15 @@ contract My3SecHub is IMy3SecHub, Ownable {
     /// ***************************************
 
     /// @inheritdoc IMy3SecHub
-    function getDefaultProfile(address account) external view override returns (DataTypes.ProfileStruct memory) {
+    function getDefaultProfile(address account) external view override returns (DataTypes.ProfileView memory) {
         uint256 profileId = _my3SecProfiles.getDefaultProfileId(account);
         return getProfile(profileId);
     }
 
     /// @inheritdoc IMy3SecHub
-    function getProfile(uint256 profileId) public view override returns (DataTypes.ProfileStruct memory) {
+    function getProfile(uint256 profileId) public view override returns (DataTypes.ProfileView memory) {
         string memory uri = _my3SecProfiles.tokenURI(profileId);
-        DataTypes.ProfileStruct memory profile = DataTypes.ProfileStruct(uri);
+        DataTypes.ProfileView memory profile = DataTypes.ProfileView(uri);
         return profile;
     }
 
@@ -55,7 +55,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
     }
 
     /// @inheritdoc IMy3SecHub
-    function createProfile(DataTypes.CreateProfileData calldata args) external override returns (uint256) {
+    function createProfile(DataTypes.CreateProfile calldata args) external override returns (uint256) {
         uint256 profileId = _my3SecProfiles.createProfile(msg.sender, args.uri);
         _energyManager.createEnergyFor(profileId, Constants.PROFILE_INITIAL_ENERGY);
         return profileId;
