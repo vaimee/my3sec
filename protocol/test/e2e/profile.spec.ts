@@ -38,12 +38,14 @@ describe("HUB: Profile creation", () => {
   });
 
   it("should retrieve the user default profile", async () => {
-    const { uri } = await my3secHub.getDefaultProfile(userAddress);
+    const { id, uri } = await my3secHub.getDefaultProfile(userAddress);
+    expect(id).eq(1);
     expect(uri).eq(MOCK_PROFILE_URI);
   });
 
   it("should retrieve the user profile by id", async () => {
-    const { uri } = await my3secHub.getProfile(2);
+    const { id, uri } = await my3secHub.getProfile(2);
+    expect(id).eq(2);
     expect(uri).eq(MOCK_PROFILE_URI);
   });
 });

@@ -45,7 +45,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
     /// @inheritdoc IMy3SecHub
     function getProfile(uint256 profileId) public view override returns (DataTypes.ProfileView memory) {
         string memory uri = _my3SecProfiles.tokenURI(profileId);
-        DataTypes.ProfileView memory profile = DataTypes.ProfileView(uri);
+        DataTypes.ProfileView memory profile = DataTypes.ProfileView(profileId, uri);
         return profile;
     }
 

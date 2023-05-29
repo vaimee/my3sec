@@ -9,6 +9,7 @@ library DataTypes {
     }
 
     struct ProfileView {
+        uint256 id;
         string uri;
     }
 
