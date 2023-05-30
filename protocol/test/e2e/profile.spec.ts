@@ -14,7 +14,7 @@ import {
 
 describe("HUB: Profile creation", () => {
   it("should create the user first profile", async () => {
-    await my3secHub.connect(user).createProfile({ uri: MOCK_PROFILE_URI });
+    await my3secHub.connect(user).createProfile({ metadataURI: MOCK_PROFILE_URI });
 
     const profilesCount = await my3secProfiles.balanceOf(userAddress);
     const defaultProfileId = await my3secProfiles.getDefaultProfileId(userAddress);
@@ -26,7 +26,7 @@ describe("HUB: Profile creation", () => {
   });
 
   it("should create the user second profile", async () => {
-    await my3secHub.connect(user).createProfile({ uri: MOCK_PROFILE_URI });
+    await my3secHub.connect(user).createProfile({ metadataURI: MOCK_PROFILE_URI });
 
     const profilesCount = await my3secProfiles.balanceOf(userAddress);
     const defaultProfileId = await my3secProfiles.getDefaultProfileId(userAddress);
@@ -38,14 +38,14 @@ describe("HUB: Profile creation", () => {
   });
 
   it("should retrieve the user default profile", async () => {
-    const { id, uri } = await my3secHub.getDefaultProfile(userAddress);
+    const { id, metadataURI } = await my3secHub.getDefaultProfile(userAddress);
     expect(id).eq(1);
-    expect(uri).eq(MOCK_PROFILE_URI);
+    expect(metadataURI).eq(MOCK_PROFILE_URI);
   });
 
   it("should retrieve the user profile by id", async () => {
-    const { id, uri } = await my3secHub.getProfile(2);
+    const { id, metadataURI } = await my3secHub.getProfile(2);
     expect(id).eq(2);
-    expect(uri).eq(MOCK_PROFILE_URI);
+    expect(metadataURI).eq(MOCK_PROFILE_URI);
   });
 });

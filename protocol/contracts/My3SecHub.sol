@@ -63,7 +63,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
 
     /// @inheritdoc IMy3SecHub
     function createProfile(DataTypes.CreateProfile calldata args) external override returns (uint256) {
-        uint256 profileId = _my3SecProfiles.createProfile(msg.sender, args.uri);
+        uint256 profileId = _my3SecProfiles.createProfile(msg.sender, args.metadataURI);
         _energyManager.createEnergyFor(profileId, Constants.PROFILE_INITIAL_ENERGY);
         return profileId;
     }

@@ -6,12 +6,12 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 library DataTypes {
     struct CreateProfile {
-        string uri;
+        string metadataURI;
     }
 
     struct ProfileView {
         uint256 id;
-        string uri;
+        string metadataURI;
     }
 
     enum ProjectStatus {
