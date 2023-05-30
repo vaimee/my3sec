@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./common/interfaces/IMy3SecHub.sol";
 import "./common/interfaces/IMy3SecProfiles.sol";
-import "./common/interfaces/IEnergyManager.sol";
+import "./common/interfaces/IEnergyWallet.sol";
 import "./common/interfaces/ITimeWallet.sol";
 import "./common/interfaces/IOrganization.sol";
 import "./common/libraries/Constants.sol";
@@ -14,7 +14,7 @@ import "./common/libraries/Errors.sol";
 import "./common/libraries/Events.sol";
 
 import "./profiles/My3SecProfiles.sol";
-import "./profiles/EnergyManager.sol";
+import "./profiles/EnergyWallet.sol";
 import "./profiles/TimeWallet.sol";
 import "./organizations/Organization.sol";
 
@@ -22,7 +22,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     IMy3SecProfiles internal _my3SecProfiles;
-    IEnergyManager internal _energyManager;
+    IEnergyWallet internal _energyWallet;
     ITimeWallet internal _timeWallet;
 
     EnumerableSet.AddressSet internal _organizations;
@@ -31,8 +31,8 @@ contract My3SecHub is IMy3SecHub, Ownable {
         _my3SecProfiles = My3SecProfiles(contractAddress);
     }
 
-    function setEnergyManagerContract(address contractAddress) external onlyOwner {
-        _energyManager = EnergyManager(contractAddress);
+    function setEnergyWalletContract(address contractAddress) external onlyOwner {
+        _energyWallet = EnergyWallet(contractAddress);
     }
 
     function setTimeWalletContract(address contractAddress) external onlyOwner {
@@ -64,20 +64,20 @@ contract My3SecHub is IMy3SecHub, Ownable {
     /// @inheritdoc IMy3SecHub
     function createProfile(DataTypes.CreateProfile calldata args) external override returns (uint256) {
         uint256 profileId = _my3SecProfiles.createProfile(msg.sender, args.metadataURI);
-        _energyManager.createEnergyFor(profileId, Constants.PROFILE_INITIAL_ENERGY);
+        _energyWallet.createEnergyFor(profileId, Constants.PROFILE_INITIAL_ENERGY);
         return profileId;
     }
 
     /// @inheritdoc IMy3SecHub
     function giveEnergyTo(uint256 profileId, uint256 amount) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
-        _energyManager.giveEnergy(senderProfileId, profileId, amount);
+        _energyWallet.giveEnergy(senderProfileId, profileId, amount);
     }
 
     /// @inheritdoc IMy3SecHub
     function removeEnergyFrom(uint256 profileId, uint256 amount) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
-        _energyManager.removeEnergy(profileId, senderProfileId, amount);
+        _energyWallet.removeEnergy(profileId, senderProfileId, amount);
     }
 
     //=============================================================================

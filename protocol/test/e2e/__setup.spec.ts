@@ -1,7 +1,7 @@
 import { Signer } from "ethers";
 import { ethers } from "hardhat";
 
-import { EnergyManager, My3SecHub, My3SecProfiles, My3SecToken } from "../../typechain-types";
+import { EnergyWallet, My3SecHub, My3SecProfiles, My3SecToken } from "../../typechain-types";
 
 export const MY3SEC_TOKEN_INITIAL_SUPPLY = 10000;
 export const PROFILE_INITIAL_ENERGY = 10;
@@ -21,7 +21,7 @@ export let userThreeAddress: string;
 export let my3secHub: My3SecHub;
 export let my3secToken: My3SecToken;
 export let my3secProfiles: My3SecProfiles;
-export let energyManager: EnergyManager;
+export let energyWallet: EnergyWallet;
 
 /**
  * NOTE: this function is registered as a global before. This means that it will run once.
@@ -42,15 +42,15 @@ before(async () => {
   const my3secHubFactory = await ethers.getContractFactory("My3SecHub");
   const my3secTokenFactory = await ethers.getContractFactory("My3SecToken");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
-  const energyManagerFactory = await ethers.getContractFactory("EnergyManager");
+  const energyWalletFactory = await ethers.getContractFactory("EnergyWallet");
 
   // Deployments
   my3secHub = await my3secHubFactory.deploy();
   my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
   my3secProfiles = await my3secProfilesFactory.deploy(my3secHub.address);
-  energyManager = await energyManagerFactory.deploy(my3secHub.address);
+  energyWallet = await energyWalletFactory.deploy(my3secHub.address);
 
   // Initializations
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
-  await my3secHub.setEnergyManagerContract(energyManager.address);
+  await my3secHub.setEnergyWalletContract(energyWallet.address);
 });

@@ -5,13 +5,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 import "../common/access/HubControllable.sol";
-import "../common/interfaces/IEnergyManager.sol";
+import "../common/interfaces/IEnergyWallet.sol";
 
 /**
- * @title EnergyManager contract
- * @dev This is the implementation of the Energy Manager.
+ * @title EnergyWallet contract
+ * @dev This is the implementation of the Energy Wallet.
  */
-contract EnergyManager is IEnergyManager, HubControllable {
+contract EnergyWallet is IEnergyWallet, HubControllable {
     using EnumerableMap for EnumerableMap.UintToUintMap;
 
     mapping(uint256 => uint256) private _totalEnergy;
@@ -21,51 +21,51 @@ contract EnergyManager is IEnergyManager, HubControllable {
     mapping(uint256 => EnumerableMap.UintToUintMap) private _reverseEnergyAllocationMap;
 
     /**
-     * Energy Manager Contract Constructor.
+     * Energy Wallet Contract Constructor.
      */
     constructor(address hub) HubControllable(hub) {}
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function totalEnergyOf(uint256 profileId) external view override returns (uint256) {
         return _totalEnergy[profileId];
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function freeEnergyOf(uint256 profileId) public view override returns (uint256) {
         return _totalEnergy[profileId] - _allocatedEnergy[profileId];
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function allocatedEnergyOf(uint256 profileId) external view override returns (uint256) {
         return _allocatedEnergy[profileId];
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function receivedEnergyOf(uint256 profileId) external view override returns (uint256) {
         return _receivedEnergy[profileId];
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function energizedBy(uint256 profileId, uint256 index) external view override returns (uint256, uint256) {
         return _energyAllocationMap[profileId].at(index);
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function energizersOf(uint256 profileId, uint256 index) external view override returns (uint256, uint256) {
         return _reverseEnergyAllocationMap[profileId].at(index);
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function totalEnergizedBy(uint256 profileId) external view returns (uint256) {
         return _energyAllocationMap[profileId].length();
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function totalEnergizersOf(uint256 profileId) external view returns (uint256) {
         return _reverseEnergyAllocationMap[profileId].length();
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function giveEnergy(uint256 from, uint256 to, uint256 amount) external override onlyHub {
         require(to != from, "Cannot give energy to yourself");
         require(amount <= freeEnergyOf(from), "Insufficient energy");
@@ -79,7 +79,7 @@ contract EnergyManager is IEnergyManager, HubControllable {
         _receivedEnergy[to] += amount;
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function removeEnergy(uint256 from, uint256 to, uint256 amount) external override onlyHub {
         require(_energyAllocationMap[to].contains(from), "Profile not referenced");
         require(amount <= _energyAllocationMap[to].get(from), "Exceeded given energy");
@@ -92,12 +92,12 @@ contract EnergyManager is IEnergyManager, HubControllable {
         _allocatedEnergy[to] -= amount;
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function createEnergyFor(uint256 profileId, uint256 amount) external override onlyHub {
         _totalEnergy[profileId] += amount;
     }
 
-    /// @inheritdoc IEnergyManager
+    /// @inheritdoc IEnergyWallet
     function destroyEnergyFor(uint256 profileId, uint256 amount) external override onlyHub {
         require(amount <= freeEnergyOf(profileId), "Exceeded free energy");
         require(amount <= _totalEnergy[profileId], "Exceeded total energy");

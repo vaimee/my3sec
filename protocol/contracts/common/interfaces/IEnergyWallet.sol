@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-interface IEnergyManager {
+interface IEnergyWallet {
     function totalEnergyOf(uint256 profileId) external view returns (uint256);
 
     function freeEnergyOf(uint256 profileId) external view returns (uint256);

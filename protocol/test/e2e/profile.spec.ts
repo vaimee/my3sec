@@ -9,7 +9,7 @@ import {
   my3secHub,
   my3secToken,
   my3secProfiles,
-  energyManager,
+  energyWallet,
 } from "./__setup.spec";
 
 describe("HUB: Profile creation", () => {
@@ -18,7 +18,7 @@ describe("HUB: Profile creation", () => {
 
     const profilesCount = await my3secProfiles.balanceOf(userAddress);
     const defaultProfileId = await my3secProfiles.getDefaultProfileId(userAddress);
-    const totalEnergy = await energyManager.totalEnergyOf(defaultProfileId);
+    const totalEnergy = await energyWallet.totalEnergyOf(defaultProfileId);
 
     expect(profilesCount).eq(1);
     expect(defaultProfileId).eq(1);
@@ -30,7 +30,7 @@ describe("HUB: Profile creation", () => {
 
     const profilesCount = await my3secProfiles.balanceOf(userAddress);
     const defaultProfileId = await my3secProfiles.getDefaultProfileId(userAddress);
-    const totalEnergy = await energyManager.totalEnergyOf(defaultProfileId);
+    const totalEnergy = await energyWallet.totalEnergyOf(defaultProfileId);
 
     expect(profilesCount).eq(2);
     expect(defaultProfileId).eq(1);

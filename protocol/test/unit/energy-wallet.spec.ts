@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
 
-import { EnergyManager } from "../../typechain-types";
+import { EnergyWallet } from "../../typechain-types";
 import { getRandomProfileId } from "../helpers/utils";
 
 const PROFILE_INITIAL_ENERGY = 100;
@@ -10,15 +10,15 @@ const TOTAL_TEST_USERS = 5;
 const ENERGIZED_ID = 1;
 const ENERGIZER_ID = 2;
 
-describe("EnergyManager", () => {
-  let contract: EnergyManager;
+describe("EnergyWallet", () => {
+  let contract: EnergyWallet;
 
   beforeEach(async () => {
     const accounts = await ethers.getSigners();
     const deployer = accounts[0];
     const deployerAddress = deployer.address;
 
-    const contractFactory = await ethers.getContractFactory("EnergyManager");
+    const contractFactory = await ethers.getContractFactory("EnergyWallet");
     contract = await contractFactory.deploy(deployerAddress);
   });
 
