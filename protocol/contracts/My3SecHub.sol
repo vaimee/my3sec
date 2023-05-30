@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./common/interfaces/IMy3SecHub.sol";
 import "./common/interfaces/IMy3SecProfiles.sol";
 import "./common/interfaces/IEnergyManager.sol";
+import "./common/interfaces/ITimeWallet.sol";
 import "./common/interfaces/IOrganization.sol";
 import "./common/libraries/Constants.sol";
 import "./common/libraries/DataTypes.sol";
@@ -14,6 +15,7 @@ import "./common/libraries/Events.sol";
 
 import "./profiles/My3SecProfiles.sol";
 import "./profiles/EnergyManager.sol";
+import "./profiles/TimeWallet.sol";
 import "./organizations/Organization.sol";
 
 contract My3SecHub is IMy3SecHub, Ownable {
@@ -21,6 +23,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
 
     IMy3SecProfiles internal _my3SecProfiles;
     IEnergyManager internal _energyManager;
+    ITimeWallet internal _timeWallet;
 
     EnumerableSet.AddressSet internal _organizations;
 
@@ -32,9 +35,13 @@ contract My3SecHub is IMy3SecHub, Ownable {
         _energyManager = EnergyManager(contractAddress);
     }
 
-    /// ***************************************
-    /// *****PROFILE INTERACTION FUNCTIONS*****
-    /// ***************************************
+    function setTimeWalletContract(address contractAddress) external onlyOwner {
+        _timeWallet = TimeWallet(contractAddress);
+    }
+
+    //=============================================================================
+    // PROFILE
+    //=============================================================================
 
     /// @inheritdoc IMy3SecHub
     function getDefaultProfile(address account) external view override returns (DataTypes.ProfileView memory) {
@@ -61,10 +68,6 @@ contract My3SecHub is IMy3SecHub, Ownable {
         return profileId;
     }
 
-    /// ***************************************
-    /// *****ENERGY INTERACTION FUNCTIONS******
-    /// ***************************************
-
     /// @inheritdoc IMy3SecHub
     function giveEnergyTo(uint256 profileId, uint256 amount) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
@@ -77,9 +80,9 @@ contract My3SecHub is IMy3SecHub, Ownable {
         _energyManager.removeEnergy(profileId, senderProfileId, amount);
     }
 
-    /// ********************************************
-    /// *****ORGANIZATION INTERACTION FUNCTIONS*****
-    /// ********************************************
+    //=============================================================================
+    // ORGANIZATION
+    //=============================================================================
 
     /// @inheritdoc IMy3SecHub
     function getOrganizationCount() public view override returns (uint256) {
@@ -138,6 +141,19 @@ contract My3SecHub is IMy3SecHub, Ownable {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
         organization.leave(senderProfileId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function logTime(address organizationAddress, uint256 projectId, uint256 taskId, uint256 time) external override {
+        uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
+        IOrganization organization = IOrganization(organizationAddress);
+
+        // Use the time for today; reverts if the time is not available
+        _timeWallet.spendTimeFor(senderProfileId, time);
+
+        organization.updateTaskTime(senderProfileId, projectId, taskId, time);
+
+        emit Events.TimeLogged(senderProfileId, time);
     }
 
     function _isOrganizationContract(address organization) internal view returns (bool) {

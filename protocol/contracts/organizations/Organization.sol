@@ -2,14 +2,17 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 import "../common/access/HubControllable.sol";
 import "../common/access/Whitelistable.sol";
+import "../common/interfaces/IMy3SecHub.sol";
 import "../common/interfaces/IOrganization.sol";
 import "../common/libraries/DataTypes.sol";
 import "../common/libraries/Errors.sol";
 
 contract Organization is IOrganization, HubControllable, Whitelistable {
+    using EnumerableMap for EnumerableMap.UintToUintMap;
     using EnumerableSet for EnumerableSet.UintSet;
 
     string internal _metadataURI;
@@ -82,7 +85,9 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         _pendingMembers.remove(profileId);
     }
 
-    // Project
+    //=============================================================================
+    // PROJECT
+    //=============================================================================
 
     /// @inheritdoc IOrganization
     function getProjectCount() external view returns (uint256) {
@@ -109,6 +114,10 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     /// @inheritdoc IOrganization
     function getProjectMember(uint256 projectId, uint256 index) external view returns (uint256) {
         return _projects[projectId].members.at(index);
+    }
+
+    function isProjectMember(uint256 projectId, uint256 profileId) public view returns (bool) {
+        return _projects[projectId].members.contains(profileId);
     }
 
     /// @inheritdoc IOrganization
@@ -138,7 +147,9 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         _projects[projectId].members.remove(profileId);
     }
 
-    // Task
+    //=============================================================================
+    // TASK
+    //=============================================================================
 
     /// @inheritdoc IOrganization
     function getTaskCount(uint256 projectId) external view returns (uint256) {
@@ -164,6 +175,25 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     /// @inheritdoc IOrganization
     function getTaskMember(uint256 projectId, uint256 taskId, uint256 index) external view returns (uint256) {
         return _projects[projectId].tasks[taskId].members.at(index);
+    }
+
+    /// @inheritdoc IOrganization
+    function isTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) public view returns (bool) {
+        return _projects[projectId].tasks[taskId].members.contains(profileId);
+    }
+
+    /// @inheritdoc IOrganization
+    function getTaskLoggedTimeCount(uint256 projectId, uint256 taskId) external view returns (uint256) {
+        return _projects[projectId].tasks[taskId].loggedTime.length();
+    }
+
+    /// @inheritdoc IOrganization
+    function getTaskLoggedTime(
+        uint256 projectId,
+        uint256 taskId,
+        uint256 index
+    ) external view returns (uint256, uint256) {
+        return _projects[projectId].tasks[taskId].loggedTime.at(index);
     }
 
     /// @inheritdoc IOrganization
@@ -200,7 +230,22 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         _projects[projectId].tasks[taskId].members.remove(profileId);
     }
 
-    // Overrides
+    /// @inheritdoc IOrganization
+    function updateTaskTime(uint256 profileId, uint256 projectId, uint256 taskId, uint256 time) external onlyHub {
+        if (!isProjectMember(projectId, profileId)) revert Errors.NotMember();
+        if (!isTaskMember(projectId, taskId, profileId)) revert Errors.NotMember();
+
+        if (!_projects[projectId].tasks[taskId].loggedTime.contains(profileId)) {
+            _projects[projectId].tasks[taskId].loggedTime.set(profileId, time);
+        } else {
+            uint256 currentTime = _projects[projectId].tasks[taskId].loggedTime.get(profileId);
+            _projects[projectId].tasks[taskId].loggedTime.set(profileId, currentTime + time);
+        }
+    }
+
+    //=============================================================================
+    // OVERRIDES
+    //=============================================================================
 
     function transferOwnership(address newOwner) public override(IOrganization, Ownable) {
         super.transferOwnership(newOwner);

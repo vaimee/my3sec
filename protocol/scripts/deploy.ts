@@ -9,6 +9,7 @@ async function main() {
   const my3secTokenFactory = await ethers.getContractFactory("My3SecToken");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
   const energyManagerFactory = await ethers.getContractFactory("EnergyManager");
+  const timeWalletFactory = await ethers.getContractFactory("TimeWallet");
 
   // Deployments
   console.log("\n\t-- Deploying My3SecHub --");
@@ -23,10 +24,14 @@ async function main() {
   console.log("\n\t-- Deploying EnergyManager --");
   const energyManager = await energyManagerFactory.deploy(my3secHub.address);
 
+  console.log("\n\t-- Deploying TimeWallet --");
+  const timeWallet = await timeWalletFactory.deploy(my3secHub.address);
+
   // Initializations
   console.log("\n\t-- Initializing My3SecHub --");
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setEnergyManagerContract(energyManager.address);
+  await my3secHub.setTimeWalletContract(timeWallet.address);
 
   // Save and logs addresses
   const addrs = {
@@ -34,6 +39,7 @@ async function main() {
     my3secToken: my3secToken.address,
     my3secProfiles: my3secProfiles.address,
     energyManager: energyManager.address,
+    timeWallet: timeWallet.address,
   };
   const json = JSON.stringify(addrs, null, 2);
   console.log(json);

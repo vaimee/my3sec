@@ -27,4 +27,6 @@ interface IMy3SecHub {
     function joinOrganization(address organizationAddress) external;
 
     function leaveOrganization(address organizationAddress) external;
+
+    function logTime(address organizationAddress, uint256 projectId, uint256 taskId, uint256 time) external;
 }

@@ -12,4 +12,5 @@ library Errors {
     error AlreadyMember();
     error NotMember();
     error NotPendingMember();
+    error ExceededLoggableTime();
 }

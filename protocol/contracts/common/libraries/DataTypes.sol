@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 library DataTypes {
@@ -65,6 +66,7 @@ library DataTypes {
         string metadataURI;
         TaskStatus status;
         EnumerableSet.UintSet members;
+        EnumerableMap.UintToUintMap loggedTime;
     }
 
     struct TaskView {

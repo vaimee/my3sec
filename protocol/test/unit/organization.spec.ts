@@ -288,6 +288,59 @@ describe("Organization", () => {
 
         expect(count).to.be.eq(0);
       });
+
+      it("should update task time", async () => {
+        const UPDATED_TIME = 100;
+        const PROFILE_ID = 1;
+
+        let tx = await contract.addProjectMember(PROJECT_ID, PROFILE_ID);
+        await tx.wait();
+        tx = await contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI });
+        await tx.wait();
+        const TASK_ID = 0;
+        tx = await contract.addTaskMember(PROJECT_ID, TASK_ID, PROFILE_ID);
+        await tx.wait();
+
+        tx = await contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
+        await tx.wait();
+
+        const loggedTimeCount = await contract.getTaskLoggedTimeCount(PROJECT_ID, 0);
+        expect(loggedTimeCount).to.be.eq(1);
+        for (let i = 0; i < loggedTimeCount.toNumber(); i++) {
+          const taskTime = await contract.getTaskLoggedTime(PROJECT_ID, 0, i);
+          if (taskTime[0].toNumber() === PROFILE_ID) {
+            expect(taskTime[1]).to.be.eq(UPDATED_TIME);
+            return;
+          }
+        }
+        expect.fail("Logged time entry not found");
+      });
+
+      it("should revert when profile is not project member", async () => {
+        const UPDATED_TIME = 100;
+        const PROFILE_ID = 1;
+
+        const tx = await contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI });
+        await tx.wait();
+        const TASK_ID = 0;
+
+        const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
+        expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
+      });
+
+      it("should revert when profile is not task member", async () => {
+        const UPDATED_TIME = 100;
+        const PROFILE_ID = 1;
+
+        let tx = await contract.addProjectMember(PROJECT_ID, PROFILE_ID);
+        await tx.wait();
+        tx = await contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI });
+        await tx.wait();
+        const TASK_ID = 0;
+
+        const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
+        expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
+      });
     });
   });
 });

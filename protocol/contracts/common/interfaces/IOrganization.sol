@@ -22,7 +22,9 @@ interface IOrganization {
 
     function rejectPendingMember(uint256 profileId) external;
 
-    // Project
+    //=============================================================================
+    // PROJECT
+    //=============================================================================
 
     function getProjectCount() external view returns (uint256);
 
@@ -32,6 +34,8 @@ interface IOrganization {
 
     function getProjectMember(uint256 projectId, uint256 index) external view returns (uint256);
 
+    function isProjectMember(uint256 projectId, uint256 profileId) external view returns (bool);
+
     function createProject(DataTypes.CreateProject calldata args) external returns (uint256);
 
     function updateProject(uint256 projectId, DataTypes.UpdateProject calldata args) external;
@@ -40,7 +44,9 @@ interface IOrganization {
 
     function removeProjectMember(uint256 projectId, uint256 profileId) external;
 
-    // Task
+    //=============================================================================
+    // TASK
+    //=============================================================================
 
     function getTaskCount(uint256 projectId) external view returns (uint256);
 
@@ -50,6 +56,16 @@ interface IOrganization {
 
     function getTaskMember(uint256 projectId, uint256 taskId, uint256 index) external view returns (uint256);
 
+    function isTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external view returns (bool);
+
+    function getTaskLoggedTimeCount(uint256 projectId, uint256 taskId) external view returns (uint256);
+
+    function getTaskLoggedTime(
+        uint256 projectId,
+        uint256 taskId,
+        uint256 index
+    ) external view returns (uint256, uint256);
+
     function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external returns (uint256);
 
     function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external;
@@ -58,7 +74,11 @@ interface IOrganization {
 
     function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external;
 
-    // Overrides
+    function updateTaskTime(uint256 profileId, uint256 projectId, uint256 taskId, uint256 time) external;
+
+    //=============================================================================
+    // OVERRIDES
+    //=============================================================================
 
     function transferOwnership(address newOwner) external;
 
