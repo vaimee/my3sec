@@ -1,10 +1,11 @@
 export const environment = {
   production: true,
   contracts: {
-    my3secHub: '0x77402d077515FF23D23Fe101274ddF50cf0B1EfE',
-    my3secToken: '0xd6432cbdbed62eC465dc00f8C80DD6E4e419966c',
-    my3secProfiles: '0x56Eb89B30b811058717ff05d5c9EAd6EFDF57578',
-    energyManager: '0xf486477789de90558CBC1bA83B4027182f3DEcd1',
+    my3secHub: '0x9b5DeBB900500e53c726fd2Bd987eCa6A949Bc65',
+    my3secToken: '0xfE50adc24fF6327B70b3abe8F82b8284d5F104F9',
+    my3secProfiles: '0xDcC3375F38d4a9d11bB771Ba72073C4e4A52d9F8',
+    energyWallet: '0x13Df2BbAd5B3bEfFdEe3fbB0e1f2D393990426fb',
+    timeWallet: '0x0994B7a15E8431d4e45f731919D562F9Fc4Ad6eA',
   },
   chain: {
     rpcUrls: ['https://bellecour.iex.ec'],
@@ -18,6 +19,7 @@ export const environment = {
   },
   abiPaths: {
     my3secHub: '../../../assets/contracts/my3sec-hub.abi.json',
+    energyManager: '../../../assets/contracts/my3sec-energy-manager.abi.json',
   },
   ipfs: {
     httpGateway: 'https://ipfs.io/ipfs',

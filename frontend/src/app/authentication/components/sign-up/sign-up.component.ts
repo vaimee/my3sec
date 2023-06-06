@@ -1,3 +1,4 @@
+import { ImageConversionService } from './../../../shared/services/image-conversion.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,12 +16,13 @@ export class SignUpComponent implements OnInit, OnDestroy {
   signUpForm!: FormGroup;
   submitted = false;
   profileExists$!: Observable<boolean>;
-
+  base64Image: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private my3secHubContractService: My3secHubContractService,
     private ipfsService: IpfsService,
     private metamaskService: MetamaskService,
+    private imageConversionService: ImageConversionService,
     private router: Router
   ) {}
 
@@ -48,10 +50,10 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
   loadForm() {
     this.signUpForm = this.formBuilder.group({
-      firstName: [null, Validators.compose([Validators.required])],
-      surname: [null, Validators.compose([Validators.required])],
-      organization: [null, Validators.compose([Validators.required])],
-      role: [null, Validators.compose([Validators.required])],
+      firstName: ['', Validators.compose([Validators.required])],
+      surname: ['', Validators.compose([Validators.required])],
+      organization: ['', Validators.compose([Validators.required])],
+      role: ['', Validators.compose([Validators.required])],
       profileImage: [null, Validators.compose([Validators.required])],
       regulationCheckbox: [false, Validators.requiredTrue],
     });
@@ -68,8 +70,13 @@ export class SignUpComponent implements OnInit, OnDestroy {
   async onSubmit() {
     this.submitted = true;
     if (!this.signUpForm.valid) return;
+
+    if (this.base64Image === '') return;
+    const formValue = { ...this.signUpForm.value };
+    formValue.profileImage = this.base64Image;
+
     this.ipfsService
-      .storeJSON(this.signUpForm.value)
+      .storeJSON(formValue)
       .pipe(
         switchMap((uri) => this.my3secHubContractService.createProfile(uri))
       )
@@ -84,11 +91,16 @@ export class SignUpComponent implements OnInit, OnDestroy {
       });
   }
 
-  onFileSelected(fileInputEvent: Event, label: HTMLDivElement): void {
+  async onFileSelected(
+    fileInputEvent: Event,
+    label: HTMLDivElement
+  ): Promise<void> {
     const fileInput = fileInputEvent.target as HTMLInputElement;
     const file: File | null = fileInput.files?.[0] || null;
     if (file === null) return;
-
+    this.base64Image = await this.imageConversionService.convertImageToBase64(
+      file
+    );
     label.innerText = file.name;
   }
 
