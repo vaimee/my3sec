@@ -232,7 +232,7 @@ describe("Organization", () => {
       });
 
       it("should create task", async () => {
-        const tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] });
+        const tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] });
         await tx.wait();
 
         const count = await contract.getTaskCount(0);
@@ -242,6 +242,7 @@ describe("Organization", () => {
         expect(task.id).to.be.eq(0);
         expect(task.metadataURI).to.be.eq(FAKE_METADATA_URI);
         expect(task.status).to.be.eq(0);
+        expect(task.skills).to.be.deep.eq([0, 1]);
       });
 
       it("should update task", async () => {
@@ -257,6 +258,22 @@ describe("Organization", () => {
         expect(task.id).to.be.eq(0);
         expect(task.metadataURI).to.be.eq(UPDATED_METADATA_URI);
         expect(task.status).to.be.eq(1);
+      });
+
+      it("should update task skill list", async () => {
+        const UPDATED_METADATA_URI = "urn:dev:new:uri";
+        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] });
+        await tx.wait();
+
+        tx = await contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [3, 2] });
+        await tx.wait();
+
+        const task = await contract.getTask(0, 0);
+
+        expect(task.id).to.be.eq(0);
+        expect(task.metadataURI).to.be.eq(UPDATED_METADATA_URI);
+        expect(task.status).to.be.eq(1);
+        expect(task.skills).to.be.deep.eq([3, 2]);
       });
 
       it("should add member", async () => {
