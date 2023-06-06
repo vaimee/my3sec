@@ -2,11 +2,13 @@ import { writeFileSync } from "fs";
 import { ethers } from "hardhat";
 
 const MY3SEC_TOKEN_INITIAL_SUPPLY = 10000000;
+const SKILL_REGISTRY_BASE_URI = "https://my3sec.vaimee.com/skills/";
 
 async function main() {
   // Factories
   const my3secHubFactory = await ethers.getContractFactory("My3SecHub");
   const my3secTokenFactory = await ethers.getContractFactory("My3SecToken");
+  const skillRegistryFactory = await ethers.getContractFactory("SkillRegistry");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
   const energyWalletFactory = await ethers.getContractFactory("EnergyWallet");
   const timeWalletFactory = await ethers.getContractFactory("TimeWallet");
@@ -17,6 +19,9 @@ async function main() {
 
   console.log("\n\t-- Deploying My3SecToken --");
   const my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
+
+  console.log("\n\t-- Deploying SkillRegistry --");
+  const skillRegistry = await skillRegistryFactory.deploy(SKILL_REGISTRY_BASE_URI);
 
   console.log("\n\t-- Deploying My3SecProfiles --");
   const my3secProfiles = await my3secProfilesFactory.deploy(my3secHub.address);
@@ -32,11 +37,13 @@ async function main() {
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setEnergyWalletContract(energyWallet.address);
   await my3secHub.setTimeWalletContract(timeWallet.address);
+  await my3secHub.setSkillRegistryContract(skillRegistry.address);
 
   // Save and logs addresses
   const addrs = {
     my3secHub: my3secHub.address,
     my3secToken: my3secToken.address,
+    skillRegistry: skillRegistry.address,
     my3secProfiles: my3secProfiles.address,
     energyWallet: energyWallet.address,
     timeWallet: timeWallet.address,

@@ -13,4 +13,5 @@ library Errors {
     error NotMember();
     error NotPendingMember();
     error ExceededLoggableTime();
+    error SkillNotFound();
 }

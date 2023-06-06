@@ -54,17 +54,20 @@ library DataTypes {
 
     struct CreateTask {
         string metadataURI;
+        uint256[] skills;
     }
 
     struct UpdateTask {
         string metadataURI;
         TaskStatus status;
+        uint256[] skills;
     }
 
     struct Task {
         uint256 id;
         string metadataURI;
         TaskStatus status;
+        uint256[] skills;
         EnumerableSet.UintSet members;
         EnumerableMap.UintToUintMap loggedTime;
     }
@@ -73,5 +76,19 @@ library DataTypes {
         uint256 id;
         string metadataURI;
         TaskStatus status;
+        uint256[] skills;
+    }
+
+    struct CreateSkill {
+        string metadataURI;
+    }
+
+    struct UpdateSkill {
+        string metadataURI;
+    }
+
+    struct SkillView {
+        uint256 id;
+        string metadataURI;
     }
 }

@@ -162,7 +162,8 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         DataTypes.TaskView memory taskView = DataTypes.TaskView({
             id: task.id,
             metadataURI: task.metadataURI,
-            status: task.status
+            status: task.status,
+            skills: task.skills
         });
         return taskView;
     }
@@ -207,6 +208,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         task.id = newTasktId;
         task.metadataURI = args.metadataURI;
         task.status = DataTypes.TaskStatus.NOT_STARTED;
+        task.skills = args.skills;
         return newTasktId;
     }
 
@@ -218,6 +220,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     ) external onlyWhitelisted {
         _projects[projectId].tasks[taskId].metadataURI = args.metadataURI;
         _projects[projectId].tasks[taskId].status = args.status;
+        _projects[projectId].tasks[taskId].skills = args.skills;
     }
 
     /// @inheritdoc IOrganization

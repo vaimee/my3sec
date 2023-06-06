@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./common/interfaces/IMy3SecHub.sol";
+import "./common/interfaces/ISkillRegistry.sol";
 import "./common/interfaces/IMy3SecProfiles.sol";
 import "./common/interfaces/IEnergyWallet.sol";
 import "./common/interfaces/ITimeWallet.sol";
@@ -13,30 +14,32 @@ import "./common/libraries/DataTypes.sol";
 import "./common/libraries/Errors.sol";
 import "./common/libraries/Events.sol";
 
-import "./profiles/My3SecProfiles.sol";
-import "./profiles/EnergyWallet.sol";
-import "./profiles/TimeWallet.sol";
 import "./organizations/Organization.sol";
 
 contract My3SecHub is IMy3SecHub, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
+    ISkillRegistry internal _skillRegistry;
     IMy3SecProfiles internal _my3SecProfiles;
     IEnergyWallet internal _energyWallet;
     ITimeWallet internal _timeWallet;
 
     EnumerableSet.AddressSet internal _organizations;
 
+    function setSkillRegistry(address contractAddress) external onlyOwner () {
+        _skillRegistry = ISkillRegistry(contractAddress);
+    }
+
     function setMy3SecProfilesContract(address contractAddress) external onlyOwner {
-        _my3SecProfiles = My3SecProfiles(contractAddress);
+        _my3SecProfiles = IMy3SecProfiles(contractAddress);
     }
 
     function setEnergyWalletContract(address contractAddress) external onlyOwner {
-        _energyWallet = EnergyWallet(contractAddress);
+        _energyWallet = IEnergyWallet(contractAddress);
     }
 
     function setTimeWalletContract(address contractAddress) external onlyOwner {
-        _timeWallet = TimeWallet(contractAddress);
+        _timeWallet = ITimeWallet(contractAddress);
     }
 
     //=============================================================================
