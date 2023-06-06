@@ -7,6 +7,7 @@ const SKILL_REGISTRY_BASE_URI = "https://my3sec.vaimee.com/skills/";
 async function main() {
   // Factories
   const my3secHubFactory = await ethers.getContractFactory("My3SecHub");
+  const organizationFactoryFactory = await ethers.getContractFactory("OrganizationFactory");
   const my3secTokenFactory = await ethers.getContractFactory("My3SecToken");
   const skillRegistryFactory = await ethers.getContractFactory("SkillRegistry");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
@@ -16,6 +17,9 @@ async function main() {
   // Deployments
   console.log("\n\t-- Deploying My3SecHub --");
   const my3secHub = await my3secHubFactory.deploy();
+
+  console.log("\n\t-- Deploying OrganizationFactory --");
+  const organizationFactory = await organizationFactoryFactory.deploy();
 
   console.log("\n\t-- Deploying My3SecToken --");
   const my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
@@ -34,6 +38,7 @@ async function main() {
 
   // Initializations
   console.log("\n\t-- Initializing My3SecHub --");
+  await my3secHub.setOrganizationFactoryContract(organizationFactory.address);
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setEnergyWalletContract(energyWallet.address);
   await my3secHub.setTimeWalletContract(timeWallet.address);
@@ -42,6 +47,7 @@ async function main() {
   // Save and logs addresses
   const addrs = {
     my3secHub: my3secHub.address,
+    organizationFactory: organizationFactory.address,
     my3secToken: my3secToken.address,
     skillRegistry: skillRegistry.address,
     my3secProfiles: my3secProfiles.address,

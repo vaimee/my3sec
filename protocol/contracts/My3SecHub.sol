@@ -14,11 +14,12 @@ import "./common/libraries/DataTypes.sol";
 import "./common/libraries/Errors.sol";
 import "./common/libraries/Events.sol";
 
-import "./organizations/Organization.sol";
+import "./organizations/OrganizationFactory.sol";
 
 contract My3SecHub is IMy3SecHub, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
+    OrganizationFactory internal _organizationFactory;
     ISkillRegistry internal _skillRegistry;
     IMy3SecProfiles internal _my3SecProfiles;
     IEnergyWallet internal _energyWallet;
@@ -26,7 +27,11 @@ contract My3SecHub is IMy3SecHub, Ownable {
 
     EnumerableSet.AddressSet internal _organizations;
 
-    function setSkillRegistry(address contractAddress) external onlyOwner () {
+    function setOrganizationFactoryContract(address contractAddress) external onlyOwner {
+        _organizationFactory = OrganizationFactory(contractAddress);
+    }
+
+    function setSkillRegistryContract(address contractAddress) external onlyOwner () {
         _skillRegistry = ISkillRegistry(contractAddress);
     }
 
@@ -100,10 +105,10 @@ contract My3SecHub is IMy3SecHub, Ownable {
 
     /// @inheritdoc IMy3SecHub
     function createOrganization(string calldata metadataURI) external returns (address) {
-        IOrganization organization = new Organization(address(this), metadataURI);
+        address organizationAddress = _organizationFactory.createOrganization(metadataURI);
+        IOrganization organization = IOrganization(organizationAddress);
         organization.transferOwnership(msg.sender);
 
-        address organizationAddress = address(organization);
         _organizations.add(organizationAddress);
         emit Events.OrganizationRegistered(organizationAddress);
 
