@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 import "../common/interfaces/ISkillRegistry.sol";
 import "../common/libraries/DataTypes.sol";
+import "../common/libraries/Events.sol";
 import "../common/libraries/Errors.sol";
 
 contract SkillRegistry is ISkillRegistry {
+    using Strings for uint256;
+
     string[] internal _skills;
     string internal _baseURI;
 
@@ -17,7 +22,7 @@ contract SkillRegistry is ISkillRegistry {
     }
 
     modifier skillExists(uint256 id) {
-        if(id > _skills.length - 1) {
+        if(_skills.length < 1 || id > _skills.length - 1) {
             revert Errors.SkillNotFound();
         }
         _;
@@ -39,7 +44,12 @@ contract SkillRegistry is ISkillRegistry {
             return DataTypes.SkillView(index, metadataURI);
         } 
 
-        return DataTypes.SkillView(index, string(abi.encodePacked(_baseURI, index)));
+        return DataTypes.SkillView(index, string(abi.encodePacked(_baseURI, index.toString())));
+    }
+
+    /// @inheritdoc ISkillRegistry
+    function getBaseURI() external view returns (string memory) {
+        return _baseURI;
     }
 
     /// @inheritdoc ISkillRegistry
@@ -50,6 +60,8 @@ contract SkillRegistry is ISkillRegistry {
     /// @inheritdoc ISkillRegistry
     function createSkill(DataTypes.CreateSkill calldata args) external {
         _skills.push(args.metadataURI);
+        uint256 id = _skills.length - 1;
+        emit Events.SkillCreated(id);
     }
 
     /// @inheritdoc ISkillRegistry
