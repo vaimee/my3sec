@@ -8,6 +8,7 @@ import "./common/interfaces/ISkillRegistry.sol";
 import "./common/interfaces/IMy3SecProfiles.sol";
 import "./common/interfaces/IEnergyWallet.sol";
 import "./common/interfaces/ITimeWallet.sol";
+import "./common/interfaces/ISkillWallet.sol";
 import "./common/interfaces/IOrganization.sol";
 import "./common/libraries/Constants.sol";
 import "./common/libraries/DataTypes.sol";
@@ -24,8 +25,11 @@ contract My3SecHub is IMy3SecHub, Ownable {
     IMy3SecProfiles internal _my3SecProfiles;
     IEnergyWallet internal _energyWallet;
     ITimeWallet internal _timeWallet;
+    ISkillWallet internal _skillWallet;
 
     EnumerableSet.AddressSet internal _organizations;
+    // Org => ProjectId => TaskId => profileId
+    mapping(address => mapping(uint256 => mapping (uint256 => uint256))) rewards;
 
     function setOrganizationFactoryContract(address contractAddress) external onlyOwner {
         _organizationFactory = OrganizationFactory(contractAddress);
@@ -45,6 +49,10 @@ contract My3SecHub is IMy3SecHub, Ownable {
 
     function setTimeWalletContract(address contractAddress) external onlyOwner {
         _timeWallet = ITimeWallet(contractAddress);
+    }
+
+    function setSkillWalletContract(address contractAddress) external onlyOwner {
+        _skillWallet = ISkillWallet(contractAddress);
     }
 
     //=============================================================================
@@ -131,7 +139,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
         IOrganization organization = IOrganization(organizationAddress);
 
         // 3. Check if the sender is whitelisted in the organization
-        if (organization.isWhitelisted(msg.sender)) revert Errors.NotWhitelisted();
+        if (!organization.isWhitelisted(msg.sender)) revert Errors.NotWhitelisted();
 
         _organizations.add(organizationAddress);
         emit Events.OrganizationRegistered(address(organization));
@@ -162,6 +170,27 @@ contract My3SecHub is IMy3SecHub, Ownable {
         organization.updateTaskTime(senderProfileId, projectId, taskId, time);
 
         emit Events.TimeLogged(senderProfileId, time);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function withdraw(address organizationAddress, uint256 projectId, uint256 taskId) external {
+        uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
+        IOrganization organization = IOrganization(organizationAddress);
+        
+        if(organization.isTaskMember(projectId, taskId, senderProfileId) != true) revert Errors.NotMember();
+        
+        DataTypes.TaskView memory task = organization.getTask(projectId, taskId);
+
+        if(task.status != DataTypes.TaskStatus.COMPLETED) revert Errors.NotCompleted();
+
+        if(rewards[organizationAddress][projectId][taskId] != 0) revert Errors.AlreadyWithdrawn();
+        rewards[organizationAddress][projectId][taskId] = senderProfileId;
+
+        uint256 skillCount = task.skills.length;
+        for (uint256 i = 0; i < skillCount; i++) {
+            uint256 time = organization.getTaskLoggedTimeOfProfile(projectId, taskId, senderProfileId);
+            _skillWallet.recordExperience(senderProfileId, task.skills[i], time / 1 hours);
+        }
     }
 
     function _isOrganizationContract(address organization) internal view returns (bool) {

@@ -13,7 +13,7 @@ contract TimeWallet is ITimeWallet, HubControllable {
     constructor(address hub) HubControllable(hub) {}
 
     function spendTimeFor(uint256 profileId, uint256 time) external override onlyHub {
-        if (time <= Constants.TIME_WALLET_SLOT_SIZE) revert Errors.ExceededLoggableTime();
+        if (time >= Constants.TIME_WALLET_SLOT_SIZE) revert Errors.ExceededLoggableTime();
 
         // Get the current day from the genesis block
         uint256 currentDay = block.timestamp / Constants.TIME_WALLET_SLOT_SIZE;
@@ -23,7 +23,7 @@ contract TimeWallet is ITimeWallet, HubControllable {
             _lastTimeSlot[profileId] = currentDay;
             _totalTimeSinceLastTimeSlot[profileId] = time;
         } else {
-            if (_totalTimeSinceLastTimeSlot[profileId] + time <= Constants.TIME_WALLET_SLOT_SIZE)
+            if (_totalTimeSinceLastTimeSlot[profileId] + time > Constants.TIME_WALLET_SLOT_SIZE)
                 revert Errors.ExceededLoggableTime();
             _totalTimeSinceLastTimeSlot[profileId] += time;
         }

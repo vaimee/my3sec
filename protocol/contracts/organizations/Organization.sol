@@ -22,6 +22,11 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
 
     DataTypes.Project[] internal _projects;
 
+    modifier taskNotCompleted(uint256 projectId, uint256 taskId) {
+        if (_projects[projectId].tasks[taskId].status == DataTypes.TaskStatus.COMPLETED) revert Errors.AlreadyCompleted();
+        _;
+    }
+
     constructor(address hub, string memory metadataURI) HubControllable(hub) {
         _metadataURI = metadataURI;
     }
@@ -198,6 +203,15 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
+    function getTaskLoggedTimeOfProfile(
+        uint256 projectId,
+        uint256 taskId,
+        uint256 profileId
+    ) external view returns (uint256) {
+        return _projects[projectId].tasks[taskId].loggedTime.get(profileId);
+    }
+
+    /// @inheritdoc IOrganization
     function createTask(
         uint256 projectId,
         DataTypes.CreateTask calldata args
@@ -217,24 +231,24 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         uint256 projectId,
         uint256 taskId,
         DataTypes.UpdateTask calldata args
-    ) external onlyWhitelisted {
+    ) external taskNotCompleted(projectId, taskId) onlyWhitelisted {
         _projects[projectId].tasks[taskId].metadataURI = args.metadataURI;
         _projects[projectId].tasks[taskId].status = args.status;
         _projects[projectId].tasks[taskId].skills = args.skills;
     }
 
     /// @inheritdoc IOrganization
-    function addTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external onlyWhitelisted {
+    function addTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external taskNotCompleted(projectId, taskId) onlyWhitelisted {
         _projects[projectId].tasks[taskId].members.add(profileId);
     }
 
     /// @inheritdoc IOrganization
-    function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external onlyWhitelisted {
+    function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external taskNotCompleted(projectId, taskId) onlyWhitelisted {
         _projects[projectId].tasks[taskId].members.remove(profileId);
     }
 
     /// @inheritdoc IOrganization
-    function updateTaskTime(uint256 profileId, uint256 projectId, uint256 taskId, uint256 time) external onlyHub {
+    function updateTaskTime(uint256 profileId, uint256 projectId, uint256 taskId, uint256 time) external taskNotCompleted(projectId, taskId) onlyHub {
         if (!isProjectMember(projectId, profileId)) revert Errors.NotMember();
         if (!isTaskMember(projectId, taskId, profileId)) revert Errors.NotMember();
 

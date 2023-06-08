@@ -66,6 +66,12 @@ interface IOrganization {
         uint256 index
     ) external view returns (uint256, uint256);
 
+    function getTaskLoggedTimeOfProfile(
+        uint256 projectId,
+        uint256 taskId,
+        uint256 profileId
+    ) external view returns (uint256);
+
     function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external returns (uint256);
 
     function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external;
