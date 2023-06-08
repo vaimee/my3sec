@@ -8,7 +8,7 @@ import "../common/interfaces/ISkillWallet.sol";
 
 contract SkillWallet is ISkillWallet, HubControllable {
     using EnumerableMap for EnumerableMap.UintToUintMap;
-    
+
     // ProfileID => EnumerableMap(SkillID => Experience)
     mapping(uint256 => EnumerableMap.UintToUintMap) private _skillMap;
 

@@ -15,14 +15,14 @@ contract SkillRegistry is ISkillRegistry {
     string internal _baseURI;
 
     modifier baseURINotEmpty(string memory baseURI) {
-        if(bytes(baseURI).length < 1) {
+        if (bytes(baseURI).length < 1) {
             revert Errors.InitParamsInvalid();
         }
         _;
     }
 
     modifier skillExists(uint256 id) {
-        if(_skills.length < 1 || id > _skills.length - 1) {
+        if (_skills.length < 1 || id > _skills.length - 1) {
             revert Errors.SkillNotFound();
         }
         _;
@@ -40,9 +40,9 @@ contract SkillRegistry is ISkillRegistry {
     /// @inheritdoc ISkillRegistry
     function getSkill(uint256 index) external view skillExists(index) returns (DataTypes.SkillView memory) {
         string memory metadataURI = _skills[index];
-        if(bytes(metadataURI).length > 1) {
+        if (bytes(metadataURI).length > 1) {
             return DataTypes.SkillView(index, metadataURI);
-        } 
+        }
 
         return DataTypes.SkillView(index, string(abi.encodePacked(_baseURI, index.toString())));
     }
@@ -65,7 +65,7 @@ contract SkillRegistry is ISkillRegistry {
     }
 
     /// @inheritdoc ISkillRegistry
-    function updateSkill(uint256 id, DataTypes.UpdateSkill calldata args) external skillExists(id){
+    function updateSkill(uint256 id, DataTypes.UpdateSkill calldata args) external skillExists(id) {
         _skills[id] = args.metadataURI;
     }
 }

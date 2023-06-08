@@ -29,13 +29,13 @@ contract My3SecHub is IMy3SecHub, Ownable {
 
     EnumerableSet.AddressSet internal _organizations;
     // Org => ProjectId => TaskId => profileId
-    mapping(address => mapping(uint256 => mapping (uint256 => uint256))) rewards;
+    mapping(address => mapping(uint256 => mapping(uint256 => uint256))) rewards;
 
     function setOrganizationFactoryContract(address contractAddress) external onlyOwner {
         _organizationFactory = OrganizationFactory(contractAddress);
     }
 
-    function setSkillRegistryContract(address contractAddress) external onlyOwner () {
+    function setSkillRegistryContract(address contractAddress) external onlyOwner {
         _skillRegistry = ISkillRegistry(contractAddress);
     }
 
@@ -176,14 +176,14 @@ contract My3SecHub is IMy3SecHub, Ownable {
     function withdraw(address organizationAddress, uint256 projectId, uint256 taskId) external {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
-        
-        if(organization.isTaskMember(projectId, taskId, senderProfileId) != true) revert Errors.NotMember();
-        
+
+        if (organization.isTaskMember(projectId, taskId, senderProfileId) != true) revert Errors.NotMember();
+
         DataTypes.TaskView memory task = organization.getTask(projectId, taskId);
 
-        if(task.status != DataTypes.TaskStatus.COMPLETED) revert Errors.NotCompleted();
+        if (task.status != DataTypes.TaskStatus.COMPLETED) revert Errors.NotCompleted();
 
-        if(rewards[organizationAddress][projectId][taskId] != 0) revert Errors.AlreadyWithdrawn();
+        if (rewards[organizationAddress][projectId][taskId] != 0) revert Errors.AlreadyWithdrawn();
         rewards[organizationAddress][projectId][taskId] = senderProfileId;
 
         uint256 skillCount = task.skills.length;
