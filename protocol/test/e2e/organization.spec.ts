@@ -1,6 +1,8 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
 
+import { waitForTx } from "../helpers/utils";
+
 import {
   PROFILE_INITIAL_ENERGY,
   MOCK_ORG_METADATA_URI,
@@ -30,8 +32,7 @@ describe("HUB: Organization creation and registration", () => {
     const organization = await organizationFactory.connect(user).deploy(my3secHub.address, MOCK_ORG_METADATA_URI);
     const currentOrgsCount = await my3secHub.getOrganizationCount();
 
-    const tx = await organization.connect(user).addToWhitelist(userAddress);
-    await tx.wait();
+    await waitForTx(organization.connect(user).addToWhitelist(userAddress));
 
     const orgCreationTransaction = await my3secHub.connect(user).registerOrganization(organization.address);
     const nextOrgsCount = await my3secHub.getOrganizationCount();
@@ -57,43 +58,36 @@ describe("HUB: Organization creation and registration", () => {
       const organizationFactory = await ethers.getContractFactory("Organization");
       const organization = await organizationFactory.connect(manager).deploy(my3secHub.address, MOCK_ORG_METADATA_URI);
 
-      let tx = await organization.connect(manager).addToWhitelist(managerAddress);
-      await tx.wait();
+      await waitForTx(organization.connect(manager).addToWhitelist(managerAddress));
 
-      tx = await my3secHub.connect(manager).createProfile({ metadataURI: MOCK_ORG_METADATA_URI });
-      await tx.wait();
-      tx = await my3secHub.connect(worker).createProfile({ metadataURI: MOCK_ORG_METADATA_URI });
-      await tx.wait();
+      await waitForTx(my3secHub.connect(manager).createProfile({ metadataURI: MOCK_ORG_METADATA_URI }));
+      await waitForTx(my3secHub.connect(worker).createProfile({ metadataURI: MOCK_ORG_METADATA_URI }));
 
       const { id: managerProfileId } = await my3secHub.connect(manager).getDefaultProfile(managerAddress);
       const { id: workerProfileId } = await my3secHub.connect(worker).getDefaultProfile(workerAddress);
 
-      tx = await my3secHub.connect(manager).registerOrganization(organization.address);
-      await tx.wait();
+      await waitForTx(my3secHub.connect(manager).registerOrganization(organization.address));
 
-      tx = await organization.connect(manager).createProject({ metadataURI: MOCK_ORG_METADATA_URI });
-      await tx.wait();
-      tx = await organization.connect(manager).createTask(0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2] });
-      await tx.wait();
+      await waitForTx(organization.connect(manager).createProject({ metadataURI: MOCK_ORG_METADATA_URI }));
 
-      tx = await organization.connect(manager).addProjectMember(0, workerProfileId);
-      await tx.wait();
+      await waitForTx(
+        organization.connect(manager).createTask(0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2] })
+      );
 
-      tx = await organization.connect(manager).addTaskMember(0, 0, workerProfileId);
-      await tx.wait();
+      await waitForTx(organization.connect(manager).addProjectMember(0, workerProfileId));
+      await waitForTx(organization.connect(manager).addTaskMember(0, 0, workerProfileId));
 
       for (let i = 0; i < 3; i++) {
-        tx = await my3secHub.connect(worker).logTime(organization.address, 0, 0, 3600);
-        await tx.wait();
+        await waitForTx(my3secHub.connect(worker).logTime(organization.address, 0, 0, 3600));
       }
 
-      tx = await organization
-        .connect(manager)
-        .updateTask(0, 0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 2 });
-      await tx.wait();
+      await waitForTx(
+        organization
+          .connect(manager)
+          .updateTask(0, 0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 2 })
+      );
 
-      tx = await my3secHub.connect(worker).withdraw(organization.address, 0, 0);
-      await tx.wait();
+      await waitForTx(my3secHub.connect(worker).withdraw(organization.address, 0, 0));
 
       // TODO: check all the skills
       const tuple = await skillWallet.getSkill(workerProfileId, 0);

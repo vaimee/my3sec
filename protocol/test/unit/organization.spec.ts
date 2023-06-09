@@ -2,7 +2,7 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 
 import { Organization } from "../../typechain-types";
-import { getRandomProfileId } from "../helpers/utils";
+import { getRandomProfileId, waitForTx } from "../helpers/utils";
 
 const FAKE_METADATA_URI = "urn:dev:fake";
 
@@ -157,10 +157,11 @@ describe("Organization", () => {
 
   describe("Project", () => {
     it("should create project", async () => {
-      const tx = await contract.createProject({
-        metadataURI: FAKE_METADATA_URI,
-      });
-      await tx.wait();
+      await waitForTx(
+        contract.createProject({
+          metadataURI: FAKE_METADATA_URI,
+        })
+      );
 
       const count = await contract.getProjectCount();
       const project = await contract.getProject(0);
@@ -172,13 +173,13 @@ describe("Organization", () => {
 
     it("should update project", async () => {
       const UPDATED_METADATA_URI = "urn:dev:new:uri";
-      let tx = await contract.createProject({
-        metadataURI: FAKE_METADATA_URI,
-      });
-      await tx.wait();
+      await waitForTx(
+        contract.createProject({
+          metadataURI: FAKE_METADATA_URI,
+        })
+      );
 
-      tx = await contract.updateProject(0, { metadataURI: UPDATED_METADATA_URI, status: 1 });
-      await tx.wait();
+      await waitForTx(contract.updateProject(0, { metadataURI: UPDATED_METADATA_URI, status: 1 }));
 
       const count = await contract.getProjectCount();
       const project = await contract.getProject(0);
@@ -190,13 +191,13 @@ describe("Organization", () => {
 
     it("should add member", async () => {
       const PROFILE_ID = 1;
-      let tx = await contract.createProject({
-        metadataURI: FAKE_METADATA_URI,
-      });
-      await tx.wait();
+      await waitForTx(
+        contract.createProject({
+          metadataURI: FAKE_METADATA_URI,
+        })
+      );
 
-      tx = await contract.addProjectMember(0, PROFILE_ID);
-      await tx.wait();
+      await waitForTx(contract.addProjectMember(0, PROFILE_ID));
 
       const count = await contract.getProjectMemberCount(0);
       const memberID = await contract.getProjectMember(0, 0);
@@ -207,15 +208,15 @@ describe("Organization", () => {
 
     it("should remove member", async () => {
       const PROFILE_ID = 1;
-      let tx = await contract.createProject({
-        metadataURI: FAKE_METADATA_URI,
-      });
-      await tx.wait();
+      await waitForTx(
+        contract.createProject({
+          metadataURI: FAKE_METADATA_URI,
+        })
+      );
 
-      tx = await contract.addProjectMember(0, PROFILE_ID);
-      await tx.wait();
-      tx = await contract.removeProjectMember(0, PROFILE_ID);
-      await tx.wait();
+      await waitForTx(contract.addProjectMember(0, PROFILE_ID));
+
+      await waitForTx(contract.removeProjectMember(0, PROFILE_ID));
 
       const count = await contract.getProjectMemberCount(0);
 
@@ -225,15 +226,15 @@ describe("Organization", () => {
     describe("Task", () => {
       const PROJECT_ID = 0;
       beforeEach(async () => {
-        const tx = await contract.createProject({
-          metadataURI: FAKE_METADATA_URI,
-        });
-        await tx.wait();
+        await waitForTx(
+          contract.createProject({
+            metadataURI: FAKE_METADATA_URI,
+          })
+        );
       });
 
       it("should create task", async () => {
-        const tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] });
-        await tx.wait();
+        await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] }));
 
         const count = await contract.getTaskCount(0);
         const task = await contract.getTask(0, 0);
@@ -247,11 +248,9 @@ describe("Organization", () => {
 
       it("should update task", async () => {
         const UPDATED_METADATA_URI = "urn:dev:new:uri";
-        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] });
-        await tx.wait();
+        await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] }));
 
-        tx = await contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [] });
-        await tx.wait();
+        await waitForTx(contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [] }));
 
         const task = await contract.getTask(0, 0);
 
@@ -262,11 +261,9 @@ describe("Organization", () => {
 
       it("should update task skill list", async () => {
         const UPDATED_METADATA_URI = "urn:dev:new:uri";
-        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] });
-        await tx.wait();
+        await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] }));
 
-        tx = await contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [3, 2] });
-        await tx.wait();
+        await waitForTx(contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [3, 2] }));
 
         const task = await contract.getTask(0, 0);
 
@@ -278,11 +275,9 @@ describe("Organization", () => {
 
       it("should add member", async () => {
         const PROFILE_ID = 1;
-        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] });
-        await tx.wait();
+        await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] }));
 
-        tx = await contract.addTaskMember(0, 0, PROFILE_ID);
-        await tx.wait();
+        await waitForTx(contract.addTaskMember(0, 0, PROFILE_ID));
 
         const count = await contract.getTaskMemberCount(0, 0);
         const memberID = await contract.getTaskMember(0, 0, 0);
@@ -293,13 +288,11 @@ describe("Organization", () => {
 
       it("should remove member", async () => {
         const PROFILE_ID = 1;
-        let tx = await contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] });
-        await tx.wait();
+        await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] }));
 
-        tx = await contract.addTaskMember(0, 0, PROFILE_ID);
-        await tx.wait();
-        tx = await contract.removeTaskMember(0, 0, PROFILE_ID);
-        await tx.wait();
+        await waitForTx(contract.addTaskMember(0, 0, PROFILE_ID));
+
+        await waitForTx(contract.removeTaskMember(0, 0, PROFILE_ID));
 
         const count = await contract.getTaskMemberCount(0, 0);
 
@@ -310,16 +303,14 @@ describe("Organization", () => {
         const UPDATED_TIME = 100;
         const PROFILE_ID = 1;
 
-        let tx = await contract.addProjectMember(PROJECT_ID, PROFILE_ID);
-        await tx.wait();
-        tx = await contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI, skills: [] });
-        await tx.wait();
-        const TASK_ID = 0;
-        tx = await contract.addTaskMember(PROJECT_ID, TASK_ID, PROFILE_ID);
-        await tx.wait();
+        await waitForTx(contract.addProjectMember(PROJECT_ID, PROFILE_ID));
 
-        tx = await contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
-        await tx.wait();
+        await waitForTx(contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI, skills: [] }));
+
+        const TASK_ID = 0;
+        await waitForTx(contract.addTaskMember(PROJECT_ID, TASK_ID, PROFILE_ID));
+
+        await waitForTx(contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME));
 
         const loggedTimeCount = await contract.getTaskLoggedTimeCount(PROJECT_ID, 0);
         expect(loggedTimeCount).to.be.eq(1);
@@ -337,8 +328,8 @@ describe("Organization", () => {
         const UPDATED_TIME = 100;
         const PROFILE_ID = 1;
 
-        const tx = await contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI, skills: [] });
-        await tx.wait();
+        await waitForTx(contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI, skills: [] }));
+
         const TASK_ID = 0;
 
         const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
@@ -349,10 +340,9 @@ describe("Organization", () => {
         const UPDATED_TIME = 100;
         const PROFILE_ID = 1;
 
-        let tx = await contract.addProjectMember(PROJECT_ID, PROFILE_ID);
-        await tx.wait();
-        tx = await contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI, skills: [] });
-        await tx.wait();
+        await waitForTx(contract.addProjectMember(PROJECT_ID, PROFILE_ID));
+        await waitForTx(contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI, skills: [] }));
+
         const TASK_ID = 0;
 
         const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);

@@ -2,6 +2,7 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 
 import { SkillRegistry, Events } from "../../typechain-types";
+import { waitForTx } from "../helpers/utils";
 
 const BASE_URI = "https://example.com/";
 const METADATA_URI = "https://example.com/metadata.json";
@@ -55,8 +56,7 @@ describe("SkillRegistry", async () => {
     describe("updateSkill", () => {
       it("should update a skill", async () => {
         await contract.createSkill({ metadataURI: METADATA_URI });
-        const tx = await contract.updateSkill(0, { metadataURI: "https://example.com/updated.json" });
-        await tx.wait();
+        await waitForTx(contract.updateSkill(0, { metadataURI: "https://example.com/updated.json" }));
         const skill = await contract.getSkill(0);
         const skillCount = await contract.getSkillCount();
 
@@ -94,8 +94,7 @@ describe("SkillRegistry", async () => {
   describe("setBaseURI", () => {
     it("should update base uri", async () => {
       const currentBaseURI = await contract.getBaseURI();
-      const tx = await contract.setBaseURI("https://example.com/updated/");
-      tx.wait();
+      await waitForTx(contract.setBaseURI("https://example.com/updated/"));
 
       const updatedBaseURI = await contract.getBaseURI();
 
