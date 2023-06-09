@@ -8,6 +8,8 @@ on:
     paths:
       - "protocol/**"
       - ".github/workflows/contracts.yml"
+    tags:
+      - "v*-contracts"   
   pull_request:
     branches: [ "main" ]
     paths:
@@ -41,3 +43,21 @@ jobs:
       - uses: actions/setup-node@v3.3.0
       - run: npm ci
       - run: npm run lint
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, unit, lint]
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      # TODO: find a way to not rebuild
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
