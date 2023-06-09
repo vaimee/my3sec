@@ -13,6 +13,7 @@ async function main() {
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
   const energyWalletFactory = await ethers.getContractFactory("EnergyWallet");
   const timeWalletFactory = await ethers.getContractFactory("TimeWallet");
+  const skillWalletFactory = await ethers.getContractFactory("SkillWallet");
 
   // Deployments
   console.log("\n\t-- Deploying My3SecHub --");
@@ -36,13 +37,17 @@ async function main() {
   console.log("\n\t-- Deploying TimeWallet --");
   const timeWallet = await timeWalletFactory.deploy(my3secHub.address);
 
+  console.log("\n\t-- Deploying SkillWallet --");
+  const skillWallet = await skillWalletFactory.deploy(my3secHub.address);
+
   // Initializations
   console.log("\n\t-- Initializing My3SecHub --");
   await my3secHub.setOrganizationFactoryContract(organizationFactory.address);
+  await my3secHub.setSkillRegistryContract(skillRegistry.address);
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setEnergyWalletContract(energyWallet.address);
   await my3secHub.setTimeWalletContract(timeWallet.address);
-  await my3secHub.setSkillRegistryContract(skillRegistry.address);
+  await my3secHub.setSkillWalletContract(skillWallet.address);
 
   // Save and logs addresses
   const addrs = {
@@ -53,6 +58,7 @@ async function main() {
     my3secProfiles: my3secProfiles.address,
     energyWallet: energyWallet.address,
     timeWallet: timeWallet.address,
+    skillWallet: skillWallet.address,
   };
   const json = JSON.stringify(addrs, null, 2);
   console.log(json);
