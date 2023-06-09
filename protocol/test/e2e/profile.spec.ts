@@ -5,49 +5,81 @@ import {
   PROFILE_INITIAL_ENERGY,
   MOCK_PROFILE_URI,
   user,
-  userAddress,
   my3secHub,
-  my3secToken,
   my3secProfiles,
   energyWallet,
 } from "./__setup.spec";
+import { findEvent, getRandomSigner, waitForTx } from "../helpers/utils";
 
-/* TODO: re-enable
 describe("HUB: Profile creation", () => {
   it("should create the user first profile", async () => {
-    await my3secHub.connect(user).createProfile({ metadataURI: MOCK_PROFILE_URI });
+    const EventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
+    const randomUser = await getRandomSigner();
+    const randomUserAddress = await randomUser.getAddress();
 
-    const profilesCount = await my3secProfiles.balanceOf(userAddress);
-    const defaultProfileId = await my3secProfiles.getDefaultProfileId(userAddress);
+    const receipt = await waitForTx(my3secHub.connect(randomUser).createProfile({ metadataURI: MOCK_PROFILE_URI }));
+
+    const event = await findEvent(receipt, "ProfileCreated", EventsLibrary);
+    const profilesCount = await my3secProfiles.balanceOf(randomUserAddress);
+    const defaultProfileId = await my3secProfiles.getDefaultProfileId(randomUserAddress);
     const totalEnergy = await energyWallet.totalEnergyOf(defaultProfileId);
 
+    expect(event.args.profileId).is.greaterThan(0);
     expect(profilesCount).eq(1);
-    expect(defaultProfileId).eq(1);
+    expect(defaultProfileId).eq(event.args.profileId);
     expect(totalEnergy).eq(PROFILE_INITIAL_ENERGY);
   });
 
   it("should create the user second profile", async () => {
-    await my3secHub.connect(user).createProfile({ metadataURI: MOCK_PROFILE_URI });
+    const EventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
+    const randomUser = await getRandomSigner();
+    const randomUserAddress = await randomUser.getAddress();
 
-    const profilesCount = await my3secProfiles.balanceOf(userAddress);
-    const defaultProfileId = await my3secProfiles.getDefaultProfileId(userAddress);
+    const firstProfileReceipt = await waitForTx(
+      my3secHub.connect(randomUser).createProfile({ metadataURI: MOCK_PROFILE_URI })
+    );
+
+    const secondProfileReceipt = await waitForTx(
+      my3secHub.connect(randomUser).createProfile({ metadataURI: MOCK_PROFILE_URI })
+    );
+
+    const firstEvent = await findEvent(firstProfileReceipt, "ProfileCreated", EventsLibrary);
+    const secondEvent = await findEvent(secondProfileReceipt, "ProfileCreated", EventsLibrary);
+    const profilesCount = await my3secProfiles.balanceOf(randomUserAddress);
+    const defaultProfileId = await my3secProfiles.getDefaultProfileId(randomUserAddress);
     const totalEnergy = await energyWallet.totalEnergyOf(defaultProfileId);
 
+    expect(firstEvent.args.profileId).is.greaterThan(0);
+    expect(secondEvent.args.profileId).is.greaterThan(0);
     expect(profilesCount).eq(2);
-    expect(defaultProfileId).eq(1);
+    expect(defaultProfileId).eq(firstEvent.args.profileId);
     expect(totalEnergy).eq(PROFILE_INITIAL_ENERGY);
   });
 
   it("should retrieve the user default profile", async () => {
-    const { id, metadataURI } = await my3secHub.getDefaultProfile(userAddress);
-    expect(id).eq(1);
+    const EventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
+    const randomUser = await getRandomSigner();
+    const randomUserAddress = await randomUser.getAddress();
+
+    const receipt = await waitForTx(my3secHub.connect(randomUser).createProfile({ metadataURI: MOCK_PROFILE_URI }));
+    const event = await findEvent(receipt, "ProfileCreated", EventsLibrary);
+
+    const { id, metadataURI } = await my3secHub.getDefaultProfile(randomUserAddress);
+
+    expect(id).eq(event.args.profileId);
     expect(metadataURI).eq(MOCK_PROFILE_URI);
   });
 
   it("should retrieve the user profile by id", async () => {
-    const { id, metadataURI } = await my3secHub.getProfile(2);
-    expect(id).eq(2);
+    const EventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
+    const randomUser = await getRandomSigner();
+
+    const receipt = await waitForTx(my3secHub.connect(randomUser).createProfile({ metadataURI: MOCK_PROFILE_URI }));
+    const event = await findEvent(receipt, "ProfileCreated", EventsLibrary);
+
+    const { id, metadataURI } = await my3secHub.getProfile(event.args.profileId);
+
+    expect(id).eq(event.args.profileId);
     expect(metadataURI).eq(MOCK_PROFILE_URI);
   });
 });
-*/
