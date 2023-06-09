@@ -19,6 +19,4 @@ _To be defined_
 
 ### Deployement
 
-| Contract | Address                                                                                                                                           |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| My3Sec   | [0x50dBb1F53c948c8471Eb44Be4B45a7860c57B5C1](https://blockscout-bellecour.iex.ec/address/0x50dBb1F53c948c8471Eb44Be4B45a7860c57B5C1/transactions) |
+We are currently deploying our solution on the [iExec Bellecour network](https://bellecour.iex.ec/). If you are looking for the deployed contracts, please refer to the [DEPLOYED.md](./DEPLOYED.md) file.
