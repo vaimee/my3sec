@@ -258,7 +258,7 @@ describe("Organization", () => {
       });
 
       it("should create task", async () => {
-        const receipit = await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] }));
+        await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] }));
 
         const count = await contract.getTaskCount(0);
         const task = await contract["getTask(uint256)"](0);

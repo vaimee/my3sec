@@ -1,4 +1,4 @@
-import { ethers, tasks } from "hardhat";
+import { ethers } from "hardhat";
 import { expect } from "chai";
 
 import { findEvent, waitForTx } from "../helpers/utils";
