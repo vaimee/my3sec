@@ -37,7 +37,7 @@ library DataTypes {
         string metadataURI;
         ProjectStatus status;
         EnumerableSet.UintSet members;
-        Task[] tasks;
+        uint256[] tasks;
     }
 
     struct ProjectView {

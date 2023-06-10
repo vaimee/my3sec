@@ -9,6 +9,7 @@ import "../common/access/Whitelistable.sol";
 import "../common/interfaces/IMy3SecHub.sol";
 import "../common/interfaces/IOrganization.sol";
 import "../common/libraries/DataTypes.sol";
+import "../common/libraries/Events.sol";
 import "../common/libraries/Errors.sol";
 
 contract Organization is IOrganization, HubControllable, Whitelistable {
@@ -21,9 +22,10 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     EnumerableSet.UintSet internal _pendingMembers;
 
     DataTypes.Project[] internal _projects;
+    DataTypes.Task[] internal _tasks;
 
-    modifier taskNotCompleted(uint256 projectId, uint256 taskId) {
-        if (_projects[projectId].tasks[taskId].status == DataTypes.TaskStatus.COMPLETED)
+    modifier taskNotCompleted(uint256 taskId) {
+        if (_tasks[taskId].status == DataTypes.TaskStatus.COMPLETED)
             revert Errors.AlreadyCompleted();
         _;
     }
@@ -33,8 +35,8 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         _;
     }
 
-    modifier taskExists(uint256 projectId, uint256 taskId) {
-        if (_projects[projectId].tasks[taskId].status == DataTypes.TaskStatus.INVALID)
+    modifier taskExists(uint256 taskId) {
+        if (_tasks[taskId].status == DataTypes.TaskStatus.INVALID)
             revert Errors.AlreadyCompleted();
         _;
     }
@@ -174,8 +176,10 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function getTask(uint256 projectId, uint256 index) projectExists(projectId) taskExists(projectId, index) external view returns (DataTypes.TaskView memory) {
-        DataTypes.Task storage task = _projects[projectId].tasks[index];
+    function getTask(uint256 projectId, uint256 index) projectExists(projectId) external view returns (DataTypes.TaskView memory) {
+        uint256 taskId = _projects[projectId].tasks[index];
+        DataTypes.Task storage task = _tasks[taskId];
+
         DataTypes.TaskView memory taskView = DataTypes.TaskView({
             id: task.id,
             metadataURI: task.metadataURI,
@@ -186,41 +190,52 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function getTaskMemberCount(uint256 projectId, uint256 taskId) projectExists(projectId) taskExists(projectId, taskId) external view returns (uint256) {
-        return _projects[projectId].tasks[taskId].members.length();
+    function getTask(uint256 taskId) taskExists(taskId) external view returns (DataTypes.TaskView memory) {
+        DataTypes.Task storage task = _tasks[taskId];
+
+        DataTypes.TaskView memory taskView = DataTypes.TaskView({
+            id: task.id,
+            metadataURI: task.metadataURI,
+            status: task.status,
+            skills: task.skills
+        });
+        return taskView;
     }
 
     /// @inheritdoc IOrganization
-    function getTaskMember(uint256 projectId, uint256 taskId, uint256 index) projectExists(projectId) taskExists(projectId, taskId) external view returns (uint256) {
-        return _projects[projectId].tasks[taskId].members.at(index);
+    function getTaskMemberCount(uint256 taskId) taskExists(taskId) external view returns (uint256) {
+        return _tasks[taskId].members.length();
     }
 
     /// @inheritdoc IOrganization
-    function isTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) projectExists(projectId) taskExists(projectId, taskId) public view returns (bool) {
-        return _projects[projectId].tasks[taskId].members.contains(profileId);
+    function getTaskMember(uint256 taskId, uint256 index) taskExists(taskId) external view returns (uint256) {
+        return _tasks[taskId].members.at(index);
     }
 
     /// @inheritdoc IOrganization
-    function getTaskLoggedTimeCount(uint256 projectId, uint256 taskId) projectExists(projectId) taskExists(projectId, taskId) external view returns (uint256) {
-        return _projects[projectId].tasks[taskId].loggedTime.length();
+    function isTaskMember(uint256 taskId, uint256 profileId) taskExists(taskId) public view returns (bool) {
+        return _tasks[taskId].members.contains(profileId);
+    }
+
+    /// @inheritdoc IOrganization
+    function getTaskLoggedTimeCount(uint256 taskId) taskExists(taskId) external view returns (uint256) {
+        return _tasks[taskId].loggedTime.length();
     }
 
     /// @inheritdoc IOrganization
     function getTaskLoggedTime(
-        uint256 projectId,
         uint256 taskId,
         uint256 index
-    ) external projectExists(projectId) taskExists(projectId, taskId) view returns (uint256, uint256) {
-        return _projects[projectId].tasks[taskId].loggedTime.at(index);
+    ) external taskExists(taskId) view returns (uint256, uint256) {
+        return _tasks[taskId].loggedTime.at(index);
     }
 
     /// @inheritdoc IOrganization
     function getTaskLoggedTimeOfProfile(
-        uint256 projectId,
         uint256 taskId,
         uint256 profileId
-    ) projectExists(projectId) taskExists(projectId, taskId) external view returns (uint256) {
-        return _projects[projectId].tasks[taskId].loggedTime.get(profileId);
+    ) taskExists(taskId) external view returns (uint256) {
+        return _tasks[taskId].loggedTime.get(profileId);
     }
 
     /// @inheritdoc IOrganization
@@ -228,60 +243,58 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         uint256 projectId,
         DataTypes.CreateTask calldata args
     ) external projectExists(projectId) onlyWhitelisted returns (uint256) {
-        uint256 newTasktId = _projects[projectId].tasks.length;
-        _projects[projectId].tasks.push();
-        DataTypes.Task storage task = _projects[projectId].tasks[newTasktId];
+        uint256 newTasktId = _tasks.length;
+        _tasks.push();
+        DataTypes.Task storage task = _tasks[newTasktId];
         task.id = newTasktId;
         task.metadataURI = args.metadataURI;
         task.status = DataTypes.TaskStatus.NOT_STARTED;
         task.skills = args.skills;
+
+        _projects[projectId].tasks.push(newTasktId);
+        emit Events.TaskCreated(newTasktId);
         return newTasktId;
     }
 
     /// @inheritdoc IOrganization
     function updateTask(
-        uint256 projectId,
         uint256 taskId,
         DataTypes.UpdateTask calldata args
-    ) external projectExists(projectId) taskExists(projectId, taskId) taskNotCompleted(projectId, taskId) onlyWhitelisted {
-        _projects[projectId].tasks[taskId].metadataURI = args.metadataURI;
-        _projects[projectId].tasks[taskId].status = args.status;
-        _projects[projectId].tasks[taskId].skills = args.skills;
+    ) external taskExists(taskId) taskNotCompleted(taskId) onlyWhitelisted {
+        _tasks[taskId].metadataURI = args.metadataURI;
+        _tasks[taskId].status = args.status;
+        _tasks[taskId].skills = args.skills;
     }
 
     /// @inheritdoc IOrganization
     function addTaskMember(
-        uint256 projectId,
         uint256 taskId,
         uint256 profileId
-    ) external projectExists(projectId) taskExists(projectId, taskId) taskNotCompleted(projectId, taskId) onlyWhitelisted {
-        _projects[projectId].tasks[taskId].members.add(profileId);
+    ) external taskExists(taskId) taskNotCompleted( taskId) onlyWhitelisted {
+        _tasks[taskId].members.add(profileId);
     }
 
     /// @inheritdoc IOrganization
     function removeTaskMember(
-        uint256 projectId,
         uint256 taskId,
         uint256 profileId
-    ) external projectExists(projectId) taskExists(projectId, taskId) taskNotCompleted(projectId, taskId) onlyWhitelisted {
-        _projects[projectId].tasks[taskId].members.remove(profileId);
+    ) external taskExists(taskId) taskNotCompleted(taskId) onlyWhitelisted {
+        _tasks[taskId].members.remove(profileId);
     }
 
     /// @inheritdoc IOrganization
     function updateTaskTime(
         uint256 profileId,
-        uint256 projectId,
         uint256 taskId,
         uint256 time
-    ) external projectExists(projectId) taskExists(projectId, taskId) taskNotCompleted(projectId, taskId) onlyHub {
-        if (!isProjectMember(projectId, profileId)) revert Errors.NotMember();
-        if (!isTaskMember(projectId, taskId, profileId)) revert Errors.NotMember();
+    ) external taskExists(taskId) taskNotCompleted(taskId) onlyHub {
+        if (!isTaskMember(taskId, profileId)) revert Errors.NotMember();
 
-        if (!_projects[projectId].tasks[taskId].loggedTime.contains(profileId)) {
-            _projects[projectId].tasks[taskId].loggedTime.set(profileId, time);
+        if (!_tasks[taskId].loggedTime.contains(profileId)) {
+            _tasks[taskId].loggedTime.set(profileId, time);
         } else {
-            uint256 currentTime = _projects[projectId].tasks[taskId].loggedTime.get(profileId);
-            _projects[projectId].tasks[taskId].loggedTime.set(profileId, currentTime + time);
+            uint256 currentTime = _tasks[taskId].loggedTime.get(profileId);
+            _tasks[taskId].loggedTime.set(profileId, currentTime + time);
         }
     }
 

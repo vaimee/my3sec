@@ -51,36 +51,36 @@ interface IOrganization {
     function getTaskCount(uint256 projectId) external view returns (uint256);
 
     function getTask(uint256 projectId, uint256 index) external view returns (DataTypes.TaskView memory);
+    
+    function getTask(uint256 taskId) external view returns (DataTypes.TaskView memory);
 
-    function getTaskMemberCount(uint256 projectId, uint256 taskId) external view returns (uint256);
+    function getTaskMemberCount(uint256 taskId) external view returns (uint256);
 
-    function getTaskMember(uint256 projectId, uint256 taskId, uint256 index) external view returns (uint256);
+    function getTaskMember(uint256 taskId, uint256 index) external view returns (uint256);
 
-    function isTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external view returns (bool);
+    function isTaskMember(uint256 taskId, uint256 profileId) external view returns (bool);
 
-    function getTaskLoggedTimeCount(uint256 projectId, uint256 taskId) external view returns (uint256);
+    function getTaskLoggedTimeCount(uint256 taskId) external view returns (uint256);
 
     function getTaskLoggedTime(
-        uint256 projectId,
         uint256 taskId,
         uint256 index
     ) external view returns (uint256, uint256);
 
     function getTaskLoggedTimeOfProfile(
-        uint256 projectId,
         uint256 taskId,
         uint256 profileId
     ) external view returns (uint256);
 
     function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external returns (uint256);
 
-    function updateTask(uint256 projectId, uint256 taskId, DataTypes.UpdateTask calldata args) external;
+    function updateTask(uint256 taskId, DataTypes.UpdateTask calldata args) external;
 
-    function addTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external;
+    function addTaskMember(uint256 taskId, uint256 profileId) external;
 
-    function removeTaskMember(uint256 projectId, uint256 taskId, uint256 profileId) external;
+    function removeTaskMember(uint256 taskId, uint256 profileId) external;
 
-    function updateTaskTime(uint256 profileId, uint256 projectId, uint256 taskId, uint256 time) external;
+    function updateTaskTime(uint256 projectId, uint256 taskId, uint256 time) external;
 
     //=============================================================================
     // OVERRIDES

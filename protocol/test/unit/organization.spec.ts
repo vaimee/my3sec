@@ -258,10 +258,10 @@ describe("Organization", () => {
       });
 
       it("should create task", async () => {
-        await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] }));
+        const receipit = await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] }));
 
         const count = await contract.getTaskCount(0);
-        const task = await contract.getTask(0, 0);
+        const task = await contract["getTask(uint256)"](0);
 
         expect(count).to.be.eq(1);
         expect(task.id).to.be.eq(0);
@@ -274,9 +274,9 @@ describe("Organization", () => {
         const UPDATED_METADATA_URI = "urn:dev:new:uri";
         await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] }));
 
-        await waitForTx(contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [] }));
+        await waitForTx(contract.updateTask(0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [] }));
 
-        const task = await contract.getTask(0, 0);
+        const task = await contract["getTask(uint256)"](0);
 
         expect(task.id).to.be.eq(0);
         expect(task.metadataURI).to.be.eq(UPDATED_METADATA_URI);
@@ -287,9 +287,9 @@ describe("Organization", () => {
         const UPDATED_METADATA_URI = "urn:dev:new:uri";
         await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [0, 1] }));
 
-        await waitForTx(contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [3, 2] }));
+        await waitForTx(contract.updateTask(0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [3, 2] }));
 
-        const task = await contract.getTask(0, 0);
+        const task = await contract["getTask(uint256)"](0);
 
         expect(task.id).to.be.eq(0);
         expect(task.metadataURI).to.be.eq(UPDATED_METADATA_URI);
@@ -300,7 +300,7 @@ describe("Organization", () => {
       it("should revert update if not registered", async () => {
         const UPDATED_METADATA_URI = "urn:dev:new:uri";
 
-        const tx = contract.updateTask(0, 0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [3, 2] });
+        const tx = contract.updateTask(0, { metadataURI: UPDATED_METADATA_URI, status: 1, skills: [3, 2] });
 
         expect(tx).to.be.revertedWithCustomError(contract, "NotRegistered");
       });
@@ -309,10 +309,10 @@ describe("Organization", () => {
         const PROFILE_ID = 1;
         await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] }));
 
-        await waitForTx(contract.addTaskMember(0, 0, PROFILE_ID));
+        await waitForTx(contract.addTaskMember(0, PROFILE_ID));
 
-        const count = await contract.getTaskMemberCount(0, 0);
-        const memberID = await contract.getTaskMember(0, 0, 0);
+        const count = await contract.getTaskMemberCount(0);
+        const memberID = await contract.getTaskMember(0, 0);
 
         expect(count).to.be.eq(1);
         expect(memberID).to.be.eq(PROFILE_ID);
@@ -320,7 +320,7 @@ describe("Organization", () => {
 
       it("should revert add member if task not registered", async () => {
         const PROFILE_ID = 1;
-        const tx = contract.addTaskMember(0, 0, PROFILE_ID);
+        const tx = contract.addTaskMember(0, PROFILE_ID);
 
         expect(tx).to.be.revertedWithCustomError(contract, "NotRegistered");
       });
@@ -329,18 +329,18 @@ describe("Organization", () => {
         const PROFILE_ID = 1;
         await waitForTx(contract.createTask(0, { metadataURI: FAKE_METADATA_URI, skills: [] }));
 
-        await waitForTx(contract.addTaskMember(0, 0, PROFILE_ID));
+        await waitForTx(contract.addTaskMember(0, PROFILE_ID));
 
-        await waitForTx(contract.removeTaskMember(0, 0, PROFILE_ID));
+        await waitForTx(contract.removeTaskMember(0, PROFILE_ID));
 
-        const count = await contract.getTaskMemberCount(0, 0);
+        const count = await contract.getTaskMemberCount(0);
 
         expect(count).to.be.eq(0);
       });
 
       it("should revert remove member if task not registered", async () => {
         const PROFILE_ID = 1;
-        const tx = contract.removeTaskMember(0, 0, PROFILE_ID);
+        const tx = contract.removeTaskMember(0, PROFILE_ID);
 
         expect(tx).to.be.revertedWithCustomError(contract, "NotRegistered");
       });
@@ -354,14 +354,14 @@ describe("Organization", () => {
         await waitForTx(contract.createTask(PROJECT_ID, { metadataURI: FAKE_METADATA_URI, skills: [] }));
 
         const TASK_ID = 0;
-        await waitForTx(contract.addTaskMember(PROJECT_ID, TASK_ID, PROFILE_ID));
+        await waitForTx(contract.addTaskMember(TASK_ID, PROFILE_ID));
 
-        await waitForTx(contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME));
+        await waitForTx(contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME));
 
-        const loggedTimeCount = await contract.getTaskLoggedTimeCount(PROJECT_ID, 0);
+        const loggedTimeCount = await contract.getTaskLoggedTimeCount(TASK_ID);
         expect(loggedTimeCount).to.be.eq(1);
         for (let i = 0; i < loggedTimeCount.toNumber(); i++) {
-          const taskTime = await contract.getTaskLoggedTime(PROJECT_ID, 0, i);
+          const taskTime = await contract.getTaskLoggedTime(TASK_ID, i);
           if (taskTime[0].toNumber() === PROFILE_ID) {
             expect(taskTime[1]).to.be.eq(UPDATED_TIME);
             return;
@@ -378,7 +378,7 @@ describe("Organization", () => {
 
         const TASK_ID = 0;
 
-        const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
+        const txUpdate = contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
         expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
       });
 
@@ -391,7 +391,7 @@ describe("Organization", () => {
 
         const TASK_ID = 0;
 
-        const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
+        const txUpdate = contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
         expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
       });
 
@@ -404,7 +404,7 @@ describe("Organization", () => {
 
         const TASK_ID = 42;
 
-        const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
+        const txUpdate = contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
         expect(txUpdate).to.be.revertedWithCustomError(contract, "NotRegistered");
       });
 
@@ -416,7 +416,7 @@ describe("Organization", () => {
 
         const TASK_ID = 42;
 
-        const txUpdate = contract.updateTaskTime(PROFILE_ID, PROJECT_ID, TASK_ID, UPDATED_TIME);
+        const txUpdate = contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
         expect(txUpdate).to.be.revertedWithCustomError(contract, "NotRegistered");
       });
     });

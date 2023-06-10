@@ -1,7 +1,7 @@
-import { ethers } from "hardhat";
+import { ethers, tasks } from "hardhat";
 import { expect } from "chai";
 
-import { waitForTx } from "../helpers/utils";
+import { findEvent, waitForTx } from "../helpers/utils";
 
 import { MOCK_ORG_METADATA_URI, user, userAddress, my3secHub, eventsLibrary, skillWallet } from "./__setup.spec";
 import { getRandomSigner } from "../helpers/utils";
@@ -58,25 +58,26 @@ describe("HUB: Organization creation and registration", () => {
 
       await waitForTx(organization.connect(manager).createProject({ metadataURI: MOCK_ORG_METADATA_URI }));
 
-      await waitForTx(
+      const tx = await waitForTx(
         organization.connect(manager).createTask(0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2] })
       );
+      const taskId = findEvent(tx, "TaskCreated", eventsLibrary).args.taskId;
 
       await waitForTx(organization.connect(manager).addProjectMember(0, workerProfileId));
-      await waitForTx(organization.connect(manager).addTaskMember(0, 0, workerProfileId));
+      await waitForTx(organization.connect(manager).addTaskMember(taskId, workerProfileId));
 
       for (let i = 0; i < 3; i++) {
-        const tx = my3secHub.connect(worker).logTime(organization.address, 0, 0, 3600);
+        const tx = my3secHub.connect(worker).logTime(organization.address, taskId, 3600);
         await expect(tx).emit(eventsLibrary, "TimeLogged").withArgs(workerProfileId, 3600);
       }
 
       await waitForTx(
         organization
           .connect(manager)
-          .updateTask(0, 0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 3 })
+          .updateTask(taskId, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 3 })
       );
 
-      await waitForTx(my3secHub.connect(worker).withdraw(organization.address, 0, 0));
+      await waitForTx(my3secHub.connect(worker).withdraw(organization.address, taskId));
 
       for (let i = 0; i < 3; i++) {
         const tuple = await skillWallet.getSkill(workerProfileId, i);
@@ -95,7 +96,7 @@ describe("HUB: Organization creation and registration", () => {
 
       await waitForTx(my3secHub.connect(manager).createProfile({ metadataURI: MOCK_ORG_METADATA_URI }));
 
-      const logTimeTransaction = my3secHub.connect(manager).logTime(organization.address, 0, 0, 3600);
+      const logTimeTransaction = my3secHub.connect(manager).logTime(organization.address, 0, 3600);
 
       await expect(logTimeTransaction).to.be.revertedWithCustomError(my3secHub, "NotRegistered");
     });

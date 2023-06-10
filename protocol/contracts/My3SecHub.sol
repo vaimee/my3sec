@@ -28,8 +28,8 @@ contract My3SecHub is IMy3SecHub, Ownable {
     ISkillWallet internal _skillWallet;
 
     EnumerableSet.AddressSet internal _organizations;
-    // Org => ProjectId => TaskId => profileId
-    mapping(address => mapping(uint256 => mapping(uint256 => uint256))) rewards;
+    // Org => TaskId => profileId
+    mapping(address => mapping(uint256 => uint256)) rewards;
 
     modifier organizationRegistered(address organizationAddress) {
         if (!_organizations.contains(organizationAddress)) revert Errors.NotRegistered();
@@ -167,35 +167,35 @@ contract My3SecHub is IMy3SecHub, Ownable {
     }
 
     /// @inheritdoc IMy3SecHub
-    function logTime(address organizationAddress, uint256 projectId, uint256 taskId, uint256 time) organizationRegistered(organizationAddress) external override {
+    function logTime(address organizationAddress, uint256 taskId, uint256 time) organizationRegistered(organizationAddress) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
 
         // Use the time for today; reverts if the time is not available
         _timeWallet.spendTimeFor(senderProfileId, time);
 
-        organization.updateTaskTime(senderProfileId, projectId, taskId, time);
+        organization.updateTaskTime(senderProfileId, taskId, time);
 
         emit Events.TimeLogged(senderProfileId, time);
     }
 
     /// @inheritdoc IMy3SecHub
-    function withdraw(address organizationAddress, uint256 projectId, uint256 taskId) external {
+    function withdraw(address organizationAddress, uint256 taskId) external {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
 
-        if (organization.isTaskMember(projectId, taskId, senderProfileId) != true) revert Errors.NotMember();
+        if (organization.isTaskMember(taskId, senderProfileId) != true) revert Errors.NotMember();
 
-        DataTypes.TaskView memory task = organization.getTask(projectId, taskId);
+        DataTypes.TaskView memory task = organization.getTask(taskId);
 
         if (task.status != DataTypes.TaskStatus.COMPLETED) revert Errors.NotCompleted();
 
-        if (rewards[organizationAddress][projectId][taskId] != 0) revert Errors.AlreadyWithdrawn();
-        rewards[organizationAddress][projectId][taskId] = senderProfileId;
+        if (rewards[organizationAddress][taskId] != 0) revert Errors.AlreadyWithdrawn();
+        rewards[organizationAddress][taskId] = senderProfileId;
 
         uint256 skillCount = task.skills.length;
         for (uint256 i = 0; i < skillCount; i++) {
-            uint256 time = organization.getTaskLoggedTimeOfProfile(projectId, taskId, senderProfileId);
+            uint256 time = organization.getTaskLoggedTimeOfProfile(taskId, senderProfileId);
             _skillWallet.recordExperience(senderProfileId, task.skills[i], time / 1 hours);
         }
     }
