@@ -3,31 +3,21 @@ import { expect } from "chai";
 
 import { waitForTx } from "../helpers/utils";
 
-import {
-  PROFILE_INITIAL_ENERGY,
-  MOCK_ORG_METADATA_URI,
-  user,
-  userAddress,
-  userTwo,
-  my3secHub,
-  skillWallet,
-} from "./__setup.spec";
+import { MOCK_ORG_METADATA_URI, user, userAddress, my3secHub, eventsLibrary, skillWallet } from "./__setup.spec";
 import { getRandomSigner } from "../helpers/utils";
 
 describe("HUB: Organization creation and registration", () => {
   it("should create a new organization", async () => {
-    const EventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
     const currentOrgsCount = await my3secHub.getOrganizationCount();
 
     const orgCreationTransaction = await my3secHub.connect(user).createOrganization(MOCK_ORG_METADATA_URI);
     const nextOrgsCount = await my3secHub.getOrganizationCount();
 
-    await expect(orgCreationTransaction).emit(EventsLibrary, "OrganizationRegistered");
+    await expect(orgCreationTransaction).emit(eventsLibrary, "OrganizationRegistered");
     expect(nextOrgsCount).to.be.greaterThan(currentOrgsCount);
   });
 
   it("should register an organization", async () => {
-    const EventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
     const organizationFactory = await ethers.getContractFactory("Organization");
     const organization = await organizationFactory.connect(user).deploy(my3secHub.address, MOCK_ORG_METADATA_URI);
     const currentOrgsCount = await my3secHub.getOrganizationCount();
@@ -38,7 +28,7 @@ describe("HUB: Organization creation and registration", () => {
     const nextOrgsCount = await my3secHub.getOrganizationCount();
 
     expect(nextOrgsCount).to.be.greaterThan(currentOrgsCount);
-    await expect(orgCreationTransaction).emit(EventsLibrary, "OrganizationRegistered").withArgs(organization.address);
+    await expect(orgCreationTransaction).emit(eventsLibrary, "OrganizationRegistered").withArgs(organization.address);
   });
 
   it("should revert registration of an organization if the contract is not IOrganization", async () => {
@@ -54,7 +44,6 @@ describe("HUB: Organization creation and registration", () => {
       const managerAddress = await manager.getAddress();
       const workerAddress = await worker.getAddress();
 
-      const EventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
       const organizationFactory = await ethers.getContractFactory("Organization");
       const organization = await organizationFactory.connect(manager).deploy(my3secHub.address, MOCK_ORG_METADATA_URI);
 
@@ -63,7 +52,6 @@ describe("HUB: Organization creation and registration", () => {
       await waitForTx(my3secHub.connect(manager).createProfile({ metadataURI: MOCK_ORG_METADATA_URI }));
       await waitForTx(my3secHub.connect(worker).createProfile({ metadataURI: MOCK_ORG_METADATA_URI }));
 
-      const { id: managerProfileId } = await my3secHub.connect(manager).getDefaultProfile(managerAddress);
       const { id: workerProfileId } = await my3secHub.connect(worker).getDefaultProfile(workerAddress);
 
       await waitForTx(my3secHub.connect(manager).registerOrganization(organization.address));
