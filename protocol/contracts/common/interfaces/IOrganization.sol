@@ -51,7 +51,7 @@ interface IOrganization {
     function getTaskCount(uint256 projectId) external view returns (uint256);
 
     function getTask(uint256 projectId, uint256 index) external view returns (DataTypes.TaskView memory);
-    
+
     function getTask(uint256 taskId) external view returns (DataTypes.TaskView memory);
 
     function getTaskMemberCount(uint256 taskId) external view returns (uint256);
@@ -62,15 +62,9 @@ interface IOrganization {
 
     function getTaskLoggedTimeCount(uint256 taskId) external view returns (uint256);
 
-    function getTaskLoggedTime(
-        uint256 taskId,
-        uint256 index
-    ) external view returns (uint256, uint256);
+    function getTaskLoggedTime(uint256 taskId, uint256 index) external view returns (uint256, uint256);
 
-    function getTaskLoggedTimeOfProfile(
-        uint256 taskId,
-        uint256 profileId
-    ) external view returns (uint256);
+    function getTaskLoggedTimeOfProfile(uint256 taskId, uint256 profileId) external view returns (uint256);
 
     function createTask(uint256 projectId, DataTypes.CreateTask calldata args) external returns (uint256);
 
