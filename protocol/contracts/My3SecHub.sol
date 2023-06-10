@@ -31,6 +31,11 @@ contract My3SecHub is IMy3SecHub, Ownable {
     // Org => ProjectId => TaskId => profileId
     mapping(address => mapping(uint256 => mapping(uint256 => uint256))) rewards;
 
+    modifier organizationRegistered(address organizationAddress) {
+        if (!_organizations.contains(organizationAddress)) revert Errors.NotRegistered();
+        _;
+    }
+
     function setOrganizationFactoryContract(address contractAddress) external onlyOwner {
         _organizationFactory = OrganizationFactory(contractAddress);
     }
@@ -162,7 +167,7 @@ contract My3SecHub is IMy3SecHub, Ownable {
     }
 
     /// @inheritdoc IMy3SecHub
-    function logTime(address organizationAddress, uint256 projectId, uint256 taskId, uint256 time) external override {
+    function logTime(address organizationAddress, uint256 projectId, uint256 taskId, uint256 time) organizationRegistered(organizationAddress) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
 

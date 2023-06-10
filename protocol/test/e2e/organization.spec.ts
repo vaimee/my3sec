@@ -73,16 +73,31 @@ describe("HUB: Organization creation and registration", () => {
       await waitForTx(
         organization
           .connect(manager)
-          .updateTask(0, 0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 2 })
+          .updateTask(0, 0, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 3 })
       );
 
       await waitForTx(my3secHub.connect(worker).withdraw(organization.address, 0, 0));
 
       for (let i = 0; i < 3; i++) {
         const tuple = await skillWallet.getSkill(workerProfileId, i);
-      expect(tuple[1]).to.be.equal(3);
+        expect(tuple[1]).to.be.equal(3);
       }
     });
+
+    it("should revert for unknown organization", async () => {
+      const manager = await getRandomSigner();
+      const managerAddress = await manager.getAddress();
+
+      const organizationFactory = await ethers.getContractFactory("Organization");
+      const organization = await organizationFactory.connect(manager).deploy(my3secHub.address, MOCK_ORG_METADATA_URI);
+
+      await waitForTx(organization.connect(manager).addToWhitelist(managerAddress));
+
+      await waitForTx(my3secHub.connect(manager).createProfile({ metadataURI: MOCK_ORG_METADATA_URI }));
+
+      const logTimeTransaction = my3secHub.connect(manager).logTime(organization.address, 0, 0, 3600);
+
+      await expect(logTimeTransaction).to.be.revertedWithCustomError(my3secHub, "NotRegistered");
     });
   });
 });

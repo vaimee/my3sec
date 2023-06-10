@@ -15,6 +15,8 @@ library DataTypes {
     }
 
     enum ProjectStatus {
+        // Zero value for Enums used to check if the Project struct is initialized
+        INVALID,
         NOT_STARTED,
         IN_PROGRESS,
         COMPLETED,
@@ -46,6 +48,8 @@ library DataTypes {
     }
 
     enum TaskStatus {
+        // Zero value for Enums used to check if the Task struct is initialized
+        INVALID,
         NOT_STARTED,
         IN_PROGRESS,
         COMPLETED,

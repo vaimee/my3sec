@@ -8,6 +8,7 @@ library Errors {
     error NotHub();
     error NotWhitelisted();
     error NotProfileOwner();
+    error NotRegistered();
     error AlreadyRegistered();
     error AlreadyMember();
     error NotMember();
