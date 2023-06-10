@@ -3,6 +3,7 @@ import { ethers } from "hardhat";
 
 import {
   EnergyWallet,
+  Events,
   My3SecHub,
   My3SecProfiles,
   My3SecToken,
@@ -29,6 +30,7 @@ export let userTwoAddress: string;
 export let userThreeAddress: string;
 
 export let my3secHub: My3SecHub;
+export let eventLibrary: Events;
 export let organizationFactory: OrganizationFactory;
 export let my3secToken: My3SecToken;
 export let skillRegistry: SkillRegistry;
@@ -64,6 +66,7 @@ before(async () => {
 
   // Deployments
   my3secHub = await my3secHubFactory.deploy();
+  eventLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
   organizationFactory = await organizationFactoryFactory.deploy();
   my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
   skillRegistry = await skillRegistryFactory.deploy(MOCK_BASE_URI);
