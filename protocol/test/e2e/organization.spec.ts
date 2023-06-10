@@ -66,7 +66,8 @@ describe("HUB: Organization creation and registration", () => {
       await waitForTx(organization.connect(manager).addTaskMember(0, 0, workerProfileId));
 
       for (let i = 0; i < 3; i++) {
-        await waitForTx(my3secHub.connect(worker).logTime(organization.address, 0, 0, 3600));
+        const tx = my3secHub.connect(worker).logTime(organization.address, 0, 0, 3600);
+        await expect(tx).emit(eventsLibrary, "TimeLogged").withArgs(workerProfileId, 3600);
       }
 
       await waitForTx(
@@ -77,9 +78,11 @@ describe("HUB: Organization creation and registration", () => {
 
       await waitForTx(my3secHub.connect(worker).withdraw(organization.address, 0, 0));
 
-      // TODO: check all the skills
-      const tuple = await skillWallet.getSkill(workerProfileId, 0);
+      for (let i = 0; i < 3; i++) {
+        const tuple = await skillWallet.getSkill(workerProfileId, i);
       expect(tuple[1]).to.be.equal(3);
+      }
+    });
     });
   });
 });
