@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ImageConversionService {
-
-  constructor() { }
   
   decodeBase64Image(base64Image: string): Blob {
     const base64Arr = base64Image.split(',');
