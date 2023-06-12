@@ -16,7 +16,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   signUpForm!: FormGroup;
   submitted = false;
   profileExists$!: Observable<boolean>;
-  base64Image: string = '';
+  base64Image = '';
   constructor(
     private formBuilder: FormBuilder,
     private my3secHubContractService: My3secHubContractService,
@@ -37,7 +37,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       .getDefaultProfile(this.metamaskService.userAddress)
       .pipe(
         map((value) => {
-          if (value.length <= 0) return false;
+          if (value === undefined) return false;
           return true;
         }),
         catchError((error) => {

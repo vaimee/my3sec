@@ -14,8 +14,8 @@ export const my3secLoginGuard = () => {
     switchMap(() =>
       my3secHubContractService.getDefaultProfile(metamaskService.userAddress)
     ),
-    map((profileUrl: string[]) => {
-      if (!profileUrl[0]) return router.parseUrl('auth/signup');
+    map((profileUrl) => {
+      if (!profileUrl.metadataURI) return router.parseUrl('auth/signup');
       return true;
     }),
     catchError((error) => {
