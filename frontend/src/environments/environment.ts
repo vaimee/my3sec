@@ -13,10 +13,6 @@ export const environment = {
       decimals: 18,
     },
   },
-  abiPaths: {
-    my3secHub: '../../../assets/contracts/my3sec-hub.abi.json',
-    energyManager: '../../../assets/contracts/my3sec-energy-manager.abi.json',
-  },
   ipfs: {
     httpGateway: 'https://ipfs.io/ipfs',
     api_key:
