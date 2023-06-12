@@ -1,6 +1,6 @@
 {
   "name": "@vaimee/my3sec-contracts",
-  "version": "0.4.3-bis",
+  "version": "0.4.4",
   "description": "A set of contracts that implements the My3Sec protocol",
   "main": "index.js",
   "scripts": {
