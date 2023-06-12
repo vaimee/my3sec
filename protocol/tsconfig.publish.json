@@ -1,10 +1,8 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
+        "outDir": "./dist",
         "rootDir": "./typechain-types",
-        "paths": {
-            "./*" : ["./typechain-types"]
-        },
         "declaration": true
     },
     "include": [

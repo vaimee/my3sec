@@ -2,7 +2,8 @@
   "name": "@vaimee/my3sec-contracts",
   "version": "0.4.6",
   "description": "A set of contracts that implements the My3Sec protocol",
-  "main": "index.js",
+  "main": "index.mjs",
+  "module": "index.mjs",
   "scripts": {
     "build": "hardhat compile",
     "test": "hardhat test",
