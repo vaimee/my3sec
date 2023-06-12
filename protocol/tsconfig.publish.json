@@ -4,7 +4,8 @@
         "rootDir": "./typechain-types",
         "paths": {
             "./*" : ["./typechain-types"]
-        }
+        },
+        "declaration": true
     },
     "include": [
         "typechain-types/*"
