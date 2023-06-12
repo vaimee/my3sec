@@ -9,20 +9,20 @@
   </h2>
 
   <div class="row">
-    <div class="col-md-4" *ngFor="let skillset of skillData">
+    <div class="col-md-4" *ngFor="let skill of skills">
       <mat-card class="border p-3 py-4 cards rounded-3 mb-4">
-        <mat-card-title class="mb-2">{{ skillset?.skillName }}</mat-card-title>
+        <mat-card-title class="mb-2">{{ skill?.name }}</mat-card-title>
         <mat-card-subtitle class="mb-2">{{
-          skillset?.category
+          skill?.category
         }}</mat-card-subtitle>
         <mat-progress-bar
           class="mb-2"
           mode="determinate"
-          value="{{ skillset?.progress }}"
+          value="{{ skill?.progress }}"
         ></mat-progress-bar>
         <mat-card-subtitle class="d-flex nav-item justify-content-between"
-          ><span>{{ skillset?.progress }} xp</span>
-          <mat-icon class="text-warning">{{ skillset?.icon }}</mat-icon>
+          ><span>{{ skill?.progress }} xp</span>
+          <mat-icon class="text-warning">{{ skill?.icon }}</mat-icon>
         </mat-card-subtitle>
       </mat-card>
     </div>

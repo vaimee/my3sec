@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { MetamaskService } from 'app/authentication/services/metamask.service';
+import { My3secHubContractService } from 'app/shared/services/my3sec-hub-contract.service';
 import { Skill } from 'app/user-profile/models';
 
 @Component({
@@ -7,46 +9,11 @@ import { Skill } from 'app/user-profile/models';
   styleUrls: ['./skills.component.css'],
 })
 export class SkillsComponent implements OnInit {
-  skillData: Array<Skill> = [];
+  @Input() skills!: Array<Skill>;
 
-  ngOnInit(): void {
-    this.skillData = [
-      {
-        skillName: 'Javascript',
-        progress: 40,
-        category: 'Computer Score',
-        icon: 'verified_user',
-      },
-      {
-        skillName: 'Javascript',
-        progress: 50,
-        category: 'Computer Score',
-        icon: 'verified_user',
-      },
-      {
-        skillName: 'Javascript',
-        progress: 40,
-        category: 'Computer Score',
-        icon: 'verified_user',
-      },
-      {
-        skillName: 'Javascript',
-        progress: 40,
-        category: 'Computer Score',
-        icon: 'verified_user',
-      },
-      {
-        skillName: 'Javascript',
-        progress: 40,
-        category: 'Computer Score',
-        icon: 'verified_user',
-      },
-      {
-        skillName: 'Javascript',
-        progress: 40,
-        category: 'Computer Score',
-        icon: 'verified_user',
-      },
-    ];
-  }
+  constructor(
+    private my3secHubContractServiceService: My3secHubContractService,
+    private metamaskService: MetamaskService
+  ) {}
+  ngOnInit(): void {}
 }

@@ -1,5 +1,5 @@
 export interface Skill {
-  skillName: string;
+  name: string;
   category: string;
   icon: string;
   progress: number;

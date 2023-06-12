@@ -26,7 +26,7 @@
   height: 450px;
 }
 .timeline-min-height {
-  height: 584px;
+  height: 200px;
 }
 .profileMultiUserBlock {
   margin: 0;
@@ -167,4 +167,10 @@
   .timeline-min-height {
     height: auto;
   }
+}
+
+.circle-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 }

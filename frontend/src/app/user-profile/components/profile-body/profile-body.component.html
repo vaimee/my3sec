@@ -10,13 +10,15 @@
                 class="profileUser d-flex align-items-center justify-content-between"
               >
                 <div class="d-flex align-items-center">
-                  <mat-icon class="text-white">account_circle</mat-icon>
+                  <div class="profile-picture">
+                    <img [src]="decodedImage" alt="Profile Picture" class="circle-image" />
+                  </div>
                   <div class="profiletitleBlock">
                     <h1 class="fw-bold">
-                      {{ profileData.firstName }} {{ profileData.surname }}
+                      {{ profile.fullName }}
                     </h1>
                     <p>
-                      {{ userWalletAddress }}
+                      {{ profile.walletAddress }}
                       <small class="bg-dark text-white p-2 rounded ms-4"
                         >ENDORSE</small
                       >
@@ -42,15 +44,15 @@
                 class="border-0 box-shadow-none p-3 cards rounded-3 d-flex align-items-center justify-content-between flex-row cardCountBlock"
               >
                 <div>
-                  <h2 class="mb-0">50</h2>
+                  <h2 class="mb-0">{{  profile.endorsers.length }}</h2>
                   <p class="mb-0">Endorsers</p>
                 </div>
                 <div>
-                  <h2 class="mb-0">200</h2>
+                  <h2 class="mb-0">{{ profile.endorsers.length }}</h2>
                   <p class="mb-0">Endorsing</p>
                 </div>
                 <div>
-                  <h2 class="mb-0">347</h2>
+                  <h2 class="mb-0">{{ profile.energy }}</h2>
                   <p class="mb-0">Energy</p>
                 </div>
               </mat-card>
@@ -62,12 +64,12 @@
           <div class="row">
             <!-- Skill -->
             <div class="col-md-8">
-              <app-skills></app-skills>
+              <app-skills [skills]="profile.skills"></app-skills>
             </div>
             <!-- Skill-->
             <!-- Certificates -->
             <div class="col-md-4">
-              <app-certificates></app-certificates>
+              <app-certificates [certificatesData]="profile.certificates"></app-certificates>
             </div>
 
             <!-- Certificates-->
@@ -81,7 +83,7 @@
       </div>
     </div>
     <!--Project-->
-    <app-projects></app-projects>
+    <app-projects [projects]="profile.projects"></app-projects>
     <!--Project-->
   </div>
 </div>
