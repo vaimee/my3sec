@@ -4,7 +4,7 @@ import { ContractTransaction, ethers, providers } from 'ethers';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { Observable, finalize, from, map, switchMap } from 'rxjs';
-import {My3SecHub, My3SecHub__factory} from '@vaimee/my3sec-contracts/typechain-types';
+import {My3SecHub, My3SecHub__factory} from '@vaimee/my3sec-contracts/dist';
 
 @Injectable({
   providedIn: 'root',
@@ -25,28 +25,27 @@ export class My3secHubContractService {
     );
 
     this.signer = this.provider.getSigner();
-    const My3SecHub__factory = require("@vaimee/my3sec-contracts/typechain-types").My3SecHub__factory;
     
     this.contract = My3SecHub__factory.connect(this.contractAddress, this.signer);
   }
   public getDefaultProfile(account: string): Observable<string[]> {
     this.loadingService.show();
 
-    return from(this.contract['getDefaultProfile'](account)).pipe(
+    return from(this.contract.getDefaultProfile(account)).pipe(
       map((value) => value as string[]),
       finalize(() => this.loadingService.hide())
     );
   }
 
   public getProfile(profileId: number): Observable<unknown> {
-    return from(this.contract['getProfile'](profileId));
+    return from(this.contract.getProfile(profileId));
   }
 
   public createProfile(metadataURI: string): Observable<number> {
     this.loadingService.show();
     const args = { metadataURI };
-
-    return from(this.contract['createProfile'](args)).pipe(
+    
+    return from(this.contract.createProfile(args)).pipe(
       switchMap((tx) =>
         (tx as ContractTransaction)
           .wait()
@@ -63,18 +62,18 @@ export class My3secHubContractService {
   }
 
   public setDefaultProfile(profileId: number): Observable<unknown> {
-    return from(this.contract['setDefaultProfile'](profileId));
+    return from(this.contract.setDefaultProfile(profileId));
   }
 
   public giveEnergyTo(profileId: number, amount: number): Observable<unknown> {
-    return from(this.contract['giveEnergyTo'](profileId, amount));
+    return from(this.contract.giveEnergyTo(profileId, amount));
   }
 
   public removeEnergyFrom(
     profileId: number,
     amount: number
   ): Observable<unknown> {
-    return from(this.contract['removeEnergyFrom'](profileId, amount));
+    return from(this.contract.removeEnergyFrom(profileId, amount));
   }
 
 }
