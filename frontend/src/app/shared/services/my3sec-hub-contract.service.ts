@@ -1,10 +1,11 @@
 import { LoadingService } from './loading.service';
 import { Injectable } from '@angular/core';
-import { ContractTransaction, ethers, providers } from 'ethers';
+import { ethers, providers } from 'ethers';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { Observable, finalize, from, map, switchMap } from 'rxjs';
 import {My3SecHub, My3SecHub__factory} from '@vaimee/my3sec-contracts/dist';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 @Injectable({
   providedIn: 'root',
@@ -28,16 +29,17 @@ export class My3secHubContractService {
     
     this.contract = My3SecHub__factory.connect(this.contractAddress, this.signer);
   }
-  public getDefaultProfile(account: string): Observable<string[]> {
+  
+  public getDefaultProfile(
+    account: string
+  ): Observable<DataTypes.ProfileViewStructOutput> {
     this.loadingService.show();
-
     return from(this.contract.getDefaultProfile(account)).pipe(
-      map((value) => value as string[]),
       finalize(() => this.loadingService.hide())
     );
   }
 
-  public getProfile(profileId: number): Observable<unknown> {
+  public getProfile(profileId: number): Observable<DataTypes.ProfileViewStructOutput> {
     return from(this.contract.getProfile(profileId));
   }
 
@@ -46,17 +48,14 @@ export class My3secHubContractService {
     const args = { metadataURI };
     
     return from(this.contract.createProfile(args)).pipe(
-      switchMap((tx) =>
-        (tx as ContractTransaction)
-          .wait()
-          .then((receipt: ethers.ContractReceipt) => {
-            const event = receipt.events?.[0];
-            if (!event) {
-              throw new Error('Event not found in transaction receipt');
-            }
-            return event.args?.['profileId'].toNumber();
-          })
-      ),
+      switchMap(async (tx) => {
+        const receipt = await tx.wait();
+        const event = receipt.events?.[0];
+        if (!event) {
+          throw new Error('Event not found in transaction receipt');
+        }
+        return event.args?.['profileId'].toNumber();
+      }),
       finalize(() => this.loadingService.hide())
     );
   }
