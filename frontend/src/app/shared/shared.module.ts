@@ -4,10 +4,12 @@ import { MaterialModule } from 'app/material/material.module';
 import { LoadingComponent } from './components/loading/loading.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
-    LoadingComponent
+    LoadingComponent,
+    PageNotFoundComponent
   ],
   imports: [CommonModule, MaterialModule],
   exports: [LoadingComponent],

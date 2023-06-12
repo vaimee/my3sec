@@ -4,6 +4,7 @@ import { metamaskNotInstalledGuard } from './authentication/guards/metamask-not-
 import { metamaskLoginGuard } from './authentication/guards/metamask-login.guard';
 import { rightChainGuard } from './authentication/guards/right-chain.guard';
 import { my3secLoginGuard } from './authentication/guards/my3sec-login.guard';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'profile' },
@@ -13,6 +14,7 @@ const routes: Routes = [
       import('../app/authentication/auth.module').then((m) => m.AuthModule),
   },
   {
+    path: 'profile',
     canActivateChild: [
       metamaskNotInstalledGuard,
       metamaskLoginGuard,
@@ -28,9 +30,8 @@ const routes: Routes = [
           ),
       },
     ],
-    path: 'profile',
   },
-  { path: '**', redirectTo: 'profile' },
+  { path: '**', component: PageNotFoundComponent }, 
 ];
 
 @NgModule({
