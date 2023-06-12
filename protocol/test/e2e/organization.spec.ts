@@ -74,7 +74,7 @@ describe("HUB: Organization creation and registration", () => {
       await waitForTx(
         organization
           .connect(manager)
-          .updateTask(taskId, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 3 })
+          .updateTask(taskId, { metadataURI: MOCK_ORG_METADATA_URI, skills: [0, 1, 2], status: 2 })
       );
 
       await waitForTx(my3secHub.connect(worker).withdraw(organization.address, taskId));

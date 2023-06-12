@@ -30,12 +30,12 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     modifier projectExists(uint256 projectId) {
-        if (_projects[projectId].status == DataTypes.ProjectStatus.INVALID) revert Errors.NotRegistered();
+        if (projectId >= _projects.length) revert Errors.NotRegistered();
         _;
     }
 
     modifier taskExists(uint256 taskId) {
-        if (_tasks[taskId].status == DataTypes.TaskStatus.INVALID) revert Errors.AlreadyCompleted();
+        if (taskId >= _tasks.length) revert Errors.NotRegistered();
         _;
     }
 
