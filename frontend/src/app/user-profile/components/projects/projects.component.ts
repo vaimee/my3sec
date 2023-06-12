@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
+import { Project } from 'app/user-profile/interfaces/project.interface';
 
 
 @Component({
@@ -8,6 +8,6 @@ import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent {
-  @Input() projects!: DataTypes.ProjectViewStruct[]; 
+  @Input() projects!: Project[]; 
 }
 

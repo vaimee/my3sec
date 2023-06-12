@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ethers, providers } from 'ethers';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { Observable, finalize, from, map, switchMap } from 'rxjs';
+import { Observable, finalize, from, switchMap } from 'rxjs';
 import {My3SecHub, My3SecHub__factory} from '@vaimee/my3sec-contracts/dist';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 

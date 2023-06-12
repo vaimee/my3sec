@@ -1,13 +1,12 @@
-import { My3SecEnergyManagerContractService } from './../../../shared/services/my3-sec-energy-manager-contract.service';
 import { My3secHubContractService } from 'app/shared/services/my3sec-hub-contract.service';
 import { IpfsService } from 'app/shared/services/ipfs.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { MetamaskService } from 'app/authentication/services/metamask.service';
 import { ProfileData } from 'app/shared/interfaces';
-import { Profile } from 'app/user-profile/models';
 import { ImageConversionService } from 'app/shared/services/image-conversion.service';
 import { ActivatedRoute } from '@angular/router';
+import { Profile } from 'app/user-profile/interfaces/profile.interface';
 
 @Component({
   selector: 'app-profile-body',
@@ -18,15 +17,14 @@ export class ProfileBodyComponent implements OnInit {
   public profileData$!: Observable<ProfileData>;
   public userWalletAddress!: string;
   public profile!: Profile;
-  public id!: number;
-  public energy!: any;
+  public id!: string;
+  public energy!: number;
   public decodedImage!: Blob;
-  public useDefaultProfile: boolean = true;
+  public useDefaultProfile = true;
 
   constructor(
     private ipfsService: IpfsService,
     private my3secHubContractService: My3secHubContractService,
-    private my3SecEnergyManagerContractService: My3SecEnergyManagerContractService,
     private metamaskService: MetamaskService,
     private imageConversion: ImageConversionService,
     private route: ActivatedRoute
@@ -45,10 +43,7 @@ export class ProfileBodyComponent implements OnInit {
       .getDefaultProfile(this.metamaskService.userAddress)
       .pipe(
         switchMap((profileUrl) => {
-          this.id = profileUrl.id;
-          this.energy = this.my3SecEnergyManagerContractService.totalEnergyOf(
-            profileUrl.id
-          );
+          this.id = profileUrl.id.toString();
           return profileUrl.metadataURI;
         }),
         switchMap((profileUrl) =>
@@ -57,26 +52,25 @@ export class ProfileBodyComponent implements OnInit {
       );
 
     this.profileData$.subscribe((data) => {
-      this.profile = new Profile(
-        `${data.firstName} ${data.surname}`,
-        this.id,
-        this.metamaskService.userAddress
-      );
-    });
+      this.profile = {
+        ...data,
+        id: parseInt(this.id),
+        walletAddress: this.metamaskService.userAddress,
+        endorsers: [],
+        energy: 0,
+        certificates: [],
+        skills: [],
+        projects: [],
+      }});
   }
 
   loadProfile() {
-    this.id = this.route.snapshot.paramMap.get('userId') as unknown as number; //work around -- test later
-
+    this.id = this.route.snapshot.paramMap.get('userId') || ''; // TODO: redirect to my profile if no id is provided
     this.profileData$ = this.my3secHubContractService
-      .getProfile(this.id)
+      .getProfile(parseInt(this.id))
       .pipe(
         switchMap((profileUrl) => {
-          this.id = profileUrl.id;
-          this.energy = this.my3SecEnergyManagerContractService.totalEnergyOf(
-            profileUrl.id
-          );
-          console.log(this.energy);
+          this.id = profileUrl.id.toString();
           return profileUrl.metadataURI;
         }),
         switchMap((profileUrl) =>
@@ -85,11 +79,16 @@ export class ProfileBodyComponent implements OnInit {
       );
 
     this.profileData$.subscribe((data) => {
-      this.profile = new Profile(
-        `${data.firstName} ${data.surname}`,
-        this.id,
-        this.metamaskService.userAddress
-      );
+      this.profile = {
+        ...data,
+        id: parseInt(this.id),
+        walletAddress: this.metamaskService.userAddress,
+        endorsers: [],
+        energy: 0,
+        certificates: [],
+        skills: [],
+        projects: [],
+      };
     });
   }
 
