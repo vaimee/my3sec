@@ -1,3 +1,1 @@
-export * from './skill.interface';
-export * from './certificate.interface';
-export * from './searchBarCategory.enum'
+export * from './search-bar-category.enum'
