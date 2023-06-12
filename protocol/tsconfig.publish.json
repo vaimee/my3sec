@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "rootDir": "./typechain-types",
+        "paths": {
+            "./*" : ["./typechain-types"]
+        }
+    },
+    "include": [
+        "typechain-types/*"
+    ]
+}
