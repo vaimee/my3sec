@@ -1,7 +1,7 @@
 import { My3secHubContractService } from 'app/shared/services/my3sec-hub-contract.service';
 import { IpfsService } from 'app/shared/services/ipfs.service';
 import { Component, OnInit } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, mergeMap, switchMap } from 'rxjs';
 import { MetamaskService } from 'app/authentication/services/metamask.service';
 import { ProfileData } from 'app/shared/interfaces';
 import { ImageConversionService } from 'app/shared/services/image-conversion.service';
@@ -44,11 +44,13 @@ export class ProfileBodyComponent implements OnInit {
       .pipe(
         switchMap((profileUrl) => {
           this.id = profileUrl.id.toString();
-          return profileUrl.metadataURI;
+          const uri =  profileUrl.metadataURI;
+          return this.ipfsService.retrieveJSON<ProfileData>(uri)
         }),
-        switchMap((profileUrl) =>
-          this.ipfsService.retrieveJSON<ProfileData>(profileUrl[0])
-        )
+        switchMap(async (profile) => {
+          await this.decodeProfilePicture(profile.profileImage);
+          return profile;
+        })
       );
 
     this.profileData$.subscribe((data) => {
@@ -69,13 +71,15 @@ export class ProfileBodyComponent implements OnInit {
     this.profileData$ = this.my3secHubContractService
       .getProfile(parseInt(this.id))
       .pipe(
-        switchMap((profileUrl) => {
-          this.id = profileUrl.id.toString();
-          return profileUrl.metadataURI;
+        switchMap((profile) => {
+          this.id = profile.id.toString();
+          const uri = profile.metadataURI;
+          return this.ipfsService.retrieveJSON<ProfileData>(uri)
         }),
-        switchMap((profileUrl) =>
-          this.ipfsService.retrieveJSON<ProfileData>(profileUrl[0])
-        )
+        switchMap(async (profile) => {
+          await this.decodeProfilePicture(profile.profileImage);
+          return profile;
+        })
       );
 
     this.profileData$.subscribe((data) => {
