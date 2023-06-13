@@ -19,7 +19,6 @@ export class ProfileBodyComponent implements OnInit {
   public profileData$!: Observable<Profile>;
   public userWalletAddress!: string;
   public id!: number;
-  public decodedImage!: Blob;
   public useDefaultProfile = true;
 
   constructor(
@@ -27,7 +26,6 @@ export class ProfileBodyComponent implements OnInit {
     private my3secHubContractService: My3secHubContractService,
     private energyWallerContract: EnergyWalletContract,
     private metamaskService: MetamaskService,
-    private imageConversion: ImageConversionService,
     private route: ActivatedRoute
   ) {}
 
@@ -42,10 +40,6 @@ export class ProfileBodyComponent implements OnInit {
           this.id = profile.id.toNumber();
           const uri = profile.metadataURI;
           return this.ipfsService.retrieveJSON<ProfileData>(uri);
-        }),
-        switchMap(async (profile) => {
-          await this.decodeProfilePicture(profile.profileImage);
-          return profile;
         }),
         map((profile) => {
           const profileData = {
@@ -73,15 +67,5 @@ export class ProfileBodyComponent implements OnInit {
   loadProfile() {
     this.id = parseInt(this.route.snapshot.paramMap.get('userId') as string, 0);
     return this.my3secHubContractService.getProfile(this.id);
-  }
-
-  async decodeProfilePicture(encodedPicture: string): Promise<void> {
-    try {
-      this.decodedImage = await this.imageConversion.decodeBase64Image(
-        encodedPicture
-      );
-    } catch (error) {
-      console.error('Failed to decode profile picture:', error);
-    }
   }
 }
