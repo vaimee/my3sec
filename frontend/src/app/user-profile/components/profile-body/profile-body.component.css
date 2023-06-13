@@ -173,4 +173,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  object-fit: cover;
+  padding: 5px;
+  margin: 10px;
 }
