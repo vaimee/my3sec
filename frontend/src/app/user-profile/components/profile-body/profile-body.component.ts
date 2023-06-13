@@ -1,12 +1,14 @@
 import { My3secHubContractService } from 'app/shared/services/my3sec-hub-contract.service';
 import { IpfsService } from 'app/shared/services/ipfs.service';
 import { Component, OnInit } from '@angular/core';
-import { Observable, mergeMap, switchMap } from 'rxjs';
+import { Observable, from, map, switchMap } from 'rxjs';
 import { MetamaskService } from 'app/authentication/services/metamask.service';
 import { ProfileData } from 'app/shared/interfaces';
 import { ImageConversionService } from 'app/shared/services/image-conversion.service';
 import { ActivatedRoute } from '@angular/router';
 import { Profile } from 'app/user-profile/interfaces/profile.interface';
+import { EnergyWalletContract } from 'app/shared/services/energy-wallet-contract.service';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 @Component({
   selector: 'app-profile-body',
@@ -14,86 +16,63 @@ import { Profile } from 'app/user-profile/interfaces/profile.interface';
   styleUrls: ['./profile-body.component.css'],
 })
 export class ProfileBodyComponent implements OnInit {
-  public profileData$!: Observable<ProfileData>;
+  public profileData$!: Observable<Profile>;
   public userWalletAddress!: string;
-  public profile!: Profile;
-  public id!: string;
-  public energy!: number;
+  public id!: number;
   public decodedImage!: Blob;
   public useDefaultProfile = true;
 
   constructor(
     private ipfsService: IpfsService,
     private my3secHubContractService: My3secHubContractService,
+    private energyWallerContract: EnergyWalletContract,
     private metamaskService: MetamaskService,
     private imageConversion: ImageConversionService,
     private route: ActivatedRoute
   ) {}
-  
 
   ngOnInit(): void {
     this.route.data.subscribe((data) => {
       this.useDefaultProfile = data['useDefaultProfile'];
-      this.useDefaultProfile ? this.loadDefaultProfile() : this.loadProfile();
+
+      this.profileData$ = (
+        this.useDefaultProfile ? this.loadDefaultProfile() : this.loadProfile()
+      ).pipe(
+        switchMap((profile: DataTypes.ProfileViewStructOutput) => {
+          this.id = profile.id.toNumber();
+          const uri = profile.metadataURI;
+          return this.ipfsService.retrieveJSON<ProfileData>(uri);
+        }),
+        switchMap(async (profile) => {
+          await this.decodeProfilePicture(profile.profileImage);
+          return profile;
+        }),
+        map((profile) => {
+          const profileData = {
+            ...profile,
+            id: this.id.toString(),
+            walletAddress: this.metamaskService.userAddress,
+            endorsers$: from([]),
+            energy$: this.energyWallerContract.totalEnergyOf(this.id),
+            certificates: [],
+            skills: [],
+            projects: [],
+          };
+          return profileData;
+        })
+      );
     });
   }
 
   loadDefaultProfile() {
-    this.profileData$ = this.my3secHubContractService
-      .getDefaultProfile(this.metamaskService.userAddress)
-      .pipe(
-        switchMap((profileUrl) => {
-          this.id = profileUrl.id.toString();
-          const uri =  profileUrl.metadataURI;
-          return this.ipfsService.retrieveJSON<ProfileData>(uri)
-        }),
-        switchMap(async (profile) => {
-          await this.decodeProfilePicture(profile.profileImage);
-          return profile;
-        })
-      );
-
-    this.profileData$.subscribe((data) => {
-      this.profile = {
-        ...data,
-        id: parseInt(this.id),
-        walletAddress: this.metamaskService.userAddress,
-        endorsers: [],
-        energy: 0,
-        certificates: [],
-        skills: [],
-        projects: [],
-      }});
+    return this.my3secHubContractService.getDefaultProfile(
+      this.metamaskService.userAddress
+    );
   }
 
   loadProfile() {
-    this.id = this.route.snapshot.paramMap.get('userId') || ''; // TODO: redirect to my profile if no id is provided
-    this.profileData$ = this.my3secHubContractService
-      .getProfile(parseInt(this.id))
-      .pipe(
-        switchMap((profile) => {
-          this.id = profile.id.toString();
-          const uri = profile.metadataURI;
-          return this.ipfsService.retrieveJSON<ProfileData>(uri)
-        }),
-        switchMap(async (profile) => {
-          await this.decodeProfilePicture(profile.profileImage);
-          return profile;
-        })
-      );
-
-    this.profileData$.subscribe((data) => {
-      this.profile = {
-        ...data,
-        id: parseInt(this.id),
-        walletAddress: this.metamaskService.userAddress,
-        endorsers: [],
-        energy: 0,
-        certificates: [],
-        skills: [],
-        projects: [],
-      };
-    });
+    this.id = parseInt(this.route.snapshot.paramMap.get('userId') as string, 0);
+    return this.my3secHubContractService.getProfile(this.id);
   }
 
   async decodeProfilePicture(encodedPicture: string): Promise<void> {

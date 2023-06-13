@@ -11,14 +11,18 @@
               >
                 <div class="d-flex align-items-center">
                   <div class="profile-picture">
-                    <img [src]="decodedImage" alt="Profile Picture" class="circle-image" />
+                    <img
+                      [src]="decodedImage"
+                      alt="Profile Picture"
+                      class="circle-image"
+                    />
                   </div>
                   <div class="profiletitleBlock">
                     <h1 class="fw-bold">
-                      {{ profile.firstName }} {{ profile.surname }}
+                      {{ profileData.firstName }} {{ profileData.surname }}
                     </h1>
                     <p>
-                      {{ profile.walletAddress }}
+                      {{ profileData.walletAddress }}
                       <small class="bg-dark text-white p-2 rounded ms-4"
                         >ENDORSE</small
                       >
@@ -44,15 +48,15 @@
                 class="border-0 box-shadow-none p-3 cards rounded-3 d-flex align-items-center justify-content-between flex-row cardCountBlock"
               >
                 <div>
-                  <h2 class="mb-0">{{  profile.endorsers.length }}</h2>
+                  <h2 class="mb-0">{{ 0 }}</h2>
                   <p class="mb-0">Endorsers</p>
                 </div>
                 <div>
-                  <h2 class="mb-0">{{ profile.endorsers.length }}</h2>
+                  <h2 class="mb-0">{{ 0 }}</h2>
                   <p class="mb-0">Endorsing</p>
                 </div>
-                <div>
-                  <h2 class="mb-0">{{ profile.energy }}</h2>
+                <div *ngIf="profileData.energy$ | async as energy">
+                  <h2 class="mb-0">{{ energy }}</h2>
                   <p class="mb-0">Energy</p>
                 </div>
               </mat-card>
@@ -64,12 +68,14 @@
           <div class="row">
             <!-- Skill -->
             <div class="col-md-8">
-              <app-skills [skills]="profile.skills"></app-skills>
+              <app-skills [skills]="profileData.skills"></app-skills>
             </div>
             <!-- Skill-->
             <!-- Certificates -->
             <div class="col-md-4">
-              <app-certificates [certificatesData]="profile.certificates"></app-certificates>
+              <app-certificates
+                [certificatesData]="profileData.certificates"
+              ></app-certificates>
             </div>
 
             <!-- Certificates-->
@@ -83,7 +89,7 @@
       </div>
     </div>
     <!--Project-->
-    <app-projects [projects]="profile.projects"></app-projects>
+    <app-projects [projects]="profileData.projects"></app-projects>
     <!--Project-->
   </div>
 </div>
