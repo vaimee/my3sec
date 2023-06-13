@@ -1,5 +1,5 @@
 import { writeFileSync } from "fs";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 
 const MY3SEC_TOKEN_INITIAL_SUPPLY = 10000000;
 const SKILL_REGISTRY_BASE_URI = "https://my3sec.vaimee.com/skills/";
@@ -17,7 +17,7 @@ async function main() {
 
   // Deployments
   console.log("\n\t-- Deploying My3SecHub --");
-  const my3secHub = await my3secHubFactory.deploy();
+  const my3secHub = await upgrades.deployProxy(my3secHubFactory, []);
 
   console.log("\n\t-- Deploying OrganizationFactory --");
   const organizationFactory = await organizationFactoryFactory.deploy();
@@ -29,16 +29,16 @@ async function main() {
   const skillRegistry = await skillRegistryFactory.deploy(SKILL_REGISTRY_BASE_URI);
 
   console.log("\n\t-- Deploying My3SecProfiles --");
-  const my3secProfiles = await my3secProfilesFactory.deploy(my3secHub.address);
+  const my3secProfiles = await upgrades.deployProxy(my3secProfilesFactory, [my3secHub.address]);
 
   console.log("\n\t-- Deploying EnergyWallet --");
-  const energyWallet = await energyWalletFactory.deploy(my3secHub.address);
+  const energyWallet = await upgrades.deployProxy(energyWalletFactory, [my3secHub.address]);
 
   console.log("\n\t-- Deploying TimeWallet --");
-  const timeWallet = await timeWalletFactory.deploy(my3secHub.address);
+  const timeWallet = await upgrades.deployProxy(timeWalletFactory, [my3secHub.address]);
 
   console.log("\n\t-- Deploying SkillWallet --");
-  const skillWallet = await skillWalletFactory.deploy(my3secHub.address);
+  const skillWallet = await upgrades.deployProxy(skillWalletFactory, [my3secHub.address]);
 
   // Initializations
   console.log("\n\t-- Initializing My3SecHub --");

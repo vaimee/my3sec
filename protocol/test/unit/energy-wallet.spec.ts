@@ -19,7 +19,8 @@ describe("EnergyWallet", () => {
     const deployerAddress = deployer.address;
 
     const contractFactory = await ethers.getContractFactory("EnergyWallet");
-    contract = await contractFactory.deploy(deployerAddress);
+    contract = await contractFactory.deploy();
+    await contract.initialize(deployerAddress);
   });
 
   describe("Deployment", () => {
