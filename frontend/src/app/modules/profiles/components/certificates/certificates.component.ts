@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { Certificate } from './../../../../modules/profiles/interfaces';
 
 @Component({
@@ -6,6 +7,6 @@ import { Certificate } from './../../../../modules/profiles/interfaces';
   templateUrl: './certificates.component.html',
   styleUrls: ['./certificates.component.css'],
 })
-export class CertificatesComponent  {
+export class CertificatesComponent {
   @Input() certificates!: Array<Certificate>;
 }

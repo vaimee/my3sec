@@ -1,14 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { ProfilesRoutingModule } from './profiles-routing.module';
+import { SharedModule } from './../../shared/shared.module';
+import { CertificatesComponent } from './components/certificates/certificates.component';
 import { ProfileBodyComponent } from './components/profile-body/profile-body.component';
 import { ProfileHeaderComponent } from './components/profile-header/profile-header.component';
-import { SharedModule } from './../../shared/shared.module';
-import { SkillsComponent } from './components/skills/skills.component';
-import { CertificatesComponent } from './components/certificates/certificates.component';
 import { ProjectsComponent } from './components/projects/projects.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { SkillsComponent } from './components/skills/skills.component';
+import { ProfilesRoutingModule } from './profiles-routing.module';
 
 @NgModule({
   declarations: [
@@ -18,11 +18,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     CertificatesComponent,
     ProjectsComponent,
   ],
-  imports: [
-    CommonModule,
-    ProfilesRoutingModule,
-    SharedModule,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule, ProfilesRoutingModule, SharedModule, ReactiveFormsModule],
 })
 export class ProfilesModule {}

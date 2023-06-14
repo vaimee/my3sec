@@ -1,13 +1,12 @@
-import { LoadingService } from './loading.service';
-import { Injectable } from '@angular/core';
-import { BigNumber, ethers, providers } from 'ethers';
+import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/dist';
 import { environment } from 'environments/environment';
+import { BigNumber, ethers, providers } from 'ethers';
 import { Observable, finalize, from, map } from 'rxjs';
-import {
-  EnergyWallet,
-  EnergyWallet__factory,
-} from '@vaimee/my3sec-contracts/dist';
+
+import { Injectable } from '@angular/core';
+
 import { ProfileEnergyData } from './../../modules/profiles/interfaces';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,15 +18,9 @@ export class EnergyWalletContract {
   private contract: EnergyWallet;
 
   constructor(private loadingService: LoadingService) {
-    this.provider = new ethers.providers.Web3Provider(
-      window.ethereum as providers.ExternalProvider,
-      'any'
-    );
+    this.provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
     this.signer = this.provider.getSigner();
-    this.contract = EnergyWallet__factory.connect(
-      this.contractAddress,
-      this.signer
-    );
+    this.contract = EnergyWallet__factory.connect(this.contractAddress, this.signer);
   }
 
   public fetchProfileEnergyData(profileId: number): ProfileEnergyData {
@@ -87,14 +80,9 @@ export class EnergyWalletContract {
       finalize(() => this.loadingService.hide())
     );
   }
-  
-  public energizersOf(
-    profileId: number,
-    index: number
-  ): Observable<[BigNumber, BigNumber]> {
+
+  public energizersOf(profileId: number, index: number): Observable<[BigNumber, BigNumber]> {
     this.loadingService.show();
-    return from(this.contract.energizersOf(profileId, index)).pipe(
-      finalize(() => this.loadingService.hide())
-    );
+    return from(this.contract.energizersOf(profileId, index)).pipe(finalize(() => this.loadingService.hide()));
   }
 }

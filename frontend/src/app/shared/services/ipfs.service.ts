@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { environment } from 'environments/environment.development';
+import { NFTStorage } from 'nft.storage';
 import { Observable, from } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
-import { NFTStorage } from 'nft.storage';
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
 import { LoadingService } from './loading.service';
-import { environment } from 'environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +33,7 @@ export class IpfsService {
 
   retrieveJSON<T>(cid: string): Observable<T> {
     return this.http.get<T>(`${this.httpGateway}/${cid}`).pipe(
-      map((response) => {
+      map(response => {
         return response;
       })
     );

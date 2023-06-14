@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MetamaskService } from '../../services/metamask.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+
+import { MetamaskService } from '../../services/metamask.service';
 import { MetamaskError } from './../../../shared/interfaces';
 
 @Component({
@@ -10,11 +11,7 @@ import { MetamaskError } from './../../../shared/interfaces';
   styleUrls: ['./metamask-login.component.css', '../../shared/styles.css'],
 })
 export class MetamaskLoginComponent implements OnInit {
-  constructor(
-    private metamaskService: MetamaskService,
-    private snackBar: MatSnackBar,
-    private router: Router
-  ) {}
+  constructor(private metamaskService: MetamaskService, private snackBar: MatSnackBar, private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     await this.metamaskService.isReady;

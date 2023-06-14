@@ -1,1 +1,1 @@
-export * from './search-bar-category.enum'
+export * from './search-bar-category.enum';

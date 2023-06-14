@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImageConversionService {
-  
   decodeBase64Image(base64Image: string): Blob {
     const base64Arr = base64Image.split(',');
     const imageType = base64Arr[0].match(/:(.*?);/)?.[1] || '';
@@ -27,7 +26,7 @@ export class ImageConversionService {
         resolve(base64Image);
       };
 
-      reader.onerror = (error) => {
+      reader.onerror = error => {
         reject(error);
       };
 

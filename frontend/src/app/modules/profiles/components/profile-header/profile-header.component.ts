@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+
 import { SearchBarCategory } from './../../../../modules/profiles/models';
 
 @Component({
@@ -19,14 +20,9 @@ export class ProfileHeaderComponent {
   });
   isSubmitted = false;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar,
-    private router: Router
-  ) {}
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private router: Router) {}
 
   onSubmit(): void {
-
     if (this.searchForm.invalid) {
       this.snackBar.open('Search input cannot be empty', 'Dismiss', {
         duration: 3000,
@@ -41,7 +37,7 @@ export class ProfileHeaderComponent {
   }
 
   redirectToProfile() {
-    console.log("redirect to profile home");
-    this.router.navigate(['/profile']); 
+    console.log('redirect to profile home');
+    this.router.navigate(['/profile']);
   }
 }

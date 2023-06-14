@@ -3,12 +3,8 @@
     *ngIf="{
       totalEnergyOf: profileData.energy.totalEnergyOf$ | async,
       freeEnergyOf: profileData.energy.freeEnergyOf$ | async
-    } as energy"
-  >
-    <app-profile-header
-      [totalEnergy]="energy.totalEnergyOf"
-      [freeEnergy]="energy.freeEnergyOf"
-    ></app-profile-header>
+    } as energy">
+    <app-profile-header [totalEnergy]="energy.totalEnergyOf" [freeEnergy]="energy.freeEnergyOf"></app-profile-header>
   </div>
 
   <div class="profileComponentBlock bg-light h-100vh">
@@ -18,26 +14,16 @@
           <div class="profileHeaderBlock">
             <div class="row">
               <div class="col-md-8">
-                <div
-                  class="profileUser d-flex align-items-center justify-content-between"
-                >
+                <div class="profileUser d-flex align-items-center justify-content-between">
                   <div class="d-flex align-items-center">
                     <div class="profile-picture">
-                      <img
-                        src="{{ profileData.profileImage }}"
-                        alt="Profile Picture"
-                        class="circle-image"
-                      />
+                      <img src="{{ profileData.profileImage }}" alt="Profile Picture" class="circle-image" />
                     </div>
                     <div class="profiletitleBlock">
-                      <h1 class="fw-bold">
-                        {{ profileData.firstName }} {{ profileData.surname }}
-                      </h1>
+                      <h1 class="fw-bold">{{ profileData.firstName }} {{ profileData.surname }}</h1>
                       <p>
                         {{ profileData.walletAddress }}
-                        <small
-                          class="bg-dark text-white p-2 rounded ms-4"
-                          *ngIf="!this.useDefaultProfile"
+                        <small class="bg-dark text-white p-2 rounded ms-4" *ngIf="!this.useDefaultProfile"
                           >ENDORSE</small
                         >
                       </p>
@@ -59,14 +45,12 @@
               </div>
               <div class="col-md-4">
                 <mat-card
-                  class="border-0 box-shadow-none p-3 cards rounded-3 d-flex align-items-center justify-content-around flex-row cardCountBlock"
-                >
+                  class="border-0 box-shadow-none p-3 cards rounded-3 d-flex align-items-center justify-content-around flex-row cardCountBlock">
                   <div
                     class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.energizedBy$ | async
-                    } as energizedBy"
-                  >
+                    } as energizedBy">
                     <h2 class="mb-0">{{ energizedBy.value }}</h2>
                     <p class="mb-0">Endorsers</p>
                   </div>
@@ -75,8 +59,7 @@
                     class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.energizersOf$ | async
-                    } as energizersOf"
-                  >
+                    } as energizersOf">
                     <h2 class="mb-0">{{ energizersOf.value }}</h2>
                     <p class="mb-0">Endorsing</p>
                   </div>
@@ -84,8 +67,7 @@
                     class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.receivedEnergyOf$ | async
-                    } as receivedEnergyOf"
-                  >
+                    } as receivedEnergyOf">
                     <h2 class="mb-0">{{ receivedEnergyOf.value }}</h2>
                     <p class="mb-0">Energy</p>
                   </div>
@@ -103,9 +85,7 @@
               <!-- Skill-->
               <!-- Certificates -->
               <div class="col-md-4">
-                <app-certificates
-                  [certificates]="profileData.certificates"
-                ></app-certificates>
+                <app-certificates [certificates]="profileData.certificates"></app-certificates>
               </div>
 
               <!-- Certificates-->

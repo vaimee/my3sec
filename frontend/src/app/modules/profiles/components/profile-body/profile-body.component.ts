@@ -1,13 +1,15 @@
-import { My3secHubContractService } from './../../../../shared/services/my3sec-hub-contract.service';
-import { IpfsService } from './../../../../shared/services/ipfs.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable, map, switchMap } from 'rxjs';
-import { MetamaskService } from './../../../../auth/services/metamask.service';
-import { ProfileData } from './../../../../shared/interfaces';
-import { ActivatedRoute } from '@angular/router';
-import { Profile } from './../../../../modules/profiles/interfaces/profile.interface';
-import { EnergyWalletContract } from './../../../../shared/services/energy-wallet-contract.service';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
+import { Observable, map, switchMap } from 'rxjs';
+
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { MetamaskService } from './../../../../auth/services/metamask.service';
+import { Profile } from './../../../../modules/profiles/interfaces/profile.interface';
+import { ProfileData } from './../../../../shared/interfaces';
+import { EnergyWalletContract } from './../../../../shared/services/energy-wallet-contract.service';
+import { IpfsService } from './../../../../shared/services/ipfs.service';
+import { My3secHubContractService } from './../../../../shared/services/my3sec-hub-contract.service';
 
 @Component({
   selector: 'app-profile-body',
@@ -29,18 +31,16 @@ export class ProfileBodyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.data.subscribe((data) => {
+    this.route.data.subscribe(data => {
       this.useDefaultProfile = data['useDefaultProfile'];
 
-      this.profileData$ = (
-        this.useDefaultProfile ? this.loadDefaultProfile() : this.loadProfile()
-      ).pipe(
+      this.profileData$ = (this.useDefaultProfile ? this.loadDefaultProfile() : this.loadProfile()).pipe(
         switchMap((profile: DataTypes.ProfileViewStructOutput) => {
           this.id = profile.id.toNumber();
           const uri = profile.metadataURI;
           return this.ipfsService.retrieveJSON<ProfileData>(uri);
         }),
-        map((profile) => {
+        map(profile => {
           const profileData = {
             ...profile,
             id: this.id.toString(),
@@ -57,9 +57,7 @@ export class ProfileBodyComponent implements OnInit {
   }
 
   loadDefaultProfile() {
-    return this.my3secHubContractService.getDefaultProfile(
-      this.metamaskService.userAddress
-    );
+    return this.my3secHubContractService.getDefaultProfile(this.metamaskService.userAddress);
   }
 
   loadProfile() {

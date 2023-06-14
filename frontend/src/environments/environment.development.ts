@@ -1,4 +1,5 @@
-import  * as contractsAddresses  from '@vaimee/my3sec-contracts/deployed.json';
+import * as contractsAddresses from '@vaimee/my3sec-contracts/deployed.json';
+
 export const environment = {
   production: false,
   contracts: contractsAddresses,

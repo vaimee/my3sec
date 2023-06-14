@@ -1,11 +1,13 @@
-import { ImageConversionService } from './../../../shared/services/image-conversion.service';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MetamaskService } from './../../services/metamask.service';
+
+import { ImageConversionService } from './../../../shared/services/image-conversion.service';
 import { IpfsService } from './../../../shared/services/ipfs.service';
 import { My3secHubContractService } from './../../../shared/services/my3sec-hub-contract.service';
-import { Observable, catchError, map, of, switchMap } from 'rxjs';
+import { MetamaskService } from './../../services/metamask.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -33,19 +35,17 @@ export class SignUpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadForm();
 
-    this.profileExists$ = this.my3secHubContractService
-      .getDefaultProfile(this.metamaskService.userAddress)
-      .pipe(
-        map((value) => {
-          if (value === undefined) return false;
-          return true;
-        }),
-        catchError((error) => {
-          console.error(error);
-          console.log('error when reading profile - redirect to signup');
-          return of(false);
-        })
-      );
+    this.profileExists$ = this.my3secHubContractService.getDefaultProfile(this.metamaskService.userAddress).pipe(
+      map(value => {
+        if (value === undefined) return false;
+        return true;
+      }),
+      catchError(error => {
+        console.error(error);
+        console.log('error when reading profile - redirect to signup');
+        return of(false);
+      })
+    );
   }
 
   loadForm() {
@@ -77,30 +77,23 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
     this.ipfsService
       .storeJSON(formValue)
-      .pipe(
-        switchMap((uri) => this.my3secHubContractService.createProfile(uri))
-      )
+      .pipe(switchMap(uri => this.my3secHubContractService.createProfile(uri)))
       .subscribe({
-        next: (value) => {
+        next: value => {
           console.log(`Profile created with ID: ${value}`);
           this.router.navigate(['/profile']);
         },
-        error: (err) => {
+        error: err => {
           console.error(`Failed to create profile: ${err}`);
         },
       });
   }
 
-  async onFileSelected(
-    fileInputEvent: Event,
-    label: HTMLDivElement
-  ): Promise<void> {
+  async onFileSelected(fileInputEvent: Event, label: HTMLDivElement): Promise<void> {
     const fileInput = fileInputEvent.target as HTMLInputElement;
     const file: File | null = fileInput.files?.[0] || null;
     if (file === null) return;
-    this.base64Image = await this.imageConversionService.convertImageToBase64(
-      file
-    );
+    this.base64Image = await this.imageConversionService.convertImageToBase64(file);
     label.innerText = file.name;
   }
 

@@ -1,10 +1,12 @@
-import { LoadingService } from '../../shared/services/loading.service';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable, NgZone } from '@angular/core';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { AccountsChangedEvent } from './../../shared/interfaces';
 import { environment } from 'environments/environment';
 import { Observable, Subject } from 'rxjs';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Injectable, NgZone } from '@angular/core';
+
+import { LoadingService } from '../../shared/services/loading.service';
+import { AccountsChangedEvent } from './../../shared/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -70,9 +72,7 @@ export class MetamaskService {
     try {
       this._ethProvider = await this.getEthereumProvider();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      this._ethProvider.on('chainChanged', (_chainId: number) =>
-        window.location.reload()
-      );
+      this._ethProvider.on('chainChanged', (_chainId: number) => window.location.reload());
       this._ethProvider.on('accountsChanged', (accounts: Array<string>) =>
         this.ngZone.run(async () => {
           // Bring event back inside Angular's zone

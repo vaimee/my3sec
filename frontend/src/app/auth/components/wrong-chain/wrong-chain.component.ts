@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MetamaskError } from './../../../shared/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+
+import { MetamaskError } from './../../../shared/interfaces';
 import { MetamaskService } from './../../services/metamask.service';
 
 @Component({
@@ -10,11 +11,7 @@ import { MetamaskService } from './../../services/metamask.service';
   styleUrls: ['./wrong-chain.component.css', '../../shared/styles.css'],
 })
 export class WrongChainComponent implements OnInit {
-  constructor(
-    private metamaskService: MetamaskService,
-    private snackBar: MatSnackBar,
-    private router: Router
-  ) {}
+  constructor(private metamaskService: MetamaskService, private snackBar: MatSnackBar, private router: Router) {}
 
   ngOnInit(): void {
     this.checkRedirectCondition();

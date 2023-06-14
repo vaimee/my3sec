@@ -1,6 +1,8 @@
+import { from, map } from 'rxjs';
+
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { from, map } from 'rxjs';
+
 import { MetamaskService } from '../services/metamask.service';
 
 export const rightChainGuard = () => {
