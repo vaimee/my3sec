@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
 import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/dist';
 
 import { ProfileEnergyData } from './../../modules/profiles/interfaces';
-import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +17,7 @@ export class EnergyWalletContract {
   private signer: ethers.Signer;
   private contract: EnergyWallet;
 
-  constructor(private loadingService: LoadingService) {
+  constructor() {
     this.provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
     this.signer = this.provider.getSigner();
     this.contract = EnergyWallet__factory.connect(this.contractAddress, this.signer);
@@ -35,55 +34,42 @@ export class EnergyWalletContract {
   }
 
   public totalEnergizersOf(profileId: number): Observable<number> {
-    this.loadingService.show();
     return from(this.contract.totalEnergizersOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber()),
-      finalize(() => this.loadingService.hide())
+      map((energy: ethers.BigNumber) => energy.toNumber())
     );
   }
 
   public totalEnergyOf(profileId: number): Observable<number> {
-    this.loadingService.show();
     return from(this.contract.totalEnergyOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber()),
-      finalize(() => this.loadingService.hide())
+      map((energy: ethers.BigNumber) => energy.toNumber())
     );
   }
 
   public allocatedEnergyOf(profileId: number): Observable<number> {
-    this.loadingService.show();
     return from(this.contract.allocatedEnergyOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber()),
-      finalize(() => this.loadingService.hide())
+      map((energy: ethers.BigNumber) => energy.toNumber())
     );
   }
 
   public freeEnergyOf(profileId: number): Observable<number> {
-    this.loadingService.show();
     return from(this.contract.freeEnergyOf(profileId)).pipe(
       map((energy: ethers.BigNumber) => energy.toNumber()),
-      finalize(() => this.loadingService.hide())
     );
   }
 
   public totalEnergizedBy(profileId: number): Observable<number> {
-    this.loadingService.show();
     return from(this.contract.totalEnergizedBy(profileId)).pipe(
       map((energy: ethers.BigNumber) => energy.toNumber()),
-      finalize(() => this.loadingService.hide())
     );
   }
 
   public receivedEnergyOf(profileId: number): Observable<number> {
-    this.loadingService.show();
     return from(this.contract.receivedEnergyOf(profileId)).pipe(
       map((energy: ethers.BigNumber) => energy.toNumber()),
-      finalize(() => this.loadingService.hide())
     );
   }
 
   public energizersOf(profileId: number, index: number): Observable<[BigNumber, BigNumber]> {
-    this.loadingService.show();
-    return from(this.contract.energizersOf(profileId, index)).pipe(finalize(() => this.loadingService.hide()));
+    return from(this.contract.energizersOf(profileId, index));
   }
 }
