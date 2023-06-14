@@ -34,9 +34,9 @@ export class EnergyWalletContract {
     return {
       energizedBy$: this.totalEnergizedBy(profileId),
       receivedEnergyOf$: this.receivedEnergyOf(profileId),
-      allocatedEnergyOf$: this.allocatedEnergyOf(profileId),
       energizersOf$: this.totalEnergizersOf(profileId),
       totalEnergyOf$: this.totalEnergyOf(profileId),
+      freeEnergyOf$: this.freeEnergyOf(profileId),
     };
   }
 
@@ -83,6 +83,17 @@ export class EnergyWalletContract {
   public receivedEnergyOf(profileId: number): Observable<number> {
     this.loadingService.show();
     return from(this.contract.receivedEnergyOf(profileId)).pipe(
+      map((energy: ethers.BigNumber) => energy.toNumber()),
+      finalize(() => this.loadingService.hide())
+    );
+  }
+
+  public asdasd(
+    profileId: number,
+    index: number
+  ): Observable<number> {
+    this.loadingService.show();
+    return from(this.contract.freeEnergyOf(profileId)).pipe(
       map((energy: ethers.BigNumber) => energy.toNumber()),
       finalize(() => this.loadingService.hide())
     );

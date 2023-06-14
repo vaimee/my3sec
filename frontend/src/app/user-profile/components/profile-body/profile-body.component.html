@@ -2,12 +2,12 @@
   <div
     *ngIf="{
       totalEnergyOf: profileData.energy.totalEnergyOf$ | async,
-      allocatedEnergyOf: profileData.energy.allocatedEnergyOf$ | async
+      freeEnergyOf: profileData.energy.freeEnergyOf$| async
     } as energy"
   >
     <app-profile-header
       [totalEnergy]="energy.totalEnergyOf"
-      [allocatedEnergy]="energy.allocatedEnergyOf"
+      [freeEnergy]="energy.freeEnergyOf"
     ></app-profile-header>
   </div>
 
@@ -59,7 +59,7 @@
                 <mat-card
                   class="border-0 box-shadow-none p-3 cards rounded-3 d-flex align-items-center justify-content-between flex-row cardCountBlock"
                 >
-                  <div
+                  <div class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.energizedBy$ | async
                     } as energizedBy"
@@ -68,7 +68,7 @@
                     <p class="mb-0">Endorsers</p>
                   </div>
 
-                  <div
+                  <div class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.energizersOf$ | async
                     } as energizersOf"
@@ -76,7 +76,7 @@
                     <h2 class="mb-0">{{ energizersOf.value }}</h2>
                     <p class="mb-0">Endorsing</p>
                   </div>
-                  <div
+                  <div class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.receivedEnergyOf$ | async
                     } as receivedEnergyOf"

@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { My3secHubContractService } from 'app/shared/services/my3sec-hub-contract.service';
 import { SearchBarCategory } from 'app/user-profile/models';
 
 @Component({
@@ -12,7 +11,7 @@ import { SearchBarCategory } from 'app/user-profile/models';
 })
 export class ProfileHeaderComponent {
   @Input() totalEnergy!: number | null;
-  @Input() allocatedEnergy!: number | null;
+  @Input() freeEnergy!: number | null;
   SearchBarCategory = SearchBarCategory;
   searchForm = this.formBuilder.group({
     searchText: ['', Validators.required],
