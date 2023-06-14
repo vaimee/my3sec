@@ -7,5 +7,5 @@ import { Certificate } from 'app/user-profile/interfaces';
   styleUrls: ['./certificates.component.css'],
 })
 export class CertificatesComponent  {
-  @Input() certificatesData!: Array<Certificate>;
+  @Input() certificates!: Array<Certificate>;
 }
