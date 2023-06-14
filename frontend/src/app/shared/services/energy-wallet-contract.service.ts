@@ -87,18 +87,7 @@ export class EnergyWalletContract {
       finalize(() => this.loadingService.hide())
     );
   }
-
-  public asdasd(
-    profileId: number,
-    index: number
-  ): Observable<number> {
-    this.loadingService.show();
-    return from(this.contract.freeEnergyOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber()),
-      finalize(() => this.loadingService.hide())
-    );
-  }
-
+  
   public energizersOf(
     profileId: number,
     index: number
