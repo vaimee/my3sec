@@ -85,6 +85,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       .pipe(switchMap(uri => this.my3secHubContractService.createProfile(uri)))
       .subscribe({
         next: value => {
+          this.loadingService.hide();
           console.log(`Profile created with ID: ${value}`);
           this.router.navigate(['/profile']);
         },

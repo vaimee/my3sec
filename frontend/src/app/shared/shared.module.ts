@@ -31,6 +31,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const materialModules = [
   MatSelectModule,
@@ -60,7 +61,7 @@ const materialModules = [
 
 @NgModule({
   declarations: [LoadingComponent, PageNotFoundComponent, LayoutComponent, NavbarComponent],
-  imports: [CommonModule, RouterModule, materialModules],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, materialModules],
   exports: [LoadingComponent, materialModules],
   providers: [
     {

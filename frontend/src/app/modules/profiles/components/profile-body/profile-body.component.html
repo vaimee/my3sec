@@ -1,12 +1,4 @@
 <div *ngIf="this.profileData$ | async as profileData">
-  <div
-    *ngIf="{
-      totalEnergyOf: profileData.energy.totalEnergyOf$ | async,
-      freeEnergyOf: profileData.energy.freeEnergyOf$ | async
-    } as energy">
-    <app-profile-header [totalEnergy]="energy.totalEnergyOf" [freeEnergy]="energy.freeEnergyOf"></app-profile-header>
-  </div>
-
   <div class="profileComponentBlock bg-light h-100vh">
     <div class="container-fluid">
       <div class="profileMainBlock">
