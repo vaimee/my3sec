@@ -7,7 +7,7 @@ import {
   EnergyWallet,
   EnergyWallet__factory,
 } from '@vaimee/my3sec-contracts/dist';
-import { ProfileEnergyData } from 'app/user-profile/interfaces';
+import { ProfileEnergyData } from './../../modules/profiles/interfaces';
 
 @Injectable({
   providedIn: 'root',
