@@ -31,6 +31,16 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'organizations',
+    canActivateChild: [
+      metamaskNotInstalledGuard,
+      metamaskLoginGuard,
+      rightChainGuard,
+    ],
+    loadChildren: () => import('./organizations/organizations.module').then((m) => m.OrganizationsModule),
+    data: { preload: true },
+  },
   { path: '**', component: PageNotFoundComponent }, 
 ];
 
