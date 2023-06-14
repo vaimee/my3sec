@@ -1,7 +1,6 @@
 import { LoadingService } from './loading.service';
 import { Injectable } from '@angular/core';
 import { ethers, providers } from 'ethers';
-import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { Observable, finalize, from, switchMap } from 'rxjs';
 import {My3SecHub, My3SecHub__factory} from '@vaimee/my3sec-contracts/dist';
@@ -16,10 +15,7 @@ export class My3secHubContractService {
   private signer: ethers.Signer;
   private contract: My3SecHub;
 
-  constructor(
-    private http: HttpClient,
-    private loadingService: LoadingService
-  ) {
+  constructor(private loadingService: LoadingService) {
     this.provider = new ethers.providers.Web3Provider(
       window.ethereum as providers.ExternalProvider,
       'any'
@@ -39,8 +35,13 @@ export class My3secHubContractService {
     );
   }
 
-  public getProfile(profileId: number): Observable<DataTypes.ProfileViewStructOutput> {
-    return from(this.contract.getProfile(profileId));
+  public getProfile(
+    profileId: number
+  ): Observable<DataTypes.ProfileViewStructOutput> {
+    this.loadingService.show();
+    return from(this.contract.getProfile(profileId)).pipe(
+      finalize(() => this.loadingService.hide())
+    );
   }
 
   public createProfile(metadataURI: string): Observable<number> {
