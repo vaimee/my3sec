@@ -43,12 +43,15 @@
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item d-flex align-items-center">
           <a class="nav-link" aria-current="page" href="javascript:void(0)"
-            >1032</a
+            >{{ allocatedEnergy }} / {{ totalEnergy }}</a
           >
           <mat-icon class="text-white">flash_on</mat-icon>
         </li>
-        <li class="nav-item d-flex align-items-center">
-          <a class="nav-link" href="javascript:void(0)">Profile </a>
+        <li
+          class="nav-item d-flex align-items-center"
+          (click)="redirectToProfile()"
+        >
+          <a class="nav-link" href="javascript:void(0)">Profile</a>
           <mat-icon class="text-white">account_circle</mat-icon>
         </li>
       </ul>

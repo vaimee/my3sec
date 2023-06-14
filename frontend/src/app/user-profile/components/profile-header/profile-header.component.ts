@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { My3secHubContractService } from 'app/shared/services/my3sec-hub-contract.service';
 import { SearchBarCategory } from 'app/user-profile/models';
 
@@ -10,6 +11,8 @@ import { SearchBarCategory } from 'app/user-profile/models';
   styleUrls: ['./profile-header.component.css'],
 })
 export class ProfileHeaderComponent {
+  @Input() totalEnergy!: number | null;
+  @Input() allocatedEnergy!: number | null;
   SearchBarCategory = SearchBarCategory;
   searchForm = this.formBuilder.group({
     searchText: ['', Validators.required],
@@ -18,9 +21,9 @@ export class ProfileHeaderComponent {
   isSubmitted = false;
 
   constructor(
-    private my3secHubContractService: My3secHubContractService,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   onSubmit(): void {
@@ -36,5 +39,10 @@ export class ProfileHeaderComponent {
     console.log('Search value:', searchForm.searchText);
     console.log('Selected option:', searchForm.category);
     this.isSubmitted = true;
+  }
+
+  redirectToProfile() {
+    console.log("redirect to profile home");
+    this.router.navigate(['/profile']); 
   }
 }
