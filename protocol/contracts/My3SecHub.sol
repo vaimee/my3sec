@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./common/interfaces/IMy3SecHub.sol";
 import "./common/interfaces/ISkillRegistry.sol";
@@ -17,7 +17,7 @@ import "./common/libraries/Events.sol";
 
 import "./organizations/OrganizationFactory.sol";
 
-contract My3SecHub is IMy3SecHub, Ownable {
+contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     OrganizationFactory internal _organizationFactory;
@@ -28,12 +28,17 @@ contract My3SecHub is IMy3SecHub, Ownable {
     ISkillWallet internal _skillWallet;
 
     EnumerableSet.AddressSet internal _organizations;
+
     // Org => TaskId => profileId
     mapping(address => mapping(uint256 => uint256)) rewards;
 
     modifier organizationRegistered(address organizationAddress) {
         if (!_organizations.contains(organizationAddress)) revert Errors.NotRegistered();
         _;
+    }
+
+    function initialize() public initializer {
+        __Ownable_init();
     }
 
     function setOrganizationFactoryContract(address contractAddress) external onlyOwner {

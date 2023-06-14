@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "../common/access/HubControllable.sol";
+import "../common/access/HubControllableUpgradeable.sol";
 import "../common/interfaces/ITimeWallet.sol";
 import "../common/libraries/Constants.sol";
 import "../common/libraries/Errors.sol";
 
-contract TimeWallet is ITimeWallet, HubControllable {
+contract TimeWallet is ITimeWallet, HubControllableUpgradeable {
     mapping(uint256 => uint256) internal _lastTimeSlot;
     mapping(uint256 => uint256) internal _totalTimeSinceLastTimeSlot;
 
-    constructor(address hub) HubControllable(hub) {}
+    function initialize(address hub) public initializer {
+        __HubControllable_init(hub);
+    }
 
     function spendTimeFor(uint256 profileId, uint256 time) external override onlyHub {
         if (time >= Constants.TIME_WALLET_SLOT_SIZE) revert Errors.ExceededLoggableTime();

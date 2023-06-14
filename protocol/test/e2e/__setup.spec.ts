@@ -1,5 +1,5 @@
 import { Signer } from "ethers";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 
 import {
   EnergyWallet,
@@ -65,15 +65,15 @@ before(async () => {
   const skillWalletFactory = await ethers.getContractFactory("SkillWallet");
 
   // Deployments
-  my3secHub = await my3secHubFactory.deploy();
+  my3secHub = (await upgrades.deployProxy(my3secHubFactory, [])) as My3SecHub;
   eventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
   organizationFactory = await organizationFactoryFactory.deploy();
   my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
   skillRegistry = await skillRegistryFactory.deploy(MOCK_BASE_URI);
-  my3secProfiles = await my3secProfilesFactory.deploy(my3secHub.address);
-  energyWallet = await energyWalletFactory.deploy(my3secHub.address);
-  timeWallet = await timeWalletFactory.deploy(my3secHub.address);
-  skillWallet = await skillWalletFactory.deploy(my3secHub.address);
+  my3secProfiles = (await upgrades.deployProxy(my3secProfilesFactory, [my3secHub.address])) as My3SecProfiles;
+  energyWallet = (await upgrades.deployProxy(energyWalletFactory, [my3secHub.address])) as EnergyWallet;
+  timeWallet = (await upgrades.deployProxy(timeWalletFactory, [my3secHub.address])) as TimeWallet;
+  skillWallet = (await upgrades.deployProxy(skillWalletFactory, [my3secHub.address])) as SkillWallet;
 
   // Initializations
   await my3secHub.setOrganizationFactoryContract(organizationFactory.address);

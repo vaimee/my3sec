@@ -1,29 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
+import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableMapUpgradeable.sol";
 
-import "../common/access/HubControllable.sol";
+import "../common/access/HubControllableUpgradeable.sol";
 import "../common/interfaces/IEnergyWallet.sol";
 
 /**
  * @title EnergyWallet contract
  * @dev This is the implementation of the Energy Wallet.
  */
-contract EnergyWallet is IEnergyWallet, HubControllable {
-    using EnumerableMap for EnumerableMap.UintToUintMap;
+contract EnergyWallet is IEnergyWallet, HubControllableUpgradeable {
+    using EnumerableMapUpgradeable for EnumerableMapUpgradeable.UintToUintMap;
 
     mapping(uint256 => uint256) private _totalEnergy;
     mapping(uint256 => uint256) private _allocatedEnergy;
     mapping(uint256 => uint256) private _receivedEnergy;
-    mapping(uint256 => EnumerableMap.UintToUintMap) private _energyAllocationMap;
-    mapping(uint256 => EnumerableMap.UintToUintMap) private _reverseEnergyAllocationMap;
+    mapping(uint256 => EnumerableMapUpgradeable.UintToUintMap) private _energyAllocationMap;
+    mapping(uint256 => EnumerableMapUpgradeable.UintToUintMap) private _reverseEnergyAllocationMap;
 
-    /**
-     * Energy Wallet Contract Constructor.
-     */
-    constructor(address hub) HubControllable(hub) {}
+    function initialize(address hub) public initializer {
+        __HubControllable_init(hub);
+    }
 
     /// @inheritdoc IEnergyWallet
     function totalEnergyOf(uint256 profileId) external view override returns (uint256) {
