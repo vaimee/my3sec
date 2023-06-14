@@ -11,12 +11,7 @@ import { SkillsComponent } from './components/skills/skills.component';
 import { ProfilesRoutingModule } from './profiles-routing.module';
 
 @NgModule({
-  declarations: [
-    ProfileBodyComponent,
-    SkillsComponent,
-    CertificatesComponent,
-    ProjectsComponent,
-  ],
+  declarations: [ProfileBodyComponent, SkillsComponent, CertificatesComponent, ProjectsComponent],
   imports: [CommonModule, ProfilesRoutingModule, SharedModule, ReactiveFormsModule],
 })
 export class ProfilesModule {}

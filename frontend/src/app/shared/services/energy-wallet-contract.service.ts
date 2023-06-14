@@ -34,39 +34,27 @@ export class EnergyWalletContract {
   }
 
   public totalEnergizersOf(profileId: number): Observable<number> {
-    return from(this.contract.totalEnergizersOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber())
-    );
+    return from(this.contract.totalEnergizersOf(profileId)).pipe(map((energy: ethers.BigNumber) => energy.toNumber()));
   }
 
   public totalEnergyOf(profileId: number): Observable<number> {
-    return from(this.contract.totalEnergyOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber())
-    );
+    return from(this.contract.totalEnergyOf(profileId)).pipe(map((energy: ethers.BigNumber) => energy.toNumber()));
   }
 
   public allocatedEnergyOf(profileId: number): Observable<number> {
-    return from(this.contract.allocatedEnergyOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber())
-    );
+    return from(this.contract.allocatedEnergyOf(profileId)).pipe(map((energy: ethers.BigNumber) => energy.toNumber()));
   }
 
   public freeEnergyOf(profileId: number): Observable<number> {
-    return from(this.contract.freeEnergyOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber()),
-    );
+    return from(this.contract.freeEnergyOf(profileId)).pipe(map((energy: ethers.BigNumber) => energy.toNumber()));
   }
 
   public totalEnergizedBy(profileId: number): Observable<number> {
-    return from(this.contract.totalEnergizedBy(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber()),
-    );
+    return from(this.contract.totalEnergizedBy(profileId)).pipe(map((energy: ethers.BigNumber) => energy.toNumber()));
   }
 
   public receivedEnergyOf(profileId: number): Observable<number> {
-    return from(this.contract.receivedEnergyOf(profileId)).pipe(
-      map((energy: ethers.BigNumber) => energy.toNumber()),
-    );
+    return from(this.contract.receivedEnergyOf(profileId)).pipe(map((energy: ethers.BigNumber) => energy.toNumber()));
   }
 
   public energizersOf(profileId: number, index: number): Observable<[BigNumber, BigNumber]> {

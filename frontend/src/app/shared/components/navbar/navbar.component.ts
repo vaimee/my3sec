@@ -1,19 +1,23 @@
+import { Observable, map, merge, mergeMap } from 'rxjs';
+
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { SearchBarCategory } from '../../models/search-bar-category.enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
-import { EnergyWalletContract } from '@shared/services/energy-wallet-contract.service';
-import { Observable, map, merge, mergeMap } from 'rxjs';
+
 import { MetamaskService } from '@auth/services/metamask.service';
+
+import { EnergyWalletContract } from '@shared/services/energy-wallet-contract.service';
+import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
+
+import { SearchBarCategory } from '../../models/search-bar-category.enum';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit{
+export class NavbarComponent implements OnInit {
   totalEnergy!: Observable<number>;
   freeEnergy!: Observable<number>;
   SearchBarCategory = SearchBarCategory;
@@ -23,16 +27,24 @@ export class NavbarComponent implements OnInit{
   });
   isSubmitted = false;
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private my3secHubService: My3secHubContractService, private energyWallet: EnergyWalletContract,private metaMaskService: MetamaskService, private router: Router) { }
-  
+  constructor(
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
+    private my3secHubService: My3secHubContractService,
+    private energyWallet: EnergyWalletContract,
+    private metaMaskService: MetamaskService,
+    private router: Router
+  ) {}
+
   ngOnInit(): void {
-    const address = this.metaMaskService.userAddress
-    this.my3secHubService.getDefaultProfile(address).pipe(
-      map((profile) => profile.id.toNumber()),
-    ).subscribe(async (id) => {
-      this.totalEnergy = this.energyWallet.totalEnergyOf(id);
-      this.freeEnergy = this.energyWallet.freeEnergyOf(id);
-    });
+    const address = this.metaMaskService.userAddress;
+    this.my3secHubService
+      .getDefaultProfile(address)
+      .pipe(map(profile => profile.id.toNumber()))
+      .subscribe(async id => {
+        this.totalEnergy = this.energyWallet.totalEnergyOf(id);
+        this.freeEnergy = this.energyWallet.freeEnergyOf(id);
+      });
   }
 
   onSubmit(): void {
