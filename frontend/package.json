@@ -9,7 +9,8 @@
     "watch": "ng build --watch",
     "watch:dev": "ng build --watch",
     "test": "ng test",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx,html} --fix"
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx,html} --fix",
+    "format": "prettier --write \"src/**/*.+(ts|html|css|scss|json)\""
   },
   "private": true,
   "dependencies": {
@@ -49,16 +50,21 @@
     "@angular-eslint/template-parser": "15.1.0",
     "@angular/cli": "~15.0.2",
     "@angular/compiler-cli": "^15.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/jasmine": "~4.3.0",
     "@typescript-eslint/eslint-plugin": "5.44.0",
     "@typescript-eslint/parser": "5.44.0",
     "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "prettier": "^2.8.8",
+    "prettier-eslint": "^15.0.1",
     "typescript": "~4.8.2"
   }
 }
