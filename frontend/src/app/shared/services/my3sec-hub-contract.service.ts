@@ -6,8 +6,6 @@ import { Observable, finalize, from, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { LoadingService } from './loading.service';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -17,7 +15,7 @@ export class My3secHubContractService {
   private signer: ethers.Signer;
   private contract: My3SecHub;
 
-  constructor(private loadingService: LoadingService) {
+  constructor() {
     this.provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
 
     this.signer = this.provider.getSigner();
@@ -26,17 +24,15 @@ export class My3secHubContractService {
   }
 
   public getDefaultProfile(account: string): Observable<DataTypes.ProfileViewStructOutput> {
-    this.loadingService.show();
-    return from(this.contract.getDefaultProfile(account)).pipe(finalize(() => this.loadingService.hide()));
+    return from(this.contract.getDefaultProfile(account));
   }
 
   public getProfile(profileId: number): Observable<DataTypes.ProfileViewStructOutput> {
-    this.loadingService.show();
-    return from(this.contract.getProfile(profileId)).pipe(finalize(() => this.loadingService.hide()));
+    return from(this.contract.getProfile(profileId));
   }
 
   public createProfile(metadataURI: string): Observable<number> {
-    this.loadingService.show();
+  
     const args = { metadataURI };
 
     return from(this.contract.createProfile(args)).pipe(
@@ -48,7 +44,6 @@ export class My3secHubContractService {
         }
         return event.args?.['profileId'].toNumber();
       }),
-      finalize(() => this.loadingService.hide())
     );
   }
 

@@ -1,5 +1,5 @@
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
-import { Observable, map, switchMap } from 'rxjs';
+import { Observable, finalize, map, switchMap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,7 @@ import { ProfileData } from './../../../../shared/interfaces';
 import { EnergyWalletContract } from './../../../../shared/services/energy-wallet-contract.service';
 import { IpfsService } from './../../../../shared/services/ipfs.service';
 import { My3secHubContractService } from './../../../../shared/services/my3sec-hub-contract.service';
+import { LoadingService } from './../../../../shared/services/loading.service';
 
 @Component({
   selector: 'app-profile-body',
@@ -27,13 +28,14 @@ export class ProfileBodyComponent implements OnInit {
     private my3secHubContractService: My3secHubContractService,
     private energyWalletContract: EnergyWalletContract,
     private metamaskService: MetamaskService,
+    private loadingService: LoadingService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.useDefaultProfile = data['useDefaultProfile'];
-
+      this.loadingService.show();
       this.profileData$ = (this.useDefaultProfile ? this.loadDefaultProfile() : this.loadProfile()).pipe(
         switchMap((profile: DataTypes.ProfileViewStructOutput) => {
           this.id = profile.id.toNumber();
@@ -51,7 +53,8 @@ export class ProfileBodyComponent implements OnInit {
             projects: [],
           };
           return profileData;
-        })
+        }),
+        finalize(()=>{this.loadingService.hide()})
       );
     });
   }

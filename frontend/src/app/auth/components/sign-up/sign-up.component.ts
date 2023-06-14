@@ -1,4 +1,4 @@
-import { Observable, catchError, map, of, switchMap } from 'rxjs';
+import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +8,7 @@ import { ImageConversionService } from './../../../shared/services/image-convers
 import { IpfsService } from './../../../shared/services/ipfs.service';
 import { My3secHubContractService } from './../../../shared/services/my3sec-hub-contract.service';
 import { MetamaskService } from './../../services/metamask.service';
+import { LoadingService } from './../../..//shared/services/loading.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -25,6 +26,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     private ipfsService: IpfsService,
     private metamaskService: MetamaskService,
     private imageConversionService: ImageConversionService,
+    private loadingService: LoadingService,
     private router: Router
   ) {}
 
@@ -44,7 +46,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
         console.error(error);
         console.log('error when reading profile - redirect to signup');
         return of(false);
-      })
+      }),
+      finalize(() => { this.loadingService.hide(); })
     );
   }
 
@@ -74,7 +77,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     if (this.base64Image === '') return;
     const formValue = { ...this.signUpForm.value };
     formValue.profileImage = this.base64Image;
-
+    this.loadingService.show();
     this.ipfsService
       .storeJSON(formValue)
       .pipe(switchMap(uri => this.my3secHubContractService.createProfile(uri)))

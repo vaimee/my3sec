@@ -21,6 +21,6 @@ export const my3secLoginGuard = () => {
       console.error(error);
       console.log('error when reading profile - redirect to signup');
       return of(router.parseUrl('auth/signup'));
-    })
+    }),
   );
 };
