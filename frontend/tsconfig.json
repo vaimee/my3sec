@@ -57,6 +57,21 @@
       "http": [
         "../node_modules/stream-http",
       ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "@organizations/*": [
+        "app/modules/organizations/*"
+      ],
+      "@profiles/*": [
+        "app/modules/profiles/*"
+      ],
+      "@projects/*": [
+        "app/modules/projects/*"
+      ],
+      "@auth/*": [
+        "app/auth/*"
+      ],
     },
     
     
@@ -65,6 +80,6 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
   }
 }

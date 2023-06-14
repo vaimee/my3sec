@@ -8,7 +8,7 @@
   "trailingComma": "es5",
   "bracketSameLine": true,
   "printWidth": 120,
-  "importOrder": ["^@angular/(.*)$", "^[./]"],
+  "importOrder": ["^@angular/(.*)$","^@auth/(.*)$","^@shared/(.*)$", "^@(.*)$" ,"^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrderParserPlugins": ["typescript", "classProperties", "decorators-legacy"]

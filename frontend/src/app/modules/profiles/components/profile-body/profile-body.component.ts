@@ -1,16 +1,18 @@
-import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 import { Observable, finalize, map, switchMap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { MetamaskService } from './../../../../auth/services/metamask.service';
-import { Profile } from './../../../../modules/profiles/interfaces/profile.interface';
-import { ProfileData } from './../../../../shared/interfaces';
-import { EnergyWalletContract } from './../../../../shared/services/energy-wallet-contract.service';
-import { IpfsService } from './../../../../shared/services/ipfs.service';
-import { My3secHubContractService } from './../../../../shared/services/my3sec-hub-contract.service';
-import { LoadingService } from './../../../../shared/services/loading.service';
+import { MetamaskService } from '@auth/services/metamask.service';
+
+import { ProfileData } from '@shared/interfaces';
+import { EnergyWalletContract } from '@shared/services/energy-wallet-contract.service';
+import { IpfsService } from '@shared/services/ipfs.service';
+import { LoadingService } from '@shared/services/loading.service';
+import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
+
+import { Profile } from '@profiles/interfaces/profile.interface';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 @Component({
   selector: 'app-profile-body',
@@ -54,7 +56,9 @@ export class ProfileBodyComponent implements OnInit {
           };
           return profileData;
         }),
-        finalize(()=>{this.loadingService.hide()})
+        finalize(() => {
+          this.loadingService.hide();
+        })
       );
     });
   }

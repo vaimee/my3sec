@@ -4,11 +4,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { LoadingService } from './../../..//shared/services/loading.service';
 import { ImageConversionService } from './../../../shared/services/image-conversion.service';
 import { IpfsService } from './../../../shared/services/ipfs.service';
 import { My3secHubContractService } from './../../../shared/services/my3sec-hub-contract.service';
 import { MetamaskService } from './../../services/metamask.service';
-import { LoadingService } from './../../..//shared/services/loading.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -47,7 +47,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
         console.log('error when reading profile - redirect to signup');
         return of(false);
       }),
-      finalize(() => { this.loadingService.hide(); })
+      finalize(() => {
+        this.loadingService.hide();
+      })
     );
   }
 

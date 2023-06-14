@@ -1,10 +1,11 @@
-import { My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
-import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 import { environment } from 'environments/environment';
 import { ethers, providers } from 'ethers';
 import { Observable, finalize, from, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
+
+import { My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,6 @@ export class My3secHubContractService {
   }
 
   public createProfile(metadataURI: string): Observable<number> {
-  
     const args = { metadataURI };
 
     return from(this.contract.createProfile(args)).pipe(
@@ -43,7 +43,7 @@ export class My3secHubContractService {
           throw new Error('Event not found in transaction receipt');
         }
         return event.args?.['profileId'].toNumber();
-      }),
+      })
     );
   }
 

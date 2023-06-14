@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Project } from './../../../../modules/profiles/interfaces/project.interface';
+import { Project } from '@profiles/interfaces/project.interface';
 
 @Component({
   selector: 'app-projects',

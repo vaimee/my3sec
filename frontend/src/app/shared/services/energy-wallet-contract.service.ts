@@ -1,9 +1,10 @@
-import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/dist';
 import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
 import { Observable, finalize, from, map } from 'rxjs';
 
 import { Injectable } from '@angular/core';
+
+import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/dist';
 
 import { ProfileEnergyData } from './../../modules/profiles/interfaces';
 import { LoadingService } from './loading.service';

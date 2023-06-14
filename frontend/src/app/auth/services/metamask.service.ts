@@ -1,9 +1,10 @@
-import detectEthereumProvider from '@metamask/detect-provider';
 import { environment } from 'environments/environment';
 import { Observable, Subject } from 'rxjs';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, NgZone } from '@angular/core';
+
+import detectEthereumProvider from '@metamask/detect-provider';
 
 import { LoadingService } from '../../shared/services/loading.service';
 import { AccountsChangedEvent } from './../../shared/interfaces';

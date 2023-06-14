@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
-import { SearchBarCategory } from './../../../../modules/profiles/models';
+import { SearchBarCategory } from '@profiles/models';
 
 @Component({
   selector: 'app-profile-header',

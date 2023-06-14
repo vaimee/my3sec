@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { SharedModule } from './../../shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
+
 import { CertificatesComponent } from './components/certificates/certificates.component';
 import { ProfileBodyComponent } from './components/profile-body/profile-body.component';
 import { ProfileHeaderComponent } from './components/profile-header/profile-header.component';

@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { metamaskLoginGuard } from './auth/guards/metamask-login.guard';
-import { metamaskNotInstalledGuard } from './auth/guards/metamask-not-installed.guard';
-import { my3secLoginGuard } from './auth/guards/my3sec-login.guard';
-import { rightChainGuard } from './auth/guards/right-chain.guard';
-import { LayoutComponent } from './shared/components/layout/layout.component';
-import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { metamaskLoginGuard } from '@auth/guards/metamask-login.guard';
+import { metamaskNotInstalledGuard } from '@auth/guards/metamask-not-installed.guard';
+import { my3secLoginGuard } from '@auth/guards/my3sec-login.guard';
+import { rightChainGuard } from '@auth/guards/right-chain.guard';
+
+import { LayoutComponent } from '@shared/components/layout/layout.component';
+import { PageNotFoundComponent } from '@shared/components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
