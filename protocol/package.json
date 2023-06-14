@@ -8,6 +8,7 @@
     "build": "hardhat compile",
     "test": "hardhat test",
     "deploy": "hardhat run --network bellecourWhiteListed scripts/deploy.ts",
+    "update": "hardhat run --network bellecourWhiteListed scripts/update.ts",
     "format": "prettier --write .",
     "lint": "eslint . --fix",
     "prepublishOnly": "tsc -p tsconfig.publish.json"

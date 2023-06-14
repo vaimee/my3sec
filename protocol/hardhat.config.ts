@@ -11,6 +11,10 @@ const config: HardhatUserConfig = {
     bellecourWhiteListed: {
       url: "https://bellecour.iex.ec",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      // Fixed gas price to allow upgradeProxy and atomic call to setHub.
+      // Not sure if this is a fix only required for Bellecour.
+      gasPrice: 0,
+      gas: 6000000,
     },
     bellecour: {
       url: "https://bellecour.iex.ec",
