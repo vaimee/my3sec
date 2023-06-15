@@ -6,7 +6,22 @@ import "@openzeppelin/hardhat-upgrades";
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.17",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+            details: {
+              yul: true,
+            },
+          },
+        },
+      },
+    ],
+  },
   networks: {
     bellecourWhiteListed: {
       url: "https://bellecour.iex.ec",
