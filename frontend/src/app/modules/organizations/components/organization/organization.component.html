@@ -1,1 +1,37 @@
-<h1>Hello Organization</h1>
+<ng-container *ngIf="organization$ | async as orgData">
+  <div class="header">
+    <div class="header-company">
+      <img class="round-image" src="{{ orgData.icon }}" alt="..." />
+      <div class="header-company name">
+        <h2>{{ orgData.name }}</h2>
+        <span class="address">{{ orgData.address }}</span>
+      </div>
+      <p>{{ orgData.description }}</p>
+    </div>
+    <div class="people-detail">
+      <div class="profile-list">
+        <button mat-fab color="primary">
+          <mat-icon>person_add</mat-icon>
+        </button>
+        <ng-container *ngFor="let manager of managers$ | async">
+          <img class="round-image" src="{{ manager.profileImage }}" alt="" />
+        </ng-container>
+      </div>
+      <h4>Managers</h4>
+    </div>
+    <div class="people-detail">
+      <div class="profile-list">
+        <button mat-fab color="primary">
+          <mat-icon>person_add</mat-icon>
+        </button>
+        <ng-container *ngFor="let member of members$ | async">
+          <img class="round-image" src="{{ member.profileImage }}" alt="" />
+        </ng-container>
+      </div>
+      <h4>Members</h4>
+    </div>
+  </div>
+  <ng-container>
+    <!--Projects detail list-->
+  </ng-container>
+</ng-container>

@@ -1,1 +1,21 @@
-<h1>Hello Organization List</h1>
+<mat-list>
+  <mat-list-item *ngFor="let org of organizations | async" (click)="goTo(org.address)">
+    <img matListItemAvatar src="{{ org.icon }}" alt="..." />
+    <span matListItemTitle>{{ org.name }}</span>
+    <span matListItemLine>{{ org.description }}</span>
+    <p matListItemLine>
+      Bologna, Italy &#8226; <mat-icon class="line-icon" fontIcon="auto_awesome_mosaic"></mat-icon>
+      {{ org.projectsCount }} &#8226; <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ org.membersCount }}
+    </p>
+    <button
+      mat-icon-button
+      #tooltip="matTooltip"
+      matTooltip="Join"
+      matTooltipPosition="below"
+      matTooltipHideDelay="500"
+      matListItemMeta
+      color="primary">
+      <mat-icon>login</mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>
