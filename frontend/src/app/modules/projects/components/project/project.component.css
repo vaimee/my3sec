@@ -1,0 +1,67 @@
+.round-image {
+  border-radius: 50%;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+}
+
+.header-project {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  max-width: 500px;
+}
+
+.header-project p {
+  display: flex;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  margin: 5px;
+}
+
+.header-project img {
+  max-height: 100px;
+  justify-self: end;
+  margin-right: 5px;
+}
+
+.header-project .name {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+
+.people-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.profile-list img {
+  max-width: 50px;
+}
+
+.profile-list img:not(:first-child) {
+  margin-left: -25px;
+  transition: margin 0.1s ease-in-out;
+}
+
+.profile-list:hover img:not(:first-child) {
+  margin: -10px;
+}

@@ -1,0 +1,26 @@
+<ng-container *ngIf="project$ | async as project">
+  <div class="header">
+    <div class="header-project">
+      <img class="round-image" src="{{ project.image }}" />
+      <div class="header-project name">
+        <h2>{{ project.name }}</h2>
+        <span>{{ project.status }}</span>
+      </div>
+      <p>{{ project.description }}</p>
+    </div>
+    <div class="people-detail">
+      <div class="profile-list">
+        <button mat-fab color="primary">
+          <mat-icon>person_add</mat-icon>
+        </button>
+        <ng-container *ngFor="let member of members$ | async">
+          <img class="round-image" src="{{ member.profileImage }}" />
+        </ng-container>
+      </div>
+      <h4>Members</h4>
+    </div>
+  </div>
+  <ng-container>
+    <!--Tasks detail list-->
+  </ng-container>
+</ng-container>
