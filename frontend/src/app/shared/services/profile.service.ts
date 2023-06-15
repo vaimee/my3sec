@@ -1,5 +1,4 @@
-import { environment } from 'environments/environment';
-import { Observable, concatMap, map, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
