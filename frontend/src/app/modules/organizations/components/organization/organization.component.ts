@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 
-import { ProfileData } from '@shared/interfaces';
+import { ProfileMetadata } from '@shared/interfaces';
 
 import { Organization } from '../../interfaces';
 
@@ -13,8 +13,8 @@ import { Organization } from '../../interfaces';
 })
 export class OrganizationComponent implements OnInit {
   organization$!: Observable<Organization>;
-  managers$!: Observable<ProfileData[]>;
-  members$!: Observable<ProfileData[]>;
+  managers$!: Observable<ProfileMetadata[]>;
+  members$!: Observable<ProfileMetadata[]>;
   ngOnInit(): void {
     this.organization$ = of({
       address: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
