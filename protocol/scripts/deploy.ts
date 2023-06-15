@@ -6,10 +6,15 @@ const MY3SEC_TOKEN_INITIAL_SUPPLY = 10000000;
 const SKILL_REGISTRY_BASE_URI = "https://my3sec.vaimee.com/skills/";
 
 async function main() {
+  const accounts = await ethers.getSigners();
+  const deployer = accounts[0];
+
   // Factories
   const my3secHubFactory = await ethers.getContractFactory("My3SecHub");
   const organizationFactoryFactory = await ethers.getContractFactory("OrganizationFactory");
   const my3secTokenFactory = await ethers.getContractFactory("My3SecToken");
+  const timelockFactory = await ethers.getContractFactory("Timelock");
+  const my3SecGovernanceFactory = await ethers.getContractFactory("My3SecGovernance");
   const skillRegistryFactory = await ethers.getContractFactory("SkillRegistry");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
   const energyWalletFactory = await ethers.getContractFactory("EnergyWallet");
@@ -25,6 +30,12 @@ async function main() {
 
   console.log("\n\t-- Deploying My3SecToken --");
   const my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
+
+  console.log("\n\t-- Deploying Timelock --");
+  const timelock = await timelockFactory.deploy([], []);
+
+  console.log("\n\t-- Deploying My3SecGovernance --");
+  const my3SecGovernance = await my3SecGovernanceFactory.deploy(my3secToken.address, timelock.address);
 
   console.log("\n\t-- Deploying SkillRegistry --");
   const skillRegistry = await skillRegistryFactory.deploy(SKILL_REGISTRY_BASE_URI);
@@ -50,11 +61,19 @@ async function main() {
   await my3secHub.setTimeWalletContract(timeWallet.address);
   await my3secHub.setSkillWalletContract(skillWallet.address);
 
+  console.log("\n\t-- Initializing My3SecGovernance --");
+  const proposerRole = await timelock.PROPOSER_ROLE();
+  const timelockAdminRole = await timelock.TIMELOCK_ADMIN_ROLE();
+  await timelock.grantRole(proposerRole, my3SecGovernance.address);
+  await timelock.revokeRole(timelockAdminRole, deployer.address);
+
   // Save and logs addresses
   const addrs = {
     my3secHub: my3secHub.address,
     organizationFactory: organizationFactory.address,
     my3secToken: my3secToken.address,
+    timelock: timelock.address,
+    my3SecGovernance: my3SecGovernance.address,
     skillRegistry: skillRegistry.address,
     my3secProfiles: my3secProfiles.address,
     energyWallet: energyWallet.address,

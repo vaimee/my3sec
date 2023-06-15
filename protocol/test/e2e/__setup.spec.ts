@@ -4,6 +4,7 @@ import { ethers, upgrades } from "hardhat";
 import {
   EnergyWallet,
   Events,
+  My3SecGovernance,
   My3SecHub,
   My3SecProfiles,
   My3SecToken,
@@ -11,6 +12,7 @@ import {
   SkillRegistry,
   SkillWallet,
   TimeWallet,
+  Timelock,
 } from "../../typechain-types";
 
 export const MY3SEC_TOKEN_INITIAL_SUPPLY = 10000;
@@ -33,6 +35,8 @@ export let my3secHub: My3SecHub;
 export let eventsLibrary: Events;
 export let organizationFactory: OrganizationFactory;
 export let my3secToken: My3SecToken;
+export let timelock: Timelock;
+export let my3SecGovernance: My3SecGovernance;
 export let skillRegistry: SkillRegistry;
 export let my3secProfiles: My3SecProfiles;
 export let energyWallet: EnergyWallet;
@@ -58,6 +62,8 @@ before(async () => {
   const my3secHubFactory = await ethers.getContractFactory("My3SecHub");
   const organizationFactoryFactory = await ethers.getContractFactory("OrganizationFactory");
   const my3secTokenFactory = await ethers.getContractFactory("My3SecToken");
+  const timelockFactory = await ethers.getContractFactory("Timelock");
+  const my3SecGovernanceFactory = await ethers.getContractFactory("My3SecGovernance");
   const skillRegistryFactory = await ethers.getContractFactory("SkillRegistry");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
   const energyWalletFactory = await ethers.getContractFactory("EnergyWallet");
@@ -69,6 +75,8 @@ before(async () => {
   eventsLibrary = await ethers.getContractAt("Events", my3secHub.address, user);
   organizationFactory = await organizationFactoryFactory.deploy();
   my3secToken = await my3secTokenFactory.deploy(my3secHub.address, MY3SEC_TOKEN_INITIAL_SUPPLY);
+  timelock = await timelockFactory.deploy([], []);
+  my3SecGovernance = await my3SecGovernanceFactory.deploy(my3secToken.address, timelock.address);
   skillRegistry = await skillRegistryFactory.deploy(MOCK_BASE_URI);
   my3secProfiles = (await upgrades.deployProxy(my3secProfilesFactory, [my3secHub.address])) as My3SecProfiles;
   energyWallet = (await upgrades.deployProxy(energyWalletFactory, [my3secHub.address])) as EnergyWallet;
@@ -82,4 +90,9 @@ before(async () => {
   await my3secHub.setEnergyWalletContract(energyWallet.address);
   await my3secHub.setTimeWalletContract(timeWallet.address);
   await my3secHub.setSkillWalletContract(skillWallet.address);
+
+  const proposerRole = await timelock.PROPOSER_ROLE();
+  const timelockAdminRole = await timelock.TIMELOCK_ADMIN_ROLE();
+  await timelock.grantRole(proposerRole, my3SecGovernance.address);
+  await timelock.revokeRole(timelockAdminRole, deployerAddress);
 });
