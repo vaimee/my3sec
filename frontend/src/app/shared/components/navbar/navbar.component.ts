@@ -7,8 +7,10 @@ import { Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
+import { Profile } from '@shared/interfaces';
 import { EnergyWalletContract } from '@shared/services/energy-wallet-contract.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
+import { ProfileService } from '@shared/services/profile.service';
 
 import { SearchBarCategory } from '../../models/search-bar-category.enum';
 
@@ -20,6 +22,7 @@ import { SearchBarCategory } from '../../models/search-bar-category.enum';
 export class NavbarComponent implements OnInit {
   totalEnergy!: Observable<number>;
   freeEnergy!: Observable<number>;
+  profile!: Profile;
   SearchBarCategory = SearchBarCategory;
   searchForm = this.formBuilder.group({
     searchText: ['', Validators.required],
@@ -30,6 +33,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
+    private profileService: ProfileService,
     private my3secHubService: My3secHubContractService,
     private energyWallet: EnergyWalletContract,
     private metaMaskService: MetamaskService,
@@ -38,13 +42,11 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     const address = this.metaMaskService.userAddress;
-    this.my3secHubService
-      .getDefaultProfile(address)
-      .pipe(map(profile => profile.id.toNumber()))
-      .subscribe(async id => {
-        this.totalEnergy = this.energyWallet.totalEnergyOf(id);
-        this.freeEnergy = this.energyWallet.freeEnergyOf(id);
-      });
+    this.profileService.getDefaultProfile(address).subscribe(profile => {
+      this.totalEnergy = this.energyWallet.totalEnergyOf(parseInt(profile.id));
+      this.freeEnergy = this.energyWallet.freeEnergyOf(parseInt(profile.id));
+      this.profile = profile;
+    });
   }
 
   onSubmit(): void {

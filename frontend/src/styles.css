@@ -14,3 +14,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.round-image {
+  border-radius: 50%;
+}

@@ -1,11 +1,11 @@
-import { ProfileData } from 'app/shared/interfaces';
+import { ProfileMetadata } from 'app/shared/interfaces';
 
 import { Certificate } from './certificate.interface';
 import { ProfileEnergyData } from './profile-energy-data.interface';
 import { Project } from './project.interface';
 import { Skill } from './skill.interface';
 
-export interface Profile extends Omit<ProfileData, 'regulationCheckbox'> {
+export interface Profile extends Omit<ProfileMetadata, 'regulationCheckbox'> {
   id: string;
   walletAddress: string;
   energy: ProfileEnergyData;

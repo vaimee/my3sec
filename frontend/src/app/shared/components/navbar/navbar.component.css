@@ -36,6 +36,12 @@
   height: 48px;
 }
 
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+}
+
 @media screen and (max-device-width: 640px) {
   .navbar .form-control {
     width: 100%;

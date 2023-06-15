@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 
-import { ProfileData } from '@shared/interfaces';
+import { ProfileMetadata } from '@shared/interfaces';
 
 import { Project } from '../../interfaces/project.interface';
 
@@ -13,7 +13,7 @@ import { Project } from '../../interfaces/project.interface';
 })
 export class ProjectComponent implements OnInit {
   project$!: Observable<Project>;
-  members$!: Observable<ProfileData[]>;
+  members$!: Observable<ProfileMetadata[]>;
 
   ngOnInit(): void {
     this.project$ = of({

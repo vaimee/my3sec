@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
-import { ProfileData } from '@shared/interfaces';
+import { ProfileMetadata } from '@shared/interfaces';
 import { EnergyWalletContract } from '@shared/services/energy-wallet-contract.service';
 import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
@@ -42,7 +42,7 @@ export class ProfileBodyComponent implements OnInit {
         switchMap((profile: DataTypes.ProfileViewStructOutput) => {
           this.id = profile.id.toNumber();
           const uri = profile.metadataURI;
-          return this.ipfsService.retrieveJSON<ProfileData>(uri);
+          return this.ipfsService.retrieveJSON<ProfileMetadata>(uri);
         }),
         map(profile => {
           const profileData = {
