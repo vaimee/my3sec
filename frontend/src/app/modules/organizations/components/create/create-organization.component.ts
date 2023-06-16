@@ -1,6 +1,6 @@
 import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -12,11 +12,11 @@ import { LoadingService } from '@shared/services/loading.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
 
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.css'],
+  selector: 'app-create-organization',
+  templateUrl: './create-organization.component.html',
+  styleUrls: ['./create-organization.component.css'],
 })
-export class SignUpComponent implements OnInit, OnDestroy {
+export class CreateOrganizationComponent implements OnInit {
   signUpForm!: FormGroup;
   submitted = false;
   profileExists$!: Observable<boolean>;
@@ -84,16 +84,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     this.ipfsService
       .storeJSON(formValue)
       .pipe(switchMap(uri => this.my3secHubContractService.createProfile(uri)))
-      .subscribe({
-        next: value => {
-          this.loadingService.hide();
-          console.log(`Profile created with ID: ${value}`);
-          this.router.navigate(['/profiles']);
-        },
-        error: err => {
-          console.error(`Failed to create profile: ${err}`);
-        },
-      });
+      .subscribe();
   }
 
   async onFileSelected(fileInputEvent: Event, label: HTMLDivElement): Promise<void> {

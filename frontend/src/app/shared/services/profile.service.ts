@@ -21,7 +21,7 @@ export class ProfileService {
     private metamaskService: MetamaskService
   ) {}
 
-  public getEnergyEndorsedTo(endorsedId: number, endorsingId: number): Observable<number> {
+  public getEnergyEndorsedTo(endorserId: number, endorsedId: number): Observable<number> {
     return this.energyWalletContract.totalEnergizersOf(endorsedId).pipe(
       mergeMap((energizers: number) => {
         if (energizers <= 0) return of(0);
@@ -30,14 +30,14 @@ export class ProfileService {
           requests.push(this.energyWalletContract.energizersOf(endorsedId, i));
         }
         return forkJoin(requests).pipe(
-          map((results: [number, number][]) => this.getEnergyEndorsedToFromArray(endorsingId, results))
+          map((results: [number, number][]) => this.getEnergyEndorsedToFromArray(endorserId, results))
         );
       })
     );
   }
 
-  private getEnergyEndorsedToFromArray(endorsingId: number, results: [number, number][]) {
-    const matchingId = results.filter(item => item[0] === endorsingId).map(item => item[1]);
+  private getEnergyEndorsedToFromArray(endorserId: number, results: [number, number][]) {
+    const matchingId = results.filter(item => item[0] === endorserId).map(item => item[1]);
     if (matchingId.length > 0) return matchingId[0];
     return 0;
   }

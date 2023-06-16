@@ -15,7 +15,7 @@ import { EndorseDialogInterface } from '@profiles/interfaces';
 })
 export class EndorseDialogComponent implements OnInit {
   currentEndorsing$!: Observable<number>;
-  targetEnergyToEndorse: number = 0;
+  targetEnergyToEndorse = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: EndorseDialogInterface,
@@ -24,7 +24,12 @@ export class EndorseDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentEndorsing$ = this.profileService.getEnergyEndorsedTo(this.data.endorsingId, this.data.endorsedId);
+    console.log(`getEnergyEndorsedTo(${this.data.endorserId}, ${this.data.endorsingId})`);
+
+    this.currentEndorsing$ = this.profileService.getEnergyEndorsedTo(this.data.endorserId, this.data.endorsingId);
+    this.currentEndorsing$.subscribe(value => {
+      this.targetEnergyToEndorse = value;
+    });
   }
 
   change(value: number): void {
@@ -41,6 +46,6 @@ export class EndorseDialogComponent implements OnInit {
     if (valueToEndorse === 0) return;
     if (valueToEndorse > 0)
       this.my3secHubContractService.giveEnergyTo(this.data.endorsingId, this.targetEnergyToEndorse);
-    else this.my3secHubContractService.removeEnergyFrom(this.data.endorsingId, valueToEndorse);
+    else this.my3secHubContractService.removeEnergyFrom(this.data.endorsingId, -valueToEndorse);
   }
 }
