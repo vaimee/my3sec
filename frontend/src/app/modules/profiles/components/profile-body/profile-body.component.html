@@ -11,15 +11,21 @@
                     <div class="profile-picture">
                       <img src="{{ profileData.profileImage }}" alt="Profile Picture" class="circle-image" />
                     </div>
-                    <div class="profiletitleBlock">
-                      <h1 class="fw-bold">{{ profileData.firstName }} {{ profileData.surname }}</h1>
-                      <p>
-                        {{ profileData.walletAddress }}
-                        <small class="bg-dark text-white p-2 rounded ms-4" *ngIf="!this.useDefaultProfile"
-                          >ENDORSE</small
-                        >
-                      </p>
-                    </div>
+                    <ng-container *ngIf="{
+                      value: profileData.energy.freeEnergyOf$| async
+                    } as freeEnergy"> 
+                  
+                      <div class="profiletitleBlock">
+                        <h1 class="fw-bold">{{ profileData.firstName }} {{ profileData.surname }}</h1>
+                        <p>
+                          {{ profileData.walletAddress }}
+                          <small class="bg-dark text-white p-2 rounded ms-4" *ngIf="!this.useDefaultProfile" (click)="openSliderDialog(profileData, freeEnergy.value || 0)"
+                            >ENDORSE</small
+                          >
+                        </p>
+                      </div>
+                  </ng-container>
+
                   </div>
                   <div class="profileMultiUserBlock me-0 me-lg-3">
                     <ul class="mb-0 mb-lg-4">

@@ -1,0 +1,27 @@
+<div
+  *ngIf="{
+    value: currentEndorsing$ | async
+  } as currentEndorsing">
+  <h1 mat-dialog-title class="title-style">Endorse</h1>
+  <div mat-dialog-content class="dialog-container">
+    {{ showText(currentEndorsing.value || 0) }}
+    <div class="content-container">
+      <div matTooltip="choose a energy value" matTooltipPosition="below">
+        <div class="display-value">
+          {{ targetEnergyToEndorse | number }}
+          <mat-icon>flash_on</mat-icon>
+        </div>
+        <div class="display-label">Endorse</div>
+      </div>
+      <div class="slider-container">
+        <mat-slider thumbLabel discrete [step]="1" [min]="0" [max]="data.maxEnergy" class="dark-slider">
+          <input matSliderThumb [value]="targetEnergyToEndorse" (valueChange)="change($event)" />
+        </mat-slider>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <small class="bg-dark text-white p-2 rounded ms-4" (click)="endorse(currentEndorsing.value || 0)">ENDORSE</small>
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+.slider-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content-container {
+  margin-top: 10px;
+}
+
+.title-style {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.dialog-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: black;
+  margin: 16px;
+}
+
+.display-value {
+  font-size: 2.5rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display-label {
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-mdc-slider.mat-primary {
+  --mdc-slider-handle-color: #000000;
+  --mdc-slider-focus-handle-color: #000000;
+  --mdc-slider-hover-handle-color: #000000;
+  --mdc-slider-active-track-color: #000000;
+  --mdc-slider-inactive-track-color: #000000;
+  --mdc-slider-with-tick-marks-active-container-color: #fff;
+  --mdc-slider-with-tick-marks-inactive-container-color: #000000;
+  --mat-mdc-slider-ripple-color: #000000;
+  --mat-mdc-slider-hover-ripple-color: rgba(63, 81, 181, 0.05);
+  --mat-mdc-slider-focus-ripple-color: rgba(63, 81, 181, 0.2);
+}

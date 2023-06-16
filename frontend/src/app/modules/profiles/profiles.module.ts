@@ -9,9 +9,10 @@ import { ProfileBodyComponent } from './components/profile-body/profile-body.com
 import { ProjectsComponent } from './components/projects/projects.component';
 import { SkillsComponent } from './components/skills/skills.component';
 import { ProfilesRoutingModule } from './profiles-routing.module';
+import { EndorseDialogComponent } from './components/endorse-dialog/endorse-dialog.component';
 
 @NgModule({
-  declarations: [ProfileBodyComponent, SkillsComponent, CertificatesComponent, ProjectsComponent],
+  declarations: [ProfileBodyComponent, SkillsComponent, CertificatesComponent, ProjectsComponent, EndorseDialogComponent],
   imports: [CommonModule, ProfilesRoutingModule, SharedModule, ReactiveFormsModule],
 })
 export class ProfilesModule {}
