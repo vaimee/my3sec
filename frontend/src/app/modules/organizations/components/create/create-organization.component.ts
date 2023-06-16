@@ -1,10 +1,8 @@
 import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { MetamaskService } from '@auth/services/metamask.service';
 
 import { ImageConversionService } from '@shared/services/image-conversion.service';
 import { IpfsService } from '@shared/services/ipfs.service';
@@ -16,16 +14,14 @@ import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.s
   templateUrl: './create-organization.component.html',
   styleUrls: ['./create-organization.component.css'],
 })
-export class CreateOrganizationComponent implements OnInit {
+export class CreateOrganizationComponent implements OnInit, OnDestroy {
   signUpForm!: FormGroup;
   submitted = false;
-  profileExists$!: Observable<boolean>;
   base64Image = '';
   constructor(
     private formBuilder: FormBuilder,
     private my3secHubContractService: My3secHubContractService,
     private ipfsService: IpfsService,
-    private metamaskService: MetamaskService,
     private imageConversionService: ImageConversionService,
     private loadingService: LoadingService,
     private router: Router
@@ -37,40 +33,18 @@ export class CreateOrganizationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadForm();
-
-    this.profileExists$ = this.my3secHubContractService.getDefaultProfile(this.metamaskService.userAddress).pipe(
-      map(value => {
-        if (value === undefined) return false;
-        return true;
-      }),
-      catchError(error => {
-        console.error(error);
-        console.log('error when reading profile - redirect to signup');
-        return of(false);
-      }),
-      finalize(() => {
-        this.loadingService.hide();
-      })
-    );
   }
 
   loadForm() {
     this.signUpForm = this.formBuilder.group({
-      firstName: ['', Validators.compose([Validators.required])],
-      surname: ['', Validators.compose([Validators.required])],
-      organization: ['', Validators.compose([Validators.required])],
-      role: ['', Validators.compose([Validators.required])],
-      profileImage: [null, Validators.compose([Validators.required])],
-      regulationCheckbox: [false, Validators.requiredTrue],
+      name: ['', Validators.compose([Validators.required])],
+      description: ['', Validators.compose([Validators.required])],
+      organizationIcon: [null, Validators.compose([Validators.required])],
     });
   }
 
-  get profileImage() {
-    return this.signUpForm.get('profileImage');
-  }
-
-  get regulationCheckbox() {
-    return this.signUpForm.get('regulationCheckbox');
+  get organizationIcon() {
+    return this.signUpForm.get('organizationIcon');
   }
 
   async onSubmit() {
@@ -79,11 +53,11 @@ export class CreateOrganizationComponent implements OnInit {
 
     if (this.base64Image === '') return;
     const formValue = { ...this.signUpForm.value };
-    formValue.profileImage = this.base64Image;
+    formValue.organizationIcon = this.base64Image;
     this.loadingService.show();
     this.ipfsService
       .storeJSON(formValue)
-      .pipe(switchMap(uri => this.my3secHubContractService.createProfile(uri)))
+      // TODO: create organization
       .subscribe();
   }
 
@@ -98,6 +72,9 @@ export class CreateOrganizationComponent implements OnInit {
   reset() {
     this.submitted = false;
   }
-  public formError = (controlName: string, errorName: string) =>
-    this.signUpForm.controls[controlName].hasError(errorName);
+  public formError = (controlName: string, errorName: string) =>{
+    console.log(controlName, errorName);
+    
+    return this.signUpForm.controls[controlName].hasError(errorName);
+  }
 }

@@ -1,6 +1,6 @@
 <div class="dark-wrapper p-5">
   <div class="container">
-    <div class="login-page-block">
+    <div class="my3sec-modal">
       <div class="logo-img text-center mb-5">
         <img src="../../../assets/images/my3sec-logo-cropped.png" />
       </div>
@@ -9,29 +9,29 @@
         <div class="login-input-col-2 login-input-col-1">
           <mat-form-field class="example-form-field d-block" appearance="outline">
             <mat-label>Name</mat-label>
-            <input matInput type="text" name="firstName" autocomplete="off" formControlName="firstName" />
-            <mat-error *ngIf="formError('firstName', 'required')">First Name is required</mat-error>
+            <input matInput type="text" name="name" autocomplete="off" formControlName="firstName" />
+            <mat-error *ngIf="formError('name', 'required')">First Name is required</mat-error>
           </mat-form-field>
         </div>
         <div class="login-input-col-2 login-input-col-1">
           <mat-form-field class="example-form-field d-block" appearance="outline">
             <mat-label>Description</mat-label>
-            <textarea matInput type="text" autocomplete="off" formControlName="organization"></textarea>
-            <mat-error *ngIf="formError('organization', 'required')">Organization is required</mat-error>
+            <textarea matInput type="text" autocomplete="off" formControlName="description"></textarea>
+            <mat-error *ngIf="formError('description', 'required')">Organization is required</mat-error>
           </mat-form-field>
         </div>
-        <input class="file-input" type="file" id="profileImage" name="avatar" accept="image/*"
-          formControlName="profileImage" (change)="onFileSelected($event, fileInputLabel)" #profileImageInput />
+        <input class="file-input" type="file" id="organizationIcon" name="avatar" accept="image/*"
+          formControlName="organizationIcon" (change)="onFileSelected($event, fileInputLabel)" #organizationIconInput />
         <div class="avatar">
           <div class="avatar-label">
-            <div class="profile-pic cursor-pointer">
-              <img src="../../../assets/images/user-profile.png" (click)="profileImageInput.click()" />
+            <div class="organization-icon cursor-pointer">
+              <img src="https://effigy.im/a/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045.png" (click)="organizationIconInput.click()" />
             </div>
-            <div class="cursor-pointer" (click)="profileImageInput.click()" #fileInputLabel>Organization logo</div>
+            <div class="cursor-pointer" (click)="organizationIconInput.click()" #fileInputLabel>Organization logo</div>
           </div>
         </div>
         <div class="margin-top text-center">
-          <mat-error *ngIf="formError('profileImage', 'required') && (profileImage?.touched || this.submitted)">Organization logo</mat-error>
+          <mat-error *ngIf="formError('organizationIcon', 'required') && (organizationIcon?.touched || this.submitted)">Organization logo</mat-error>
         </div>
         <div class="text-center mt-4">
           <button class="btn btn-dark text-uppercase" type="submit">Create</button>
