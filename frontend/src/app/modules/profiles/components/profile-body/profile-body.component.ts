@@ -14,6 +14,8 @@ import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.s
 
 import { EndorseDialogInterface } from '@profiles/interfaces/endorse-dialog-data.interface';
 import { EndorseDialogComponent } from '@profiles/components/endorse-dialog/endorse-dialog.component';
+import { EndorsersListComponent } from '@profiles/components/endorsers-list/endorsers-list.component';
+
 import { Profile } from '@profiles/interfaces/profile.interface';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
@@ -101,9 +103,16 @@ export class ProfileBodyComponent implements OnInit {
       width: '400px',
       data: endorseDialogInterface
     });
-  
-    dialogRef.afterClosed().subscribe((result) => {
-      // Handle any actions or data returned from the dialog
+  }
+
+  openEndorsersDialog(){
+    const dialogRef = this.dialog.open(EndorsersListComponent, {
+      width: '400px',
+      data: null
     });
+
+  }
+  openEndorsingDialog(){
+    
   }
 }
