@@ -18,3 +18,25 @@ body {
 .round-image {
   border-radius: 50%;
 }
+
+.my3sec-modal {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  width: 50%;
+  margin: 0 auto;
+}
+
+@media screen and (max-device-width: 640px) {
+  .my3sec-modal {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .my3sec-modal {
+    width: 100%;
+  }
+}
