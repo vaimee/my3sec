@@ -4,11 +4,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { LoadingService } from './../../..//shared/services/loading.service';
-import { ImageConversionService } from './../../../shared/services/image-conversion.service';
-import { IpfsService } from './../../../shared/services/ipfs.service';
-import { My3secHubContractService } from './../../../shared/services/my3sec-hub-contract.service';
-import { MetamaskService } from './../../services/metamask.service';
+import { MetamaskService } from '@auth/services/metamask.service';
+
+import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
+import { IpfsService } from '@shared/services/ipfs.service';
+import { ImageConversionService } from '@shared/services/image-conversion.service';
+
+import { LoadingService } from '@shared/services/loading.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -87,7 +89,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         next: value => {
           this.loadingService.hide();
           console.log(`Profile created with ID: ${value}`);
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/profiles']);
         },
         error: err => {
           console.error(`Failed to create profile: ${err}`);
