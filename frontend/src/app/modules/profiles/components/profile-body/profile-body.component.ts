@@ -1,7 +1,7 @@
 import { Observable, finalize, map, of, switchMap } from 'rxjs';
 
-import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
@@ -12,8 +12,8 @@ import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
 
-import { EndorseDialogInterface } from '@profiles/interfaces/endorse-dialog-data.interface';
 import { EndorseDialogComponent } from '@profiles/components/endorse-dialog/endorse-dialog.component';
+import { EndorseDialogInterface } from '@profiles/interfaces/endorse-dialog-data.interface';
 import { Profile } from '@profiles/interfaces/profile.interface';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
@@ -26,7 +26,7 @@ export class ProfileBodyComponent implements OnInit {
   public profileData$!: Observable<Profile>;
   public userWalletAddress!: string;
   public id!: number;
-  public endorsedId!:number;
+  public endorsedId!: number;
   public useDefaultProfile = true;
   private loggedProfileId!: number;
 
@@ -48,16 +48,15 @@ export class ProfileBodyComponent implements OnInit {
       this.profileData$ = this.loadDefaultProfile().pipe(
         map((profile: DataTypes.ProfileViewStructOutput) => {
           this.loggedProfileId = profile.id.toNumber();
-          if(this.useDefaultProfile)
-            return {id: profile.id.toNumber(), profile: profile}
+          if (this.useDefaultProfile) return { id: profile.id.toNumber(), profile: profile };
           const id = parseInt(this.route.snapshot.paramMap.get('userId') as string, 0);
-          if(id === this.endorsedId) this.router.navigate(['/profiles/me']);
-          return { id: id, profile: profile }
-        }),      
+          if (id === this.endorsedId) this.router.navigate(['/profiles/me']);
+          return { id: id, profile: profile };
+        }),
         switchMap(data => {
-          if(!this.useDefaultProfile) return this.my3secHubContractService.getProfile(data.id)
-          return of(data.profile)
-        }), 
+          if (!this.useDefaultProfile) return this.my3secHubContractService.getProfile(data.id);
+          return of(data.profile);
+        }),
         switchMap((profile: DataTypes.ProfileViewStructOutput) => {
           this.id = profile.id.toNumber();
           const uri = profile.metadataURI;
@@ -91,21 +90,20 @@ export class ProfileBodyComponent implements OnInit {
   }
 
   openSliderDialog(profile: Profile, maxEnergy: number): void {
-
     const endorseDialogInterface: EndorseDialogInterface = {
       firstName: profile.firstName,
       surname: profile.surname,
       endorserId: this.loggedProfileId,
       endorsingId: +profile.id,
       maxEnergy: maxEnergy,
-    }
-    
+    };
+
     const dialogRef = this.dialog.open(EndorseDialogComponent, {
       width: '400px',
-      data: endorseDialogInterface
+      data: endorseDialogInterface,
     });
-  
-    dialogRef.afterClosed().subscribe((result) => {
+
+    dialogRef.afterClosed().subscribe(result => {
       // Handle any actions or data returned from the dialog
     });
   }

@@ -15,7 +15,7 @@ import { EndorseDialogInterface } from '@profiles/interfaces';
 })
 export class EndorseDialogComponent implements OnInit {
   currentEndorsing$!: Observable<number>;
-  targetEnergyToEndorse: number = 0;
+  targetEnergyToEndorse = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: EndorseDialogInterface,
@@ -27,7 +27,7 @@ export class EndorseDialogComponent implements OnInit {
     console.log(`getEnergyEndorsedTo(${this.data.endorserId}, ${this.data.endorsingId})`);
 
     this.currentEndorsing$ = this.profileService.getEnergyEndorsedTo(this.data.endorserId, this.data.endorsingId);
-    this.currentEndorsing$.subscribe((value) => {
+    this.currentEndorsing$.subscribe(value => {
       this.targetEnergyToEndorse = value;
     });
   }

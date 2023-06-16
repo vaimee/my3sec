@@ -6,11 +6,10 @@ import { Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
-import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
-import { IpfsService } from '@shared/services/ipfs.service';
 import { ImageConversionService } from '@shared/services/image-conversion.service';
-
+import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
+import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
 
 @Component({
   selector: 'app-sign-up',

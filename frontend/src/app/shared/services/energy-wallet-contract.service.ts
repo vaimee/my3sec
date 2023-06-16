@@ -4,9 +4,8 @@ import { Observable, from, map } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/dist';
 import { ProfileEnergyData } from '@profiles/interfaces';
-
+import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/dist';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +58,8 @@ export class EnergyWalletContractService {
   }
 
   public energizersOf(profileId: number, index: number): Observable<[number, number]> {
-    return from(this.contract.energizersOf(profileId, index)).pipe(map((energizer: [BigNumber, BigNumber]) => [energizer[0].toNumber(), energizer[1].toNumber()]));
+    return from(this.contract.energizersOf(profileId, index)).pipe(
+      map((energizer: [BigNumber, BigNumber]) => [energizer[0].toNumber(), energizer[1].toNumber()])
+    );
   }
 }
