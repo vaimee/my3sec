@@ -1,7 +1,7 @@
 export interface EndorseDialogInterface {
     firstName: string;
     surname: string;
-    endorsedId: number;
+    endorserId: number;
     endorsingId: number;
     maxEnergy: number;
   }

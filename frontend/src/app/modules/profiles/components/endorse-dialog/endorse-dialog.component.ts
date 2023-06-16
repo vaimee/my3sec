@@ -24,7 +24,12 @@ export class EndorseDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentEndorsing$ = this.profileService.getEnergyEndorsedTo(this.data.endorsingId, this.data.endorsedId);
+    console.log(`getEnergyEndorsedTo(${this.data.endorserId}, ${this.data.endorsingId})`);
+
+    this.currentEndorsing$ = this.profileService.getEnergyEndorsedTo(this.data.endorserId, this.data.endorsingId);
+    this.currentEndorsing$.subscribe((value) => {
+      this.targetEnergyToEndorse = value;
+    });
   }
 
   change(value: number): void {
