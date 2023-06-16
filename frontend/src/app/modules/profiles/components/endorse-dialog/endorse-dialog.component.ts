@@ -46,6 +46,6 @@ export class EndorseDialogComponent implements OnInit {
     if (valueToEndorse === 0) return;
     if (valueToEndorse > 0)
       this.my3secHubContractService.giveEnergyTo(this.data.endorsingId, this.targetEnergyToEndorse);
-    else this.my3secHubContractService.removeEnergyFrom(this.data.endorsingId, valueToEndorse);
+    else this.my3secHubContractService.removeEnergyFrom(this.data.endorsingId, -valueToEndorse);
   }
 }
