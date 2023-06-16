@@ -40,7 +40,7 @@
             <mat-icon>add</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="redirectToCreateOrganization()">
               <mat-icon>groups</mat-icon>
               <span>New Organization</span>
             </button>

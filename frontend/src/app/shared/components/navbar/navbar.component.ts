@@ -67,4 +67,8 @@ export class NavbarComponent implements OnInit {
     console.log('redirect to profile home');
     this.router.navigate(['/profiles/me']);
   }
+
+  redirectToCreateOrganization() {
+    this.router.navigate(['/organizations/new']);
+  }
 }
