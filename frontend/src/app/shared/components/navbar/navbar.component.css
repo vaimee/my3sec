@@ -41,7 +41,9 @@
   height: 30px;
   object-fit: cover;
 }
-
+.add-button {
+  color: #fff;
+}
 @media screen and (max-device-width: 640px) {
   .navbar .form-control {
     width: 100%;

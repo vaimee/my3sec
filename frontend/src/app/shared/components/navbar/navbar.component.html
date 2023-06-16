@@ -35,6 +35,25 @@
           >
           <mat-icon class="text-white">flash_on</mat-icon>
         </li>
+        <li class="nav-item d-flex align-items-center add-button">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>groups</mat-icon>
+              <span>New Organization</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>workspaces</mat-icon>
+              <span>New Project</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>add_task</mat-icon>
+              <span>New Task</span>
+            </button>
+          </mat-menu>
+        </li>
         <li class="nav-item d-flex align-items-center" (click)="redirectToProfile()">
           <a class="nav-link" href="javascript:void(0)">{{ (profile$ | async)?.firstName }}</a>
           <img class="round-image profile-icon" src="{{ (profile$ | async)?.profileImage }}" />
