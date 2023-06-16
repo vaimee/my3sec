@@ -1,17 +1,18 @@
 import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
-import { Observable, finalize, from, map } from 'rxjs';
+import { Observable, from, map } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
 import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/dist';
+import { ProfileEnergyData } from '@profiles/interfaces';
 
-import { ProfileEnergyData } from './../../modules/profiles/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EnergyWalletContract {
+// Add service
+export class EnergyWalletContractService {
   private contractAddress = environment.contracts.energyWallet;
   private provider: ethers.providers.JsonRpcProvider;
   private signer: ethers.Signer;
@@ -57,7 +58,7 @@ export class EnergyWalletContract {
     return from(this.contract.receivedEnergyOf(profileId)).pipe(map((energy: ethers.BigNumber) => energy.toNumber()));
   }
 
-  public energizersOf(profileId: number, index: number): Observable<[BigNumber, BigNumber]> {
-    return from(this.contract.energizersOf(profileId, index));
+  public energizersOf(profileId: number, index: number): Observable<[number, number]> {
+    return from(this.contract.energizersOf(profileId, index)).pipe(map((energizer: [BigNumber, BigNumber]) => [energizer[0].toNumber(), energizer[1].toNumber()]));
   }
 }

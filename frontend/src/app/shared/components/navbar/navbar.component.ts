@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { MetamaskService } from '@auth/services/metamask.service';
 
 import { Profile } from '@shared/interfaces';
-import { EnergyWalletContract } from '@shared/services/energy-wallet-contract.service';
+import { EnergyWalletContractService } from '@shared/services/energy-wallet-contract.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
 import { ProfileService } from '@shared/services/profile.service';
 
@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
     private snackBar: MatSnackBar,
     private profileService: ProfileService,
     private my3secHubService: My3secHubContractService,
-    private energyWallet: EnergyWalletContract,
+    private energyWallet: EnergyWalletContractService,
     private metaMaskService: MetamaskService,
     private router: Router
   ) {}
