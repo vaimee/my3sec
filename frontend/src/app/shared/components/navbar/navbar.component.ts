@@ -22,7 +22,7 @@ import { SearchBarCategory } from '../../models/search-bar-category.enum';
 export class NavbarComponent implements OnInit {
   totalEnergy!: Observable<number>;
   freeEnergy!: Observable<number>;
-  profile!: Profile;
+  profile$!: Observable<Profile>;
   SearchBarCategory = SearchBarCategory;
   searchForm = this.formBuilder.group({
     searchText: ['', Validators.required],
@@ -42,10 +42,10 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     const address = this.metaMaskService.userAddress;
-    this.profileService.getDefaultProfile(address).subscribe(profile => {
+    this.profile$ = this.profileService.getDefaultProfile(address);
+    this.profile$.subscribe(profile => {
       this.totalEnergy = this.energyWallet.totalEnergyOf(parseInt(profile.id));
       this.freeEnergy = this.energyWallet.freeEnergyOf(parseInt(profile.id));
-      this.profile = profile;
     });
   }
 
