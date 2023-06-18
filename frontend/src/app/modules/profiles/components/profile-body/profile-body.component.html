@@ -20,7 +20,7 @@
                         <p>
                           {{ profileData.walletAddress }}
                           <small
-                            class="bg-dark text-white p-2 rounded ms-4"
+                            class="bg-dark text-white p-2 rounded ms-4 clickable"
                             *ngIf="!this.useDefaultProfile"
                             (click)="openSliderDialog(profileData, freeEnergy.value || 0)"
                             >ENDORSE</small
@@ -39,18 +39,17 @@
                     *ngIf="{
                       value: profileData.energy.energizedBy$ | async
                     } as energizedBy">
-                    <div (click)="openEndorsersDialog()">
+                    <div (click)="openEndorsersDialog()" class="d-flex align-items-center flex-column clickable">
                       <h2 class="mb-0">{{ energizedBy.value }}</h2>
                       <p class="mb-0">Endorsers</p>
                     </div>
                   </div>
 
                   <div
-                    class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.energizersOf$ | async
                     } as energizersOf">
-                    <div (click)="openEndorsingDialog()">
+                    <div (click)="openEndorsingDialog()" class="d-flex align-items-center flex-column clickable">
                       <h2 class="mb-0">{{ energizersOf.value }}</h2>
                       <p class="mb-0">Endorsing</p>
                     </div>

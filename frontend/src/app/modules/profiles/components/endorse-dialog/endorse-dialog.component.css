@@ -50,3 +50,7 @@
   --mat-mdc-slider-hover-ripple-color: rgba(63, 81, 181, 0.05);
   --mat-mdc-slider-focus-ripple-color: rgba(63, 81, 181, 0.2);
 }
+
+.clickable {
+  cursor: pointer;
+}
