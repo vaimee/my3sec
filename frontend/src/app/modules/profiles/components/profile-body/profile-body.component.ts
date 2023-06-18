@@ -14,7 +14,6 @@ import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.s
 
 import { EndorseDialogComponent } from '@profiles/components/endorse-dialog/endorse-dialog.component';
 import { EndorsersListComponent } from '@profiles/components/endorsers-list/endorsers-list.component';
-
 import { EndorseDialogInterface } from '@profiles/interfaces/endorse-dialog-data.interface';
 import { Profile } from '@profiles/interfaces/profile.interface';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
@@ -28,7 +27,6 @@ export class ProfileBodyComponent implements OnInit {
   public profileData$!: Observable<Profile>;
   public userWalletAddress!: string;
   public id!: number;
-  public endorsedId!: number;
   public useDefaultProfile = true;
   private loggedProfileId!: number;
 
@@ -41,7 +39,10 @@ export class ProfileBodyComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog
-  ) {}
+  ) {
+    /* TODO: later refactor this to its own custom route */
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -52,7 +53,8 @@ export class ProfileBodyComponent implements OnInit {
           this.loggedProfileId = profile.id.toNumber();
           if (this.useDefaultProfile) return { id: profile.id.toNumber(), profile: profile };
           const id = parseInt(this.route.snapshot.paramMap.get('userId') as string, 0);
-          if (id === this.endorsedId) this.router.navigate(['/profiles/me']);
+          if (id === this.loggedProfileId) this.router.navigate(['/profiles', 'me']);
+
           return { id: id, profile: profile };
         }),
         switchMap(data => {
@@ -100,20 +102,21 @@ export class ProfileBodyComponent implements OnInit {
       maxEnergy: maxEnergy,
     };
 
-    const dialogRef = this.dialog.open(EndorseDialogComponent, {
+    this.dialog.open(EndorseDialogComponent, {
       width: '400px',
       data: endorseDialogInterface,
     });
   }
 
-  openEndorsersDialog(){
+  openEndorsersOrEndorsingDialog(isEndorser: boolean) {
     const dialogRef = this.dialog.open(EndorsersListComponent, {
       width: '400px',
-      data: null
+      data: { id: this.id, isEndorser: isEndorser },
     });
-
-  }
-  openEndorsingDialog(){
-    
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      console.log(result);
+      this.router.navigate(['/profiles', result]);
+    });
   }
 }

@@ -10,7 +10,6 @@ import { EnergyWallet, EnergyWallet__factory } from '@vaimee/my3sec-contracts/di
 @Injectable({
   providedIn: 'root',
 })
-// Add service
 export class EnergyWalletContractService {
   private contractAddress = environment.contracts.energyWallet;
   private provider: ethers.providers.JsonRpcProvider;
@@ -59,6 +58,12 @@ export class EnergyWalletContractService {
 
   public energizersOf(profileId: number, index: number): Observable<[number, number]> {
     return from(this.contract.energizersOf(profileId, index)).pipe(
+      map((energizer: [BigNumber, BigNumber]) => [energizer[0].toNumber(), energizer[1].toNumber()])
+    );
+  }
+
+  public energizedBy(profileId: number, index: number): Observable<[number, number]> {
+    return from(this.contract.energizedBy(profileId, index)).pipe(
       map((energizer: [BigNumber, BigNumber]) => [energizer[0].toNumber(), energizer[1].toNumber()])
     );
   }

@@ -39,7 +39,9 @@
                     *ngIf="{
                       value: profileData.energy.energizedBy$ | async
                     } as energizedBy">
-                    <div (click)="openEndorsersDialog()" class="d-flex align-items-center flex-column clickable">
+                    <div
+                      class="d-flex align-items-center flex-column clickable"
+                      (click)="openEndorsersOrEndorsingDialog(true)">
                       <h2 class="mb-0">{{ energizedBy.value }}</h2>
                       <p class="mb-0">Endorsers</p>
                     </div>
@@ -49,7 +51,9 @@
                     *ngIf="{
                       value: profileData.energy.energizersOf$ | async
                     } as energizersOf">
-                    <div (click)="openEndorsingDialog()" class="d-flex align-items-center flex-column clickable">
+                    <div
+                      class="d-flex align-items-center flex-column clickable"
+                      (click)="openEndorsersOrEndorsingDialog(false)">
                       <h2 class="mb-0">{{ energizersOf.value }}</h2>
                       <p class="mb-0">Endorsing</p>
                     </div>

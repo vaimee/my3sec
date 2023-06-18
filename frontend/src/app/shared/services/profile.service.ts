@@ -1,10 +1,12 @@
-import { Observable, forkJoin, map, mergeMap, of, switchMap } from 'rxjs';
+import { Observable, concatMap, forkJoin, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
 import { Profile, ProfileMetadata } from '@shared/interfaces';
+
+import { EndorserItem } from '@profiles/interfaces';
 
 import { EnergyWalletContractService } from './energy-wallet-contract.service';
 import { IpfsService } from './ipfs.service';
@@ -20,6 +22,56 @@ export class ProfileService {
     private ipfsService: IpfsService,
     private metamaskService: MetamaskService
   ) {}
+
+  public getEndorsers(profileId: number): Observable<EndorserItem[]> {
+    return this.energyWalletContract.totalEnergizedBy(profileId).pipe(
+      mergeMap((energizers: number) => {
+        const requests = [];
+        for (let i = 0; i < energizers; i++) {
+          requests.push(this.energyWalletContract.energizedBy(profileId, i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      mergeMap(data =>
+        this.getProfile(data[0]).pipe(
+          map(profile => ({
+            firstName: profile.firstName,
+            surname: profile.surname,
+            id: data[0],
+            energy: data[1],
+            profileImage: profile.profileImage,
+          }))
+        )
+      ),
+      toArray()
+    );
+  }
+
+  public getEndorsing(profileId: number): Observable<EndorserItem[]> {
+    return this.energyWalletContract.totalEnergizersOf(profileId).pipe(
+      mergeMap((energizers: number) => {
+        const requests = [];
+        for (let i = 0; i < energizers; i++) {
+          requests.push(this.energyWalletContract.energizersOf(profileId, i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      mergeMap(data =>
+        this.getProfile(data[0]).pipe(
+          map(profile => ({
+            firstName: profile.firstName,
+            surname: profile.surname,
+            id: data[0],
+            energy: data[1],
+            profileImage: profile.profileImage,
+          }))
+        )
+      ),
+      toArray()
+    );
+  }
 
   public getEnergyEndorsedTo(endorserId: number, endorsedId: number): Observable<number> {
     return this.energyWalletContract.totalEnergizersOf(endorsedId).pipe(
@@ -40,6 +92,19 @@ export class ProfileService {
     const matchingId = results.filter(item => item[0] === endorserId).map(item => item[1]);
     if (matchingId.length > 0) return matchingId[0];
     return 0;
+  }
+
+  public getProfile(profileId: number): Observable<Profile> {
+    return this.my3secHub.getProfile(profileId).pipe(
+      switchMap(({ id, metadataURI }) => {
+        return this.ipfsService.retrieveJSON<ProfileMetadata>(metadataURI).pipe(
+          map(data => {
+            const walletAddress = this.metamaskService.userAddress;
+            return { id: id.toString(), walletAddress, ...data };
+          })
+        );
+      })
+    );
   }
 
   public getDefaultProfile(account: string): Observable<Profile> {

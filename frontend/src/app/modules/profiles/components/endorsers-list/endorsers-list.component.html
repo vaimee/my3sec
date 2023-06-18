@@ -1,6 +1,20 @@
-<h1 mat-dialog-title class="title-style">Endorse</h1>
+<h1 mat-dialog-title class="title-style">{{ isEndorser? "Endorsers" : "Endorsing"}}</h1>
 <div mat-dialog-content class="dialog-container">
-    list-endorsers
+  <mat-list>
+    <mat-list-item *ngFor="let endorser of endorsers | async" (click)="goTo(endorser.id)">
+      <img
+        matListItemAvatar
+        src="{{ endorser.profileImage }}"
+        alt="{{ endorser.firstName }} {{ endorser.surname }} profile image" />
+      <div matListItemTitle class="container">
+        <span> {{ endorser.firstName }} {{ endorser.surname }}</span>
+        <div class="container-energy">
+          <span>{{ endorser.energy }}</span>
+          <mat-icon>flash_on</mat-icon>
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-list>
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Close</button>
