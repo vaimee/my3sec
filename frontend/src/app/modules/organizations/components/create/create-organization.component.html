@@ -9,15 +9,15 @@
         <div class="login-input-col-2 login-input-col-1">
           <mat-form-field class="example-form-field d-block" appearance="outline">
             <mat-label>Name</mat-label>
-            <input matInput type="text" name="name" autocomplete="off" formControlName="firstName" />
-            <mat-error *ngIf="formError('name', 'required')">First Name is required</mat-error>
+            <input matInput type="text" name="name" autocomplete="off" formControlName="name" />
+            <mat-error *ngIf="formError('name', 'required')">Organization name is required</mat-error>
           </mat-form-field>
         </div>
         <div class="login-input-col-2 login-input-col-1">
           <mat-form-field class="example-form-field d-block" appearance="outline">
             <mat-label>Description</mat-label>
             <textarea matInput type="text" autocomplete="off" formControlName="description"></textarea>
-            <mat-error *ngIf="formError('description', 'required')">Organization is required</mat-error>
+            <mat-error *ngIf="formError('description', 'required')">Organization description is required</mat-error>
           </mat-form-field>
         </div>
         <input class="file-input" type="file" id="organizationIcon" name="avatar" accept="image/*"
