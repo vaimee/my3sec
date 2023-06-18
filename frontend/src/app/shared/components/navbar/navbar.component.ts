@@ -71,4 +71,8 @@ export class NavbarComponent implements OnInit {
   redirectToCreateOrganization() {
     this.router.navigate(['/organizations/new']);
   }
+
+  redirectToLogHours() {
+    this.router.navigate(['/tasks/log-hours']);
+  }
 }
