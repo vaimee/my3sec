@@ -108,10 +108,10 @@ export class ProfileBodyComponent implements OnInit {
     });
   }
 
-  openEndorsersOrEndorsingDialog(isEndorser: boolean) {
+  openEndorsersOrEndorsingDialog(isEndorsing: boolean) {
     const dialogRef = this.dialog.open(EndorsersListComponent, {
       width: '400px',
-      data: { id: this.id, isEndorser: isEndorser },
+      data: { id: this.id, isEndorser: isEndorsing },
     });
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return;

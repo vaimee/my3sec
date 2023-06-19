@@ -15,7 +15,7 @@ import { ProfileBodyComponent } from '../profile-body/profile-body.component';
   styleUrls: ['./endorsers-list.component.css'],
 })
 export class EndorsersListComponent implements OnInit {
-  public isEndorser: boolean;
+  public isEndorsing: boolean;
   public endorsers!: Observable<EndorserItem[]>;
   public id: number;
 
@@ -25,10 +25,10 @@ export class EndorsersListComponent implements OnInit {
     private profileService: ProfileService
   ) {
     this.id = data.id as number;
-    this.isEndorser = data.isEndorser;
+    this.isEndorsing = data.isEndorser;
   }
   ngOnInit() {
-    this.endorsers = this.isEndorser
+    this.endorsers = this.isEndorsing
       ? this.profileService.getEndorsers(this.id)
       : this.profileService.getEndorsing(this.id);
   }
