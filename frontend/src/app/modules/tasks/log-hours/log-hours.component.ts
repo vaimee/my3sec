@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { TaskStatus } from '../enums';
 import { Task } from '../interfaces';
 
 @Component({
@@ -40,6 +41,7 @@ export class LogHoursComponent implements OnInit, OnDestroy {
       durationInMonths: 12,
     };
     const task: Task = {
+      id: 1,
       name: 'Frontend Development',
       description:
         'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -47,7 +49,7 @@ export class LogHoursComponent implements OnInit, OnDestroy {
       project: project,
       hours: 10,
       feedback: 0,
-      status: true,
+      status: TaskStatus.IN_PROGRESS,
       skills: [
         {
           name: 'HTML',
@@ -68,8 +70,10 @@ export class LogHoursComponent implements OnInit, OnDestroy {
           progress: 90,
         },
       ],
-      reviewer: '',
-      members: ['', '', ''],
+      reviewer: 1,
+      members: [2, 3, 4],
+      creationDate: new Date(),
+      deadline: new Date(),
     };
     this.tasks = [task];
   }

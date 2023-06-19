@@ -1,12 +1,9 @@
 <mat-list>
-  <mat-list-item *ngFor="let task of tasks | async" (click)="goTo(task.name)">
+  <mat-list-item *ngFor="let task of tasks | async" (click)="goTo(task.id)">
     <div class="clickable">
       <span matListItemTitle
         >{{ task.name }}
-        <span class="text-success display-status" *ngIf="task.status; else closed">ACTIVE</span>
-        <ng-template #closed>
-          <span class="text-warning display-status">CLOSED</span>
-        </ng-template>
+        <app-show-status [status]="task.status"></app-show-status>       
       </span>
       <span matListItemLine>{{ task.description }}</span>
       <p matListItemLine>

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LogHoursComponent } from './log-hours/log-hours.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { TasksComponent } from './tasks.component';
+import { TaskComponent } from './task/task.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
     children: [
       { path: '', component: TaskListComponent },
       { path: 'log-hours', component: LogHoursComponent },
+      {
+        path: ':id',
+        component: TaskComponent,
+      },
     ],
   },
 ];

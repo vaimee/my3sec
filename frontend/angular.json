@@ -26,6 +26,7 @@
               "src/styles.css"
             ],
             "scripts": [
+              "node_modules/marked/marked.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },

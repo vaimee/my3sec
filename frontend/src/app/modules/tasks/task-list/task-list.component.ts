@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Organization } from '@organizations/interfaces';
 import { Project } from '@profiles/interfaces';
 
+import { TaskStatus } from '../enums';
 import { Task } from '../interfaces';
 
 @Component({
@@ -39,6 +40,7 @@ export class TaskListComponent implements OnInit {
       durationInMonths: 12,
     };
     const task: Task = {
+      id: 1,
       name: 'Frontend Development',
       description:
         'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -46,7 +48,7 @@ export class TaskListComponent implements OnInit {
       project: project,
       hours: 10,
       feedback: 0,
-      status: true,
+      status: TaskStatus.COMPLETED,
       skills: [
         {
           name: 'HTML',
@@ -67,13 +69,15 @@ export class TaskListComponent implements OnInit {
           progress: 90,
         },
       ],
-      reviewer: '',
-      members: ['', '', ''],
+      reviewer: 1,
+      members: [2, 3, 4],
+      creationDate: new Date(),
+      deadline: new Date(),
     };
     this.tasks = of([task]);
   }
 
-  goTo(name: string): void {
-    this.router.navigate([`/tasks/${name}`]);
+  goTo(id: number): void {
+    this.router.navigate([`/tasks/${id}`]);
   }
 }
