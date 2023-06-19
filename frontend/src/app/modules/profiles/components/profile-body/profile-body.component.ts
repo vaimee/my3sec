@@ -11,6 +11,7 @@ import { EnergyWalletContractService } from '@shared/services/energy-wallet-cont
 import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
+import { ProfileService } from '@shared/services/profile.service';
 
 import { EndorseDialogComponent } from '@profiles/components/endorse-dialog/endorse-dialog.component';
 import { EndorsersListComponent } from '@profiles/components/endorsers-list/endorsers-list.component';
@@ -34,6 +35,7 @@ export class ProfileBodyComponent implements OnInit {
     private ipfsService: IpfsService,
     private my3secHubContractService: My3secHubContractService,
     private energyWalletContract: EnergyWalletContractService,
+    private profileService: ProfileService,
     private metamaskService: MetamaskService,
     private loadingService: LoadingService,
     private route: ActivatedRoute,
@@ -108,7 +110,8 @@ export class ProfileBodyComponent implements OnInit {
     });
   }
 
-  openEndorsersOrEndorsingDialog(isEndorsing: boolean) {
+  openEndorsersOrEndorsingDialog(isEndorsing: boolean, endorsers: number | null): void {
+    if (!endorsers || endorsers <= 0) return;
     const dialogRef = this.dialog.open(EndorsersListComponent, {
       width: '400px',
       data: { id: this.id, isEndorser: isEndorsing },

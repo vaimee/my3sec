@@ -37,24 +37,24 @@
                   <div
                     class="d-flex align-items-center flex-column"
                     *ngIf="{
-                      value: profileData.energy.energizedBy$ | async
-                    } as energizedBy">
+                      value: profileData.energy.totalEndorsing$ | async
+                    } as totalEndorsing">
                     <div
-                      class="d-flex align-items-center flex-column clickable"
-                      (click)="openEndorsersOrEndorsingDialog(true)">
-                      <h2 class="mb-0">{{ energizedBy.value }}</h2>
+                      class="d-flex align-items-center flex-column" [class.clickable]="totalEndorsing.value && totalEndorsing.value > 0"
+                      (click)="openEndorsersOrEndorsingDialog(true, totalEndorsing.value)">
+                      <h2 class="mb-0">{{ totalEndorsing.value }}</h2>
                       <p class="mb-0">Endorsing</p>
                     </div>
                   </div>
 
                   <div
                     *ngIf="{
-                      value: profileData.energy.energizersOf$ | async
-                    } as energizersOf">
+                      value: profileData.energy.totalEndorsers$ | async
+                    } as totalEndorsers">
                     <div
-                      class="d-flex align-items-center flex-column clickable"
-                      (click)="openEndorsersOrEndorsingDialog(false)">
-                      <h2 class="mb-0">{{ energizersOf.value }}</h2>
+                      class="d-flex align-items-center flex-column" [class.clickable]="totalEndorsers.value && totalEndorsers.value > 0"
+                      (click)="openEndorsersOrEndorsingDialog(false, totalEndorsers.value)">
+                      <h2 class="mb-0">{{ totalEndorsers.value }}</h2>
                       <p class="mb-0">Endorsers</p>
                     </div>
                   </div>
@@ -82,7 +82,6 @@
               <div class="col-md-4">
                 <app-certificates [certificates]="profileData.certificates"></app-certificates>
               </div>
-
             </div>
           </div>
         </div>

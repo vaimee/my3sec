@@ -1,4 +1,4 @@
-import { Observable, concatMap, forkJoin, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, filter, forkJoin, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -33,6 +33,7 @@ export class ProfileService {
         return forkJoin(requests);
       }),
       concatMap(data => data),
+      filter(data => data[1] > 0),
       mergeMap(data =>
         this.getProfile(data[0]).pipe(
           map(profile => ({
@@ -58,6 +59,7 @@ export class ProfileService {
         return forkJoin(requests);
       }),
       concatMap(data => data),
+      filter(data => data[1] > 0),
       mergeMap(data =>
         this.getProfile(data[0]).pipe(
           map(profile => ({

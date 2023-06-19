@@ -1,6 +1,6 @@
 import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
-import { Observable, from, map } from 'rxjs';
+import { Observable, concatMap, count, filter, forkJoin, from, map, mergeMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -24,12 +24,40 @@ export class EnergyWalletContractService {
 
   public fetchProfileEnergyData(profileId: number): ProfileEnergyData {
     return {
-      energizedBy$: this.totalEnergizedBy(profileId),
+      totalEndorsing$: this.countEndorsing(profileId),
       receivedEnergyOf$: this.receivedEnergyOf(profileId),
-      energizersOf$: this.totalEnergizersOf(profileId),
+      totalEndorsers$: this.countEndorsers(profileId),
       totalEnergyOf$: this.totalEnergyOf(profileId),
       freeEnergyOf$: this.freeEnergyOf(profileId),
     };
+  }
+
+  private countEnergizers(profileId: number, isEndorsing: boolean): Observable<number> {
+    const totalFn = isEndorsing
+      ? this.totalEnergizedBy.bind(this, profileId)
+      : this.totalEnergizersOf.bind(this, profileId);
+    const energizerFn = isEndorsing ? this.energizedBy.bind(this, profileId) : this.energizersOf.bind(this, profileId);
+
+    return totalFn().pipe(
+      mergeMap((energizers: number) => {
+        const requests = [];
+        for (let i = 0; i < energizers; i++) {
+          requests.push(energizerFn(i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      filter(data => data[1] > 0),
+      count()
+    );
+  }
+
+  public countEndorsing(profileId: number): Observable<number> {
+    return this.countEnergizers(profileId, true)
+  }
+
+  public countEndorsers(profileId: number): Observable<number> {
+    return this.countEnergizers(profileId, false)
   }
 
   public totalEnergizersOf(profileId: number): Observable<number> {
