@@ -54,13 +54,28 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     }
 
     /// @inheritdoc IOrganization
-    function getPendingMemberCount() external view virtual override returns (uint256) {
-        return _pendingMembers.length();
+    function getMember(uint256 index) external view virtual override returns (uint256) {
+        return _members.at(index);
     }
 
     /// @inheritdoc IOrganization
     function isMember(uint256 profileId) public view virtual override returns (bool) {
         return _members.contains(profileId);
+    }
+
+    /// @inheritdoc IOrganization
+    function getPendingMemberCount() external view virtual override returns (uint256) {
+        return _pendingMembers.length();
+    }
+
+    /// @inheritdoc IOrganization
+    function getPendingMember(uint256 index) external view virtual override returns (uint256) {
+        return _pendingMembers.at(index);
+    }
+
+    /// @inheritdoc IOrganization
+    function isPendingMember(uint256 profileId) public view virtual override returns (bool) {
+        return _pendingMembers.contains(profileId);
     }
 
     /// @inheritdoc IOrganization

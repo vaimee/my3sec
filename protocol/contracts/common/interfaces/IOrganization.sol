@@ -8,9 +8,15 @@ interface IOrganization {
 
     function getMemberCount() external view returns (uint256);
 
-    function getPendingMemberCount() external view returns (uint256);
+    function getMember(uint256 index) external view returns (uint256);
 
     function isMember(uint256 profileId) external view returns (bool);
+
+    function getPendingMemberCount() external view returns (uint256);
+
+    function getPendingMember(uint256 index) external view returns (uint256);
+
+    function isPendingMember(uint256 profileId) external view returns (bool);
 
     function setMetadataURI(string memory metadataURI) external;
 
