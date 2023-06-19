@@ -6,13 +6,15 @@
 
   | Contract            | Address                                                                                                                                           |
   | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | My3secHub           | [0x2eA1C930B09e1e5C0F05D0E5416e743F305F6f44](https://blockscout-bellecour.iex.ec/address/0x2eA1C930B09e1e5C0F05D0E5416e743F305F6f44/transactions) |
-  | OrganizationFactory | [0x561A9C0f5FDB0b348119Ae998defF82DE35a159A](https://blockscout-bellecour.iex.ec/address/0x561A9C0f5FDB0b348119Ae998defF82DE35a159A/transactions) |
-  | My3secToken         | [0x1518c4E7D26D16b85896ab86a15137FAC42d40F8](https://blockscout-bellecour.iex.ec/address/0x1518c4E7D26D16b85896ab86a15137FAC42d40F8/transactions) |
-  | SkillRegistry       | [0xa7dbE5397D2e049af1E39680A8BfFF28fAE6CD29](https://blockscout-bellecour.iex.ec/address/0xa7dbE5397D2e049af1E39680A8BfFF28fAE6CD29/transactions) |
-  | My3secProfiles      | [0xFC02a099BffbdF43C1609b3F82A44dCFADa337dA](https://blockscout-bellecour.iex.ec/address/0xFC02a099BffbdF43C1609b3F82A44dCFADa337dA/transactions) |
-  | EnergyWallet        | [0x817C2aF1f05fa2a4b27114Cd51eFB802D6A135C0](https://blockscout-bellecour.iex.ec/address/0x817C2aF1f05fa2a4b27114Cd51eFB802D6A135C0/transactions) |
-  | TimeWallet          | [0x32E38A0353E663cf14Fb006A4eB9c490332F4a11](https://blockscout-bellecour.iex.ec/address/0x32E38A0353E663cf14Fb006A4eB9c490332F4a11/transactions) |
-  | SkillWallet         | [0x67e2A73d1129244da3C34932Df47587904Da7B17](https://blockscout-bellecour.iex.ec/address/0x67e2A73d1129244da3C34932Df47587904Da7B17/transactions) |
+  | My3secHub           | [0xa813DdaaD01eFF5798b9d5cDcF733Ebf41628d09](https://blockscout-bellecour.iex.ec/address/0xa813DdaaD01eFF5798b9d5cDcF733Ebf41628d09/transactions) |
+  | OrganizationFactory | [0x5263AB2C0e3581971702F22140c0d04FBed7425c](https://blockscout-bellecour.iex.ec/address/0x5263AB2C0e3581971702F22140c0d04FBed7425c/transactions) |
+  | My3secToken         | [0xc5c616A170788C2949D118377274DB1f876C11Bc](https://blockscout-bellecour.iex.ec/address/0xc5c616A170788C2949D118377274DB1f876C11Bc/transactions) |
+  | Timelock            | [0xcfb4dFc751861285667bD8869205D2d48C1e891b](https://blockscout-bellecour.iex.ec/address/0xcfb4dFc751861285667bD8869205D2d48C1e891b/transactions) |
+  | My3SecGovernance    | [0x9112aBaB69B5f19Ae5c4EA9fDaF064D64815b1fc](https://blockscout-bellecour.iex.ec/address/0x9112aBaB69B5f19Ae5c4EA9fDaF064D64815b1fc/transactions) |
+  | SkillRegistry       | [0xb8a819d391B9922065a03df9ef2A6F5F60aE6cCf](https://blockscout-bellecour.iex.ec/address/0xb8a819d391B9922065a03df9ef2A6F5F60aE6cCf/transactions) |
+  | My3secProfiles      | [0xBCF25488fEe3Fb703Ef95B7cdF9AB2Da534CEce7](https://blockscout-bellecour.iex.ec/address/0xBCF25488fEe3Fb703Ef95B7cdF9AB2Da534CEce7/transactions) |
+  | EnergyWallet        | [0x702e995984145dFafd09B46627faA9854C1aEb0f](https://blockscout-bellecour.iex.ec/address/0x702e995984145dFafd09B46627faA9854C1aEb0f/transactions) |
+  | TimeWallet          | [0x564B424F08eB3C616310755f502682BE152dB969](https://blockscout-bellecour.iex.ec/address/0x564B424F08eB3C616310755f502682BE152dB969/transactions) |
+  | SkillWallet         | [0x6603383Ec11FB8F8F77dB7334ea798f0d23cc686](https://blockscout-bellecour.iex.ec/address/0x6603383Ec11FB8F8F77dB7334ea798f0d23cc686/transactions) |
 
 *source: [deployed.json](./deployed.json)*
