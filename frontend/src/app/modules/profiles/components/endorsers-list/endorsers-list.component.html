@@ -3,6 +3,7 @@
   <mat-list>
     <mat-list-item *ngFor="let endorser of endorsers | async" (click)="goTo(endorser.id)">
       <img
+        class="avatar"
         matListItemAvatar
         src="{{ endorser.profileImage }}"
         alt="{{ endorser.firstName }} {{ endorser.surname }} profile image" />

@@ -14,3 +14,7 @@
   justify-self: center;
   margin-left: 16px;
 }
+
+.avatar {
+  object-fit: cover;
+}
