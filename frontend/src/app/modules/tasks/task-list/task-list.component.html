@@ -1,0 +1,17 @@
+<mat-list>
+  <mat-list-item *ngFor="let task of tasks | async" (click)="goTo(task.name)">
+    <span matListItemTitle
+      >{{ task.name }}
+      <span class="text-success display-status" *ngIf="task.status; else closed">ACTIVE</span>
+      <ng-template #closed>
+        <span class="text-warning display-status">CLOSED</span>
+      </ng-template>
+    </span>
+    <span matListItemLine>{{ task.description }}</span>
+    <p matListItemLine>
+      {{ task.organization.name }}, {{ task.project.name }} &#8226;
+      <mat-icon class="line-icon" fontIcon="hourglass_top"></mat-icon> {{ task.hours }}h &#8226;
+      <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ task.members.length }}
+    </p>
+  </mat-list-item>
+</mat-list>

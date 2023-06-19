@@ -11,21 +11,23 @@
                     <div class="profile-picture">
                       <img src="{{ profileData.profileImage }}" alt="Profile Picture" class="circle-image" />
                     </div>
-                    <ng-container *ngIf="{
-                      value: profileData.energy.freeEnergyOf$| async
-                    } as freeEnergy"> 
-                  
+                    <ng-container
+                      *ngIf="{
+                        value: profileData.energy.freeEnergyOf$ | async
+                      } as freeEnergy">
                       <div class="profiletitleBlock">
                         <h1 class="fw-bold">{{ profileData.firstName }} {{ profileData.surname }}</h1>
                         <p>
                           {{ profileData.walletAddress }}
-                          <small class="bg-dark text-white p-2 rounded ms-4" *ngIf="!this.useDefaultProfile" (click)="openSliderDialog(profileData, freeEnergy.value || 0)"
+                          <small
+                            class="bg-dark text-white p-2 rounded ms-4 clickable"
+                            *ngIf="!this.useDefaultProfile"
+                            (click)="openSliderDialog(profileData, freeEnergy.value || 0)"
                             >ENDORSE</small
                           >
                         </p>
                       </div>
-                  </ng-container>
-
+                    </ng-container>
                   </div>
                 </div>
               </div>
@@ -37,17 +39,24 @@
                     *ngIf="{
                       value: profileData.energy.energizedBy$ | async
                     } as energizedBy">
-                    <h2 class="mb-0">{{ energizedBy.value }}</h2>
-                    <p class="mb-0">Endorsers</p>
+                    <div
+                      class="d-flex align-items-center flex-column clickable"
+                      (click)="openEndorsersOrEndorsingDialog(true)">
+                      <h2 class="mb-0">{{ energizedBy.value }}</h2>
+                      <p class="mb-0">Endorsers</p>
+                    </div>
                   </div>
 
                   <div
-                    class="d-flex align-items-center flex-column"
                     *ngIf="{
                       value: profileData.energy.energizersOf$ | async
                     } as energizersOf">
-                    <h2 class="mb-0">{{ energizersOf.value }}</h2>
-                    <p class="mb-0">Endorsing</p>
+                    <div
+                      class="d-flex align-items-center flex-column clickable"
+                      (click)="openEndorsersOrEndorsingDialog(false)">
+                      <h2 class="mb-0">{{ energizersOf.value }}</h2>
+                      <p class="mb-0">Endorsing</p>
+                    </div>
                   </div>
                   <div
                     class="d-flex align-items-center flex-column"

@@ -1,3 +1,5 @@
+import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -51,11 +53,11 @@ export class CreateOrganizationComponent implements OnInit, OnDestroy {
 
     if (this.base64Image === '') return;
     const formValue = { ...this.signUpForm.value };
-    formValue.profileImage = this.base64Image;
+    formValue.organizationIcon = this.base64Image;
     this.loadingService.show();
     this.ipfsService
       .storeJSON(formValue)
-      // TODO - create organization
+      // TODO: create organization
       .subscribe();
   }
 
@@ -70,6 +72,9 @@ export class CreateOrganizationComponent implements OnInit, OnDestroy {
   reset() {
     this.submitted = false;
   }
-  public formError = (controlName: string, errorName: string) =>
-    this.signUpForm.controls[controlName].hasError(errorName);
+  public formError = (controlName: string, errorName: string) =>{
+    console.log(controlName, errorName);
+    
+    return this.signUpForm.controls[controlName].hasError(errorName);
+  }
 }
