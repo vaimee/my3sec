@@ -89,6 +89,7 @@ export class OrganizationContractService {
         const total = count.toNumber();
         const requests = [];
         for (let i = 0; i < total; i++) {
+          //TODO: how to get the organization members?  I cannot call the getMember function
           requests.push(this.contract!.getProjectMember(1, i));
         }
         return forkJoin(requests);
@@ -97,6 +98,52 @@ export class OrganizationContractService {
       map(data => data.toNumber()),
       toArray()
     );
+  }
+
+  public getProjectMemberCount(projectId: number): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getProjectMemberCount(projectId)).pipe(map(value => value.toNumber()));
+  }
+
+  public getProjectMembers(projectId: number): Observable<number[]> {
+    return this.getProjectMemberCount(projectId).pipe(
+      mergeMap(total => {
+        const requests = [];
+        for (let i = 0; i < total; i++) {
+          requests.push(this.contract!.getProjectMember(1, i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      map(data => data.toNumber()),
+      toArray()
+    );
+  }
+
+
+  public getTaskMemberCount(taskId: number): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getTaskMemberCount(taskId)).pipe(map(value => value.toNumber()));
+  }
+
+  public getTaskMembers(taskId: number): Observable<number[]> {
+    return this.getTaskMemberCount(taskId).pipe(
+      mergeMap(total => {
+        const requests = [];
+        for (let i = 0; i < total; i++) {
+          requests.push(this.contract!.getProjectMember(1, i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      map(data => data.toNumber()),
+      toArray()
+    );
+  }
+
+  public isMember(profileId: number): Observable<boolean> {
+    this.assertTargetSet();
+    return from(this.contract!.isMember(profileId));
   }
 
   /*TODO:
