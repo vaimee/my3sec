@@ -92,7 +92,6 @@ export class TaskComponent {
       2. A visually enhanced web application that meets the requirements specified above.
 `,
       organization: org,
-      project: project,
       hours: 10,
       feedback: 0,
       status: Status.IN_PROGRESS,
