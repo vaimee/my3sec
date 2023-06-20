@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { CreateTaskComponent } from './create/create-task.component';
 import { LogHoursComponent } from './log-hours/log-hours.component';
 import { TaskListComponent } from './task-list/task-list.component';
-import { TasksComponent } from './tasks.component';
 import { TaskComponent } from './task/task.component';
+import { TasksComponent } from './tasks.component';
 
 const routes: Routes = [
   {
@@ -27,4 +28,4 @@ const routes: Routes = [
 })
 export class TasksRoutingModule {}
 
-export const routedComponents = [TasksComponent];
+export const routedComponents = [TasksComponent, LogHoursComponent, TaskComponent, CreateTaskComponent];

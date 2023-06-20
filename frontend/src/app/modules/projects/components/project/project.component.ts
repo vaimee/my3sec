@@ -23,7 +23,7 @@ export class ProjectComponent implements OnInit {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       image: 'https://picsum.photos/200/',
       hours: 5,
-      tasks: [],
+      tasks: of([]),
       organization: '',
       currentMonth: 5,
       durationInMonths: 10,
