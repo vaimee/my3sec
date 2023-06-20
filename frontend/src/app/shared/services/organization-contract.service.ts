@@ -1,14 +1,10 @@
-import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, mergeMap, switchMap } from 'rxjs';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { My3SecHub, Organization__factory } from '@vaimee/my3sec-contracts/dist';
-import { DataTypes as HubTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
+import { Organization__factory } from '@vaimee/my3sec-contracts/dist';
 import { DataTypes, Organization } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
-
-import { My3secHubContractService } from './my3sec-hub-contract.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,13 +12,9 @@ import { My3secHubContractService } from './my3sec-hub-contract.service';
 export class OrganizationContractService {
   private contract: Organization | undefined;
 
-  constructor(private my3SecHub: My3secHubContractService) {}
-
   public setTarget(targetAddress: string): void {
     const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
-
     const signer = provider.getSigner();
-
     this.contract = Organization__factory.connect(targetAddress, signer);
   }
 
@@ -61,11 +53,16 @@ export class OrganizationContractService {
       this.assertTargetSet();
       return undefined;
     }*/
+
+  public getProjectCount(): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getProjectCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  }
+
   public getProjects(): Observable<DataTypes.ProjectViewStructOutput[]> {
     this.assertTargetSet();
-    return from(this.contract!.getProjectCount()).pipe(
-      mergeMap(count => {
-        const total = count.toNumber();
+    return from(this.getProjectCount()).pipe(
+      mergeMap(total => {
         const requests = [];
         for (let i = 0; i < total; i++) {
           requests.push(this.contract!.getProject(i));
@@ -80,20 +77,27 @@ export class OrganizationContractService {
     return from(this.contract!.updateProject(projectId, project));
   }
 
-  /*TODO:
-  public getMembers(): Observable<HubTypes.ProfileViewStructOutput[]> {
+  public getMemberCount(): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getMemberCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  }
+
+  public getMembers(): Observable<number[]> {
     this.assertTargetSet();
     return from(this.contract!.getMemberCount()).pipe(
       mergeMap(count => {
         const total = count.toNumber();
         const requests = [];
         for (let i = 0; i < total; i++) {
-          requests.push(this.contract!.getProjectMember(i));
+          requests.push(this.contract!.getProjectMember(1, i));
         }
         return forkJoin(requests);
-      })
-    }
-    );*/
+      }),
+      concatMap(data => data),
+      map(data => data.toNumber()),
+      toArray()
+    );
+  }
 
   /*TODO:
   public getPendingMembers(): Observable<HubTypes.ProfileViewStructOutput[]> {

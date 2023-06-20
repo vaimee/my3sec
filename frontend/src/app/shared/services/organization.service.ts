@@ -1,20 +1,57 @@
-import { Observable, concatAll, from, map, of, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
+import { Profile } from '@shared/interfaces';
 import { Organization } from '@shared/interfaces/organization.interface';
 
-import { Status } from '../enums';
+import { Organization as FullOrganization } from '@organizations/interfaces';
+
 import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';
 import { IpfsService } from './ipfs.service';
+import { My3secHubContractService } from './my3sec-hub-contract.service';
 import { OrganizationContractService } from './organization-contract.service';
+import { ProfileService } from './profile.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrganizationService {
-  constructor(private contractService: OrganizationContractService, private ipfsService: IpfsService) {}
+  constructor(
+    private contractService: OrganizationContractService,
+    private ipfsService: IpfsService,
+    private my3secHub: My3secHubContractService,
+    private profileService: ProfileService
+  ) {}
 
+  public getOrganizations(): Observable<Organization[]> {
+    return this.my3secHub.getOrganizationsIds().pipe(
+      concatMap(data => data),
+      mergeMap(id => this.getOrganizationById(id)),
+      toArray()
+    );
+  }
+
+  public getFullOrganization(): Observable<FullOrganization> {
+    return this.getOrganization().pipe(
+      switchMap((organization: Organization) => {
+        return forkJoin({
+          ...organization,
+          projectCount: this.contractService.getProjectCount(),
+          memberCount: this.contractService.getMemberCount(),
+          address: this.contractService.address,
+        });
+      })
+    );
+  }
+  public getOrganizationById(id: string): Observable<Organization> {
+    return this.my3secHub.getOrganizationMetadataUri(id).pipe(
+      switchMap((uri: string) => this.ipfsService.retrieveJSON<Omit<Organization, 'id'>>(uri)),
+      map(data => {
+        return { ...data, id: id };
+      })
+    );
+  }
   public getOrganization(): Observable<Organization> {
     return this.contractService.getMetadataURI().pipe(
       switchMap((uri: string) => this.ipfsService.retrieveJSON<Omit<Organization, 'id'>>(uri)),
@@ -77,6 +114,13 @@ export class OrganizationService {
 
   public setTarget(targetAddress: string): void {
     this.contractService.setTarget(targetAddress);
+  }
+
+  public getMembers(): Observable<Profile> {
+    return this.contractService.getMembers().pipe(
+      concatMap(data => data),
+      switchMap(id => this.profileService.getProfile(id))
+    );
   }
 
   private calculateDurationInMonths(start: Date, end: Date): number {

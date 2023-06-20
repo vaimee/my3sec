@@ -1,6 +1,6 @@
 import { environment } from 'environments/environment';
-import { ethers, providers } from 'ethers';
-import { Observable, from, switchMap } from 'rxjs';
+import { BigNumber, ethers, providers } from 'ethers';
+import { Observable, forkJoin, from, mergeMap, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -54,6 +54,26 @@ export class My3secHubContractService {
 
   public removeEnergyFrom(profileId: number, amount: number): Observable<unknown> {
     return from(this.contract.removeEnergyFrom(profileId, amount));
+  }
+
+  public getOrganizationsIds(): Observable<string[]> {
+    return from(this.contract.getOrganizationCount()).pipe(
+      mergeMap(total => {
+        const requests = [];
+        for (let i = 0; i < total.toNumber(); i++) {
+          requests.push(this.contract.getOrganization(i));
+        }
+        return forkJoin(requests);
+      })
+    );
+  }
+
+  public getOrganizationMetadataUri(id: string): Observable<string> {
+    return from(this.contract.getOrganization(id));
+  }
+
+  public getOrganizationCount(): Observable<BigNumber> {
+    return from(this.contract.getOrganizationCount());
   }
 
   private async wait(tx: ethers.ContractTransaction): Promise<void> {
