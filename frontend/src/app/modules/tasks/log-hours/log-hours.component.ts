@@ -1,11 +1,10 @@
+import { of } from 'rxjs';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Status } from '@shared/enums';
 import { Task } from '@shared/interfaces/project.interface';
-import { OrganizationService } from '@shared/services/organization.service';
-import { of } from 'rxjs';
-
 
 @Component({
   selector: 'app-log-hours',
@@ -26,7 +25,8 @@ export class LogHoursComponent implements OnInit, OnDestroy {
     const task: Task = {
       id: 1,
       name: 'Frontend Development',
-      description: 'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      description:
+        'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       organization: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
       hours: 10,
       status: Status.IN_PROGRESS,
@@ -59,7 +59,7 @@ export class LogHoursComponent implements OnInit, OnDestroy {
       start: new Date(),
       end: new Date(),
       currentMonth: 0,
-      durationInMonths: 0
+      durationInMonths: 0,
     };
     this.tasks = [task];
   }

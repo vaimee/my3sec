@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -7,7 +7,6 @@ import { Profile } from '@shared/interfaces';
 import { Organization } from '@shared/interfaces/organization.interface';
 
 import { Organization as FullOrganization } from '@organizations/interfaces';
-import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';

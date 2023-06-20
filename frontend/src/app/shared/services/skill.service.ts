@@ -1,4 +1,4 @@
-import { Observable, concatMap, forkJoin, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, forkJoin, map, mergeMap, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
