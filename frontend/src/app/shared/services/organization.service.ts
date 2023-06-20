@@ -15,6 +15,7 @@ import { IpfsService } from './ipfs.service';
 import { My3secHubContractService } from './my3sec-hub-contract.service';
 import { OrganizationContractService } from './organization-contract.service';
 import { ProfileService } from './profile.service';
+import { SkillService } from './skill.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,8 @@ export class OrganizationService {
     private contractService: OrganizationContractService,
     private ipfsService: IpfsService,
     private my3secHub: My3secHubContractService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private skillService: SkillService
   ) {}
 
   public getOrganizations(): Observable<Organization[]> {
@@ -97,8 +99,7 @@ export class OrganizationService {
           map(data => {
             const start = new Date(data.start);
             const end = new Date(data.end);
-            //TODO: get skills
-            const skills = task.skills.map(skill => this.ipfsService.retrieveSkill<Skill>(skill.toString()));
+            const skills = task.skills.map(skill => this.skillService.getSkill(skill.toNumber()));
             return {
               ...data,
               id: task.id.toNumber(),

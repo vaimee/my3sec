@@ -84,7 +84,6 @@
             <h2 class="d-flex justify-content-between align-items-center mb-3">Skills</h2>
             <mat-list *ngIf="taskData.skills | async as skills">
               <mat-list-item *ngFor="let skill of skills">
-                <div matListItemIcon class="container">{{ skill.progress }}xp</div>
                 <div matListItemTitle>{{ skill.name }}</div>
                 <div matListItemLine>{{ skill.category }}</div>
               </mat-list-item>

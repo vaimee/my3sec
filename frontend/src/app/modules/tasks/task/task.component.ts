@@ -10,8 +10,8 @@ import { LoadingService } from '@shared/services/loading.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
 import { OrganizationService } from '@shared/services/organization.service';
 
-import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 import { Skill } from '@profiles/interfaces';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 @Component({
   selector: 'app-task',
@@ -60,7 +60,6 @@ export class TaskComponent {
     private organizationService: OrganizationService,
     private loadingService: LoadingService
   ) {
-
     const task: Task = {
       id: 1,
       name: 'Frontend Development',
@@ -90,22 +89,17 @@ export class TaskComponent {
           id: 0,
           name: 'HTML',
           category: 'Front-end',
-          icon: 'html-icon',
-          progress: 80,
         },
         {
           id: 1,
           name: 'CSS',
           category: 'Front-end',
-          icon: 'css-icon',
-          progress: 70,
         },
         {
           id: 2,
           name: 'JavaScript',
+          description: 'The techniques and principles of software development, such as analysis, algorithms, coding, testing and compiling of programming paradigms in JavaScript.',
           category: 'Front-end',
-          icon: 'js-icon',
-          progress: 90,
         },
       ]),
       start: new Date(2023, 5, 10),
@@ -114,7 +108,7 @@ export class TaskComponent {
       members: [2, 3, 4],
       metadataURI: '',
       currentMonth: 0,
-      durationInMonths: 0
+      durationInMonths: 0,
     };
     this.task$ = of(task);
   }
