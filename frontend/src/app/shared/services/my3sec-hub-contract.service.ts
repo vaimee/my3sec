@@ -12,16 +12,13 @@ import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 })
 export class My3secHubContractService {
   private contractAddress = environment.contracts.my3secHub;
-  private provider: ethers.providers.JsonRpcProvider;
-  private signer: ethers.Signer;
+
   private contract: My3SecHub;
 
   constructor() {
-    this.provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
-
-    this.signer = this.provider.getSigner();
-
-    this.contract = My3SecHub__factory.connect(this.contractAddress, this.signer);
+    const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
+    const signer = provider.getSigner();
+    this.contract = My3SecHub__factory.connect(this.contractAddress, signer);
   }
 
   public getDefaultProfile(account: string): Observable<DataTypes.ProfileViewStructOutput> {
