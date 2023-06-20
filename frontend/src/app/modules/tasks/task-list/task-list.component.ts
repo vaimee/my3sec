@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Status } from '@shared/enums';
@@ -16,7 +16,7 @@ import { Task } from '../interfaces';
   styleUrls: ['./task-list.component.css'],
 })
 export class TaskListComponent implements OnInit {
-  tasks!: Observable<Task[]>;
+  @Input() tasks!: Observable<Task[]>;
 
   constructor(private router: Router) {}
 
@@ -35,7 +35,7 @@ export class TaskListComponent implements OnInit {
       status: 'In Progress',
       description: 'Lorem ipsum dolor sit amet',
       hours: 120,
-      tasks: ['Task 1', 'Task 2', 'Task 3'],
+      tasks: of([]),
       organization: 'ABC Company',
       currentMonth: 6,
       durationInMonths: 12,
@@ -46,7 +46,6 @@ export class TaskListComponent implements OnInit {
       description:
         'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       organization: org,
-      project: project,
       hours: 10,
       feedback: 0,
       status: Status.COMPLETED,

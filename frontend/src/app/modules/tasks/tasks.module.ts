@@ -6,23 +6,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@shared/shared.module';
 
-import { CreateTaskComponent } from './create/create-task.component';
-import { LogHoursComponent } from './log-hours/log-hours.component';
 import { ShowStatusComponent } from './show-status/show-status.component';
 import { TaskListComponent } from './task-list/task-list.component';
-import { TaskComponent } from './task/task.component';
-import { TasksRoutingModule } from './tasks-routing.module';
-import { TasksComponent } from './tasks.component';
+import { TasksRoutingModule, routedComponents } from './tasks-routing.module';
 
 @NgModule({
-  declarations: [
-    TasksComponent,
-    TaskComponent,
-    TaskListComponent,
-    CreateTaskComponent,
-    LogHoursComponent,
-    ShowStatusComponent,
-  ],
+  declarations: [routedComponents, TaskListComponent, ShowStatusComponent],
+  exports: [TaskListComponent],
   imports: [MarkdownModule.forRoot(), CommonModule, SharedModule, TasksRoutingModule, FormsModule, ReactiveFormsModule],
 })
 export class TasksModule {}
