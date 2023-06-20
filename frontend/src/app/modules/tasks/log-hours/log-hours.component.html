@@ -12,7 +12,7 @@
             <mat-select [formGroup]="logHoursForm" autocomplete="off" formControlName="task">
               <mat-option>None</mat-option>
               <mat-option *ngFor="let task of tasks" [value]="task.name">
-                {{ task.name }} - {{ task.organization.name }}
+                {{ task.name }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="formError('task', 'required')">Task is required</mat-error>

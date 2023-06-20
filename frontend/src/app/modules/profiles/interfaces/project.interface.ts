@@ -1,4 +1,4 @@
-import { Task } from 'app/modules/tasks/interfaces';
+import { Task } from '@shared/interfaces/project.interface';
 import { Observable } from 'rxjs';
 
 export interface Project {

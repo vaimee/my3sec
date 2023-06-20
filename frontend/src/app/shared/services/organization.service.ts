@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -7,6 +7,7 @@ import { Profile } from '@shared/interfaces';
 import { Organization } from '@shared/interfaces/organization.interface';
 
 import { Organization as FullOrganization } from '@organizations/interfaces';
+import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';
@@ -96,6 +97,8 @@ export class OrganizationService {
           map(data => {
             const start = new Date(data.start);
             const end = new Date(data.end);
+            //TODO: get skills
+            const skills = task.skills.map(skill => this.ipfsService.retrieveSkill<Skill>(skill.toString()));
             return {
               ...data,
               id: task.id.toNumber(),
@@ -106,6 +109,8 @@ export class OrganizationService {
               end,
               currentMonth: this.calculateCurrentMonth(start),
               durationInMonths: this.calculateDurationInMonths(start, end),
+              skills: forkJoin(skills),
+              metadataURI: task.metadataURI,
             };
           })
         );

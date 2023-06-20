@@ -38,4 +38,12 @@ export class IpfsService {
       })
     );
   }
+
+  retrieveSkill<T>(uri: string): Observable<T> {
+    return this.http.get<T>(`${uri}`).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
 }

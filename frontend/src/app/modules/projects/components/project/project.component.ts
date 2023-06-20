@@ -2,9 +2,9 @@ import { Observable, of } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 
-import { ProfileMetadata } from '@shared/interfaces';
-import { Project } from '@shared/interfaces/project.interface';
 import { Status } from '@shared/enums';
+import { ProfileMetadata } from '@shared/interfaces';
+import { Project, Task } from '@shared/interfaces/project.interface';
 
 @Component({
   selector: 'app-project',
@@ -16,6 +16,8 @@ export class ProjectComponent implements OnInit {
   members$!: Observable<ProfileMetadata[]>;
 
   ngOnInit(): void {
+    const tasks$ = new Observable<Task[]>();
+
     this.project$ = of({
       id: 1,
       start: new Date('2023-06-10'),
@@ -26,7 +28,7 @@ export class ProjectComponent implements OnInit {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       image: 'https://picsum.photos/200/',
       hours: 5,
-      tasks: of([]),
+      tasks: tasks$,
       organization: '',
       currentMonth: 5,
       durationInMonths: 10,

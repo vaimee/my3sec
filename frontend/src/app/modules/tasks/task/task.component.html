@@ -13,22 +13,30 @@
               </div>
               <div class="col-md-5">
                 <div *ngIf="showCloseTask; else checkReward">
-                  <a href="javascript:void(0)" class="btn btn-outline-dark m-1">
-                    <div class="d-flex align-items-center justify-content-evenly m-1">
-                      <mat-icon>check_circle</mat-icon>
-                      <span class="margin-left">CLOSE TASK</span>
-                    </div>
-                  </a>
-                  <a href="javascript:void(0)" class="btn btn-outline-dark m-1">
-                    <div class="d-flex align-items-center justify-content-evenly m-1">
-                      <mat-icon>cancel</mat-icon>
-                      <span class="margin-left">CANCEL TASK</span>
-                    </div>
-                  </a>
+                  <ng-container *ngIf="taskData.skills | async as skills">
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-outline-dark m-1"
+                      (click)="updateTask(true, taskData, skills)">
+                      <div class="d-flex align-items-center justify-content-evenly m-1">
+                        <mat-icon>check_circle</mat-icon>
+                        <span class="margin-left">CLOSE TASK</span>
+                      </div>
+                    </a>
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-outline-dark m-1"
+                      (click)="updateTask(false, taskData, skills)">
+                      <div class="d-flex align-items-center justify-content-evenly m-1">
+                        <mat-icon>cancel</mat-icon>
+                        <span class="margin-left">CANCEL TASK</span>
+                      </div>
+                    </a>
+                  </ng-container>
                 </div>
                 <ng-template #checkReward>
                   <div *ngIf="showReward">
-                    <a href="javascript:void(0)" class="btn btn-outline-dark">
+                    <a href="javascript:void(0)" class="btn btn-outline-dark" (click)="getReward(taskData.id)">
                       <div class="d-flex align-items-center justify-content-evenly m-1">
                         <mat-icon>emoji_events</mat-icon>
                         <span class="margin-left">GET REWARD</span>
@@ -74,8 +82,8 @@
         <div class="col-md-4">
           <div class="p-4 bg-white">
             <h2 class="d-flex justify-content-between align-items-center mb-3">Skills</h2>
-            <mat-list>
-              <mat-list-item *ngFor="let skill of taskData.skills">
+            <mat-list *ngIf="taskData.skills | async as skills">
+              <mat-list-item *ngFor="let skill of skills">
                 <div matListItemIcon class="container">{{ skill.progress }}xp</div>
                 <div matListItemTitle>{{ skill.name }}</div>
                 <div matListItemLine>{{ skill.category }}</div>
@@ -86,7 +94,7 @@
           <div class="p-4 bg-white margin-top">
             <h2 class="d-flex justify-content-between align-items-center mb-3">Deadline</h2>
             <mat-card class="calendar-card">
-              <mat-calendar class="custom-calendar" [selected]="taskData.deadline"></mat-calendar>
+              <mat-calendar class="custom-calendar" [selected]="taskData.end"></mat-calendar>
             </mat-card>
           </div>
         </div>
