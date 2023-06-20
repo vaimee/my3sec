@@ -76,6 +76,10 @@ export class My3secHubContractService {
     return from(this.contract.getOrganizationCount());
   }
 
+  public withdrawExperience(organizationAddress: string, taskId: string): Observable<ethers.ContractTransaction> {
+    return from(this.contract.withdraw(organizationAddress, taskId));
+  }
+
   private async wait(tx: ethers.ContractTransaction): Promise<void> {
     await tx.wait();
     return;
@@ -87,5 +91,9 @@ export class My3secHubContractService {
 
   public removeEnergyBlocking(profileId: number, amount: number) {
     return from(this.contract.removeEnergyFrom(profileId, amount)).pipe(switchMap(this.wait));
+  }
+
+  public withdrawExperienceBlocking(organizationAddress: string, taskId: string) {
+    return from(this.contract.withdraw(organizationAddress, taskId)).pipe(switchMap(this.wait));
   }
 }

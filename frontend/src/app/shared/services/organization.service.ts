@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
@@ -6,6 +7,7 @@ import { Profile } from '@shared/interfaces';
 import { Organization } from '@shared/interfaces/organization.interface';
 
 import { Organization as FullOrganization } from '@organizations/interfaces';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';
 import { IpfsService } from './ipfs.service';
@@ -121,6 +123,10 @@ export class OrganizationService {
       concatMap(data => data),
       switchMap(id => this.profileService.getProfile(id))
     );
+  }
+  public updateTask(taskId: number, task: DataTypes.UpdateTaskStruct) {
+    const hexValue = ethers.utils.hexValue(taskId);
+    return from(this.contractService.updateTask(ethers.BigNumber.from(hexValue), task));
   }
 
   private calculateDurationInMonths(start: Date, end: Date): number {
