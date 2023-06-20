@@ -21,7 +21,7 @@
             </td>
             <td class="border-0">
               <div class="d-flex flex-column text-center">
-                <h5 class="mb-0">{{ project.tasks.length }}</h5>
+                <h5 class="mb-0">{{ (project.tasks | async)?.length }}</h5>
                 <small>Tasks</small>
               </div>
             </td>

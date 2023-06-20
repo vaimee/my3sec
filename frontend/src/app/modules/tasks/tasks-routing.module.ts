@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LogHoursComponent } from './log-hours/log-hours.component';
 import { TaskListComponent } from './task-list/task-list.component';
-import { TasksComponent } from './tasks.component';
 import { TaskComponent } from './task/task.component';
+import { TasksComponent } from './tasks.component';
 
 const routes: Routes = [
   {

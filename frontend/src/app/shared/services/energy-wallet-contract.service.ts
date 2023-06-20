@@ -53,11 +53,11 @@ export class EnergyWalletContractService {
   }
 
   public countEndorsing(profileId: number): Observable<number> {
-    return this.countEnergizers(profileId, true)
+    return this.countEnergizers(profileId, true);
   }
 
   public countEndorsers(profileId: number): Observable<number> {
-    return this.countEnergizers(profileId, false)
+    return this.countEnergizers(profileId, false);
   }
 
   public totalEnergizersOf(profileId: number): Observable<number> {

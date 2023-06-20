@@ -40,7 +40,8 @@
                       value: profileData.energy.totalEndorsing$ | async
                     } as totalEndorsing">
                     <div
-                      class="d-flex align-items-center flex-column" [class.clickable]="totalEndorsing.value && totalEndorsing.value > 0"
+                      class="d-flex align-items-center flex-column"
+                      [class.clickable]="totalEndorsing.value && totalEndorsing.value > 0"
                       (click)="openEndorsersOrEndorsingDialog(true, totalEndorsing.value)">
                       <h2 class="mb-0">{{ totalEndorsing.value }}</h2>
                       <p class="mb-0">Endorsing</p>
@@ -52,7 +53,8 @@
                       value: profileData.energy.totalEndorsers$ | async
                     } as totalEndorsers">
                     <div
-                      class="d-flex align-items-center flex-column" [class.clickable]="totalEndorsers.value && totalEndorsers.value > 0"
+                      class="d-flex align-items-center flex-column"
+                      [class.clickable]="totalEndorsers.value && totalEndorsers.value > 0"
                       (click)="openEndorsersOrEndorsingDialog(false, totalEndorsers.value)">
                       <h2 class="mb-0">{{ totalEndorsers.value }}</h2>
                       <p class="mb-0">Endorsers</p>
