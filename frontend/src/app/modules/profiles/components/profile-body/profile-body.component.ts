@@ -35,7 +35,6 @@ export class ProfileBodyComponent implements OnInit {
     private ipfsService: IpfsService,
     private my3secHubContractService: My3secHubContractService,
     private energyWalletContract: EnergyWalletContractService,
-    private profileService: ProfileService,
     private metamaskService: MetamaskService,
     private loadingService: LoadingService,
     private route: ActivatedRoute,
@@ -47,6 +46,10 @@ export class ProfileBodyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadProfileDetail();
+  }
+
+  loadProfileDetail() {
     this.route.data.subscribe(data => {
       this.useDefaultProfile = data['useDefaultProfile'];
       this.loadingService.show();
@@ -104,9 +107,14 @@ export class ProfileBodyComponent implements OnInit {
       maxEnergy: maxEnergy,
     };
 
-    this.dialog.open(EndorseDialogComponent, {
+    const dialogRef = this.dialog.open(EndorseDialogComponent, {
       width: '400px',
       data: endorseDialogInterface,
+    });
+
+    dialogRef.afterClosed().subscribe(changed => {
+      if (!changed) return;
+      this.loadProfileDetail();
     });
   }
 
@@ -118,7 +126,6 @@ export class ProfileBodyComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return;
-      console.log(result);
       this.router.navigate(['/profiles', result]);
     });
   }

@@ -1,6 +1,6 @@
 import { environment } from 'environments/environment';
 import { ethers, providers } from 'ethers';
-import { Observable, finalize, from, switchMap } from 'rxjs';
+import { Observable, from, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -57,5 +57,18 @@ export class My3secHubContractService {
 
   public removeEnergyFrom(profileId: number, amount: number): Observable<unknown> {
     return from(this.contract.removeEnergyFrom(profileId, amount));
+  }
+
+  private async wait(tx: ethers.ContractTransaction): Promise<void> {
+    await tx.wait();
+    return;
+  }
+
+  public giveEnergyBlocking(profileId: number, amount: number) {
+    return from(this.contract.giveEnergyTo(profileId, amount)).pipe(switchMap(this.wait));
+  }
+
+  public removeEnergyBlocking(profileId: number, amount: number) {
+    return from(this.contract.removeEnergyFrom(profileId, amount)).pipe(switchMap(this.wait));
   }
 }
