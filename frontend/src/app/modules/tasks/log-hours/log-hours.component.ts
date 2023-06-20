@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { TaskStatus } from '../enums';
+import { Status } from '@shared/enums';
+
 import { Task } from '../interfaces';
 
 @Component({
@@ -49,7 +50,7 @@ export class LogHoursComponent implements OnInit, OnDestroy {
       project: project,
       hours: 10,
       feedback: 0,
-      status: TaskStatus.IN_PROGRESS,
+      status: Status.IN_PROGRESS,
       skills: [
         {
           name: 'HTML',

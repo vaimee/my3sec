@@ -1,7 +1,7 @@
+import { Status } from '@shared/enums';
+
 import { Organization } from '@organizations/interfaces';
 import { Project, Skill } from '@profiles/interfaces';
-
-import { TaskStatus } from '../enums';
 
 export interface Task {
   id: number;
@@ -11,7 +11,7 @@ export interface Task {
   project: Project;
   hours: number;
   feedback: number;
-  status: TaskStatus;
+  status: Status;
   skills: Skill[];
   reviewer: number;
   members: number[];

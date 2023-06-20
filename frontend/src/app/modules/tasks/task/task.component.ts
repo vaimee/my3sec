@@ -3,10 +3,10 @@ import { Observable, of } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { Status } from '@shared/enums';
 import { Profile } from '@shared/interfaces';
 import { ProfileService } from '@shared/services/profile.service';
 
-import { TaskStatus } from '../enums';
 import { Task } from '../interfaces';
 
 @Component({
@@ -95,7 +95,7 @@ export class TaskComponent {
       project: project,
       hours: 10,
       feedback: 0,
-      status: TaskStatus.IN_PROGRESS,
+      status: Status.IN_PROGRESS,
       skills: [
         {
           name: 'HTML',

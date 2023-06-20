@@ -3,10 +3,11 @@ import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { Status } from '@shared/enums';
+
 import { Organization } from '@organizations/interfaces';
 import { Project } from '@profiles/interfaces';
 
-import { TaskStatus } from '../enums';
 import { Task } from '../interfaces';
 
 @Component({
@@ -48,7 +49,7 @@ export class TaskListComponent implements OnInit {
       project: project,
       hours: 10,
       feedback: 0,
-      status: TaskStatus.COMPLETED,
+      status: Status.COMPLETED,
       skills: [
         {
           name: 'HTML',
