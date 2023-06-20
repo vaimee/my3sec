@@ -1,5 +1,6 @@
-import { Task } from '@shared/interfaces/project.interface';
 import { Observable } from 'rxjs';
+
+import { Task } from '@shared/interfaces/project.interface';
 
 export interface Project {
   name: string;
