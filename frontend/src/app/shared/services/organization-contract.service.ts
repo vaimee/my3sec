@@ -10,7 +10,7 @@ import { DataTypes, Organization } from '@vaimee/my3sec-contracts/dist/contracts
   providedIn: 'root',
 })
 export class OrganizationContractService {
-  private contract: Organization | undefined;
+  protected contract: Organization | undefined;
 
   public setTarget(targetAddress: string): void {
     const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
@@ -120,7 +120,6 @@ export class OrganizationContractService {
     );
   }
 
-
   public getTaskMemberCount(taskId: number): Observable<number> {
     this.assertTargetSet();
     return from(this.contract!.getTaskMemberCount(taskId)).pipe(map(value => value.toNumber()));
@@ -181,7 +180,7 @@ export class OrganizationContractService {
     return from(this.contract!.updateTask(taskId, task));
   }
 
-  private assertTargetSet(): void {
+  private assertTargetSet(): asserts this is { contract: Organization } {
     if (!this.contract) throw new Error('Target address not set');
   }
 }
