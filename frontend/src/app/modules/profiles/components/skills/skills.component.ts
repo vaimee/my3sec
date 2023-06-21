@@ -2,9 +2,10 @@ import { Observable } from 'rxjs';
 
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ProfileSkill } from '@profiles/interfaces';
 import { ProfileService } from '@shared/services/profile.service';
 import { SkillService } from '@shared/services/skill.service';
+
+import { ProfileSkill } from '@profiles/interfaces';
 
 @Component({
   selector: 'app-skills',
@@ -19,10 +20,9 @@ export class SkillsComponent implements OnInit {
   ngOnInit(): void {
     this.skills$ = this.profileService.getSkills(this.profileId);
     this.skillsService.getAllSkills().subscribe(skills => {
-      console.log('here');
-      for(let skill of skills) {
+      for (const skill of skills) {
         console.log(skill);
       }
-    })
+    });
   }
 }

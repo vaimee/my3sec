@@ -1,15 +1,20 @@
-<mat-list>
-  <mat-list-item *ngFor="let task of tasks | async" (click)="goTo(task.id)">
-    <div class="clickable">
-      <span matListItemTitle
-        >{{ task.name }}
-        <app-show-status [status]="task.status"></app-show-status>
-      </span>
-      <span matListItemLine>{{ task.description }}</span>
-      <p matListItemLine>
-        <mat-icon class="line-icon" fontIcon="hourglass_top"></mat-icon> {{ task.hours }}h &#8226;
-        <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ task.members?.length }}
-      </p>
-    </div>
-  </mat-list-item>
-</mat-list>
+<div class="mt-4 bg-white p-4">
+  <h2 class="d-flex justify-content-between align-items-center mb-3">
+    Tasks
+  </h2>
+  <mat-list>
+    <mat-list-item *ngFor="let task of tasks | async" (click)="goTo(task.id)">
+      <div class="clickable">
+        <span matListItemTitle
+          >{{ task.name }}
+          <app-show-status [status]="task.status"></app-show-status>
+        </span>
+        <span matListItemLine>{{ task.description }}</span>
+        <p matListItemLine>
+          <mat-icon class="line-icon" fontIcon="hourglass_top"></mat-icon> {{ task.hours }}h &#8226;
+          <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ task.members?.length }}
+        </p>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

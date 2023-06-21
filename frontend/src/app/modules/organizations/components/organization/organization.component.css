@@ -33,3 +33,10 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.dark-wrapper {
+  background-color: #ddd;
+  height: 100vh;
+}
+
+

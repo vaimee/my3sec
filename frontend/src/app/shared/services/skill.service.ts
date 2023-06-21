@@ -11,10 +11,7 @@ import { SkillRegistryContractService } from './skill-registry-contract.service'
   providedIn: 'root',
 })
 export class SkillService {
-  constructor(
-    private skillRegistry: SkillRegistryContractService,
-    private ipfs: IpfsService
-  ) {}
+  constructor(private skillRegistry: SkillRegistryContractService, private ipfs: IpfsService) {}
 
   public getAllSkills(): Observable<Skill[]> {
     return this.skillRegistry.getSkillCount().pipe(

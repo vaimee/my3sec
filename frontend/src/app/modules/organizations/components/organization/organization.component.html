@@ -1,19 +1,21 @@
-<ng-container *ngIf="organization$ | async as organization">
-  <div class="header">
-    <div class="header-company">
-      <img class="round-image" src="{{ organization.icon }}" alt="..." />
-      <div class="header-company name">
-        <h2>{{ organization.name }}</h2>
-        <span class="address">{{ organization.address }}</span>
+<div class="dark-wrapper p-5">
+  <ng-container *ngIf="organization$ | async as organization">
+    <div class="header">
+      <div class="header-company">
+        <img class="round-image" src="{{ organization.icon }}" alt="..." />
+        <div class="header-company name">
+          <h2>{{ organization.name }}</h2>
+          <span class="address">{{ organization.address }}</span>
+        </div>
       </div>
-      <p>{{ organization.description }}</p>
+      <ng-container *ngIf="managers$ | async as managers">
+        <app-people-detail [label]="'managers'" [people]="managers"></app-people-detail>
+      </ng-container>
+      <ng-container *ngIf="members$ | async as members">
+        <app-people-detail [people]="members"></app-people-detail>
+      </ng-container>
     </div>
-    <ng-container *ngIf="managers$ | async as managers">
-      <app-people-detail [label]="'managers'" [people]="managers"></app-people-detail>
-    </ng-container>
-    <ng-container *ngIf="members$ | async as members">
-      <app-people-detail [people]="members"></app-people-detail>
-    </ng-container>
-  </div>
-  <app-project-list [projects$]="projects$"></app-project-list>
-</ng-container>
+      <p>{{ description }}</p>
+    <app-project-list [projects$]="projects$"></app-project-list>
+  </ng-container>
+</div>

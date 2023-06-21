@@ -1,7 +1,3 @@
-.round-image {
-  border-radius: 50%;
-}
-
 .header {
   display: flex;
   flex-direction: row;
@@ -10,7 +6,7 @@
   margin: 10px;
 }
 
-.header-project {
+.header-company {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
@@ -18,22 +14,29 @@
   max-width: 500px;
 }
 
-.header-project p {
+.header-company p {
   display: flex;
   grid-column-start: 1;
   grid-column-end: 3;
   margin: 5px;
 }
 
-.header-project img {
+.header-company img {
   max-height: 100px;
   justify-self: end;
   margin-right: 5px;
 }
 
-.header-project .name {
+.header-company .name {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
   justify-content: center;
 }
+
+.dark-wrapper {
+  background-color: #ddd;
+  height: 100vh;
+}
+
+

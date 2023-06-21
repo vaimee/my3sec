@@ -15,13 +15,14 @@
 
 .profile-list img {
   max-width: 50px;
+  max-height: 50px;
 }
 
 .profile-list img:not(:first-child) {
-  margin-left: -25px;
+  margin-left: -15px;
   transition: margin 0.1s ease-in-out;
 }
 
 .profile-list:hover img:not(:first-child) {
-  margin: -10px;
+  margin: -5px;
 }

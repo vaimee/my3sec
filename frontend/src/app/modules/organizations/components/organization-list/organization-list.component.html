@@ -1,21 +1,32 @@
-<mat-list>
-  <mat-list-item *ngFor="let organization of organizations | async" (click)="goTo(organization.address)">
-    <img matListItemAvatar src="{{ organization.icon }}" alt="{{ organization.name }} icon" />
-    <span matListItemTitle>{{ organization.name }}</span>
-    <span matListItemLine>{{ organization.description }}</span>
-    <p matListItemLine>
-      Bologna, Italy &#8226; <mat-icon class="line-icon" fontIcon="auto_awesome_mosaic"></mat-icon>
-      {{ organization.projectCount }} &#8226; <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ organization.memberCount }}
-    </p>
-    <button
-      mat-icon-button
-      #tooltip="matTooltip"
-      matTooltip="Join"
-      matTooltipPosition="below"
-      matTooltipHideDelay="500"
-      matListItemMeta
-      color="primary">
-      <mat-icon>login</mat-icon>
-    </button>
-  </mat-list-item>
-</mat-list>
+<div class="dark-wrapper p-5">
+  <div class="container">
+    <div class="my3sec-modal">
+      <div class="logo-img text-center mb-5">
+        <img src="../../../assets/images/my3sec-logo-cropped.png" />
+      </div>
+      <h2>Organizations</h2>
+      <mat-list>
+        <mat-list-item *ngFor="let organization of organizations | async" (click)="goTo(organization.address)">
+          <img matListItemAvatar src="{{ organization.icon }}" alt="{{ organization.name }} icon" />
+          <span matListItemTitle>{{ organization.name }}</span>
+          <span matListItemLine>{{ organization.description }}</span>
+          <p matListItemLine>
+            Bologna, Italy &#8226; <mat-icon class="line-icon" fontIcon="auto_awesome_mosaic"></mat-icon>
+            {{ getRandom(4) }} &#8226; <mat-icon class="line-icon" fontIcon="group"></mat-icon>
+            {{ getRandom(10) }}
+          </p>
+          <button
+            mat-icon-button
+            #tooltip="matTooltip"
+            matTooltip="Join"
+            matTooltipPosition="below"
+            matTooltipHideDelay="500"
+            matListItemMeta
+            color="primary">
+            <mat-icon>login</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,113 @@
 .line-icon {
   vertical-align: middle;
 }
+
+.dark-wrapper {
+  background-color: #ddd;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.logo-img img {
+  width: 80px;
+  margin: 0 auto;
+}
+
+.avatar {
+  margin: 0.5em auto;
+  position: relative;
+  height: 50px;
+  display: block;
+}
+
+.avatar .avatar-label {
+  text-align: center;
+  color: #000;
+  font-size: 16px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.avatar .mat-icon {
+  font-size: 50px;
+  width: 50px;
+  height: 50px;
+  color: #aaa;
+}
+
+.margin-top {
+  margin-top: 20px;
+}
+
+.file-input {
+  display: none;
+}
+
+/*Custom CSS*/
+.input-col-2 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+.input-col-2 mat-form-field {
+  width: 50%;
+}
+
+.input-col-1 mat-form-field {
+  flex-grow: 1;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.organization-icon {
+  background: #64b2db;
+  border-radius: 50%;
+  height: 70px;
+  width: 70px;
+  margin-right: 20px;
+  overflow: hidden;
+}
+
+@media screen and (max-device-width: 640px) {
+  .dark-wrapper {
+    padding: 20px !important;
+  }
+
+  .page-block {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .input-col-2 {
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  .input-col-1 mat-form-field,
+  .input-col-2 mat-form-field {
+    width: 100%;
+  }
+
+  .avatar .avatar-label {
+    justify-content: start;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-block {
+    width: 100%;
+  }
+}

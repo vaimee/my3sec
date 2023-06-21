@@ -21,14 +21,14 @@ import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations
 export class TaskComponent {
   task$: Observable<Task>;
   showReward = true;
-  showCloseTask = true;
+  showCloseTask = false;
   reviewer$: Observable<Profile> = of({
     id: '123',
-    firstName: 'John',
-    surname: 'Doe',
+    firstName: 'Cristiano',
+    surname: 'Aguzzi',
     organization: 'ABC Company',
     role: 'Developer',
-    profileImage: 'https://picsum.photos/200/',
+    profileImage: '../../../assets/images/cris.jpg',
     walletAddress: '0x1234567890abcdef',
     regulationCheckbox: true,
   });
@@ -39,7 +39,7 @@ export class TaskComponent {
       surname: 'Gigli',
       organization: 'ABC Company',
       role: 'Developer',
-      profileImage: 'https://picsum.photos/200/',
+      profileImage: '../../../assets/images/gigli.jpg',
       walletAddress: '0x1234567890abcdef',
       regulationCheckbox: true,
     },
@@ -49,7 +49,7 @@ export class TaskComponent {
       surname: 'Zyrianoff',
       organization: 'ABC Company',
       role: 'Developer',
-      profileImage: 'https://picsum.photos/200/',
+      profileImage: '../../../assets/images/ivan.jpg',
       walletAddress: '0x1234567890abcdef',
       regulationCheckbox: true,
     },
@@ -64,7 +64,7 @@ export class TaskComponent {
       id: 1,
       name: 'Frontend Development',
       description: `
-      In this task, you will be working on enhancing the user interface (UI) of a web application. The goal is to improve the overall user experience and make the interface more visually appealing.
+      In this task, you will be working on enhancing the user interface (UI). The goal is to improve the overall user experience and make the interface more visually appealing.
 
       #### 1. Implement Responsive Design
       
@@ -83,23 +83,24 @@ export class TaskComponent {
 `,
       organization: '',
       hours: 10,
-      status: Status.IN_PROGRESS,
+      status: Status.COMPLETED,
       skills: of([
         {
           id: 0,
           name: 'HTML',
-          category: 'Front-end',
+          category: 'Computer Science / Programming / Front-end ',
         },
         {
           id: 1,
           name: 'CSS',
-          category: 'Front-end',
+          category: 'Computer Science / Programming / Front-end ',
         },
         {
           id: 2,
           name: 'JavaScript',
-          description: 'The techniques and principles of software development, such as analysis, algorithms, coding, testing and compiling of programming paradigms in JavaScript.',
-          category: 'Front-end',
+          description:
+            'The techniques and principles of software development, such as analysis, algorithms, coding, testing and compiling of programming paradigms in JavaScript.',
+          category: 'Computer Science / Programming / Front-end ',
         },
       ]),
       start: new Date(2023, 5, 10),

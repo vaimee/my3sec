@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -21,5 +21,9 @@ export class OrganizationListComponent implements OnInit {
 
   goTo(address: string): void {
     this.router.navigate([`/organizations/${address}`]);
+  }
+
+  getRandom(max: number) {
+    return Math.floor(Math.random() * max) + 1;
   }
 }

@@ -31,6 +31,10 @@ const routes: Routes = [
         path: 'tasks',
         loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule),
       },
+      {
+        path: 'projects',
+        loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule),
+      },
     ],
     canActivate: [metamaskNotInstalledGuard, metamaskLoginGuard, rightChainGuard, my3secLoginGuard],
   },

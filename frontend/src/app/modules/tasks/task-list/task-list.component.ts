@@ -21,9 +21,9 @@ export class TaskListComponent implements OnInit {
       id: 1,
       name: 'Frontend Development',
       description:
-        'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'Develop a web interface-based UI to explore My3Sec features implemented in the blockchain',
       organization: '',
-      hours: 10,
+      hours: 58,
       status: Status.IN_PROGRESS,
       metadataURI: '',
       skills: of([
@@ -50,13 +50,52 @@ export class TaskListComponent implements OnInit {
         },
       ]),
       reviewer: 1,
-      members: [2, 3, 4],
+      members: [2, 3],
       start: new Date(),
       end: new Date(),
       currentMonth: 0,
       durationInMonths: 0,
     };
-    this.tasks = of([task]);
+    const task2: Task = {
+      id: 2,
+      name: 'Backend Development',
+      description:
+        'Develop in solidity the contract logic to support user skill growth and project management features',
+      organization: '',
+      hours: 80,
+      status: Status.COMPLETED,
+      metadataURI: '',
+      skills: of([
+        {
+          id: 0,
+          name: 'HTML',
+          category: 'Front-end',
+          icon: 'html-icon',
+          progress: 80,
+        },
+        {
+          id: 1,
+          name: 'CSS',
+          category: 'Front-end',
+          icon: 'css-icon',
+          progress: 70,
+        },
+        {
+          id: 2,
+          name: 'JavaScript',
+          category: 'Front-end',
+          icon: 'js-icon',
+          progress: 90,
+        },
+      ]),
+      reviewer: 1,
+      members: [2],
+      start: new Date(),
+      end: new Date(),
+      currentMonth: 0,
+      durationInMonths: 0,
+    };
+    this.tasks = of([task, task2]);
   }
 
   goTo(id: number): void {
