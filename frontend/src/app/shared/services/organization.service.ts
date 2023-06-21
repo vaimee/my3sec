@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -35,6 +35,34 @@ export class OrganizationService {
     );
   }
 
+  public getProjectsOfProfile(profileId: number): Observable<Project[]> {
+    return this.my3secHub.getOrganizationsAddress().pipe(
+      switchMap(ids => {
+        const orgProjects = [];
+        for (const id of ids) {
+          this.setTarget(id);
+          orgProjects.push(this.getProjectsByMember(profileId));
+        }
+        return forkJoin(orgProjects);
+      }),
+      concatMap(data => data)
+    );
+  }
+
+  public getTasksOfProfile(profileId: number): Observable<Task[]> {
+    return this.my3secHub.getOrganizationsAddress().pipe(
+      switchMap(ids => {
+        const orgProjects = [];
+        for (const id of ids) {
+          this.setTarget(id);
+          orgProjects.push(this.getTasksByMember(profileId));
+        }
+        return forkJoin(orgProjects);
+      }),
+      concatMap(data => data)
+    );
+  }
+
   public getOrganizationByAddress(address: string): Observable<Organization> {
     this.contractService.setTarget(address);
     return this.getOrganization().pipe(
@@ -63,6 +91,7 @@ export class OrganizationService {
               status: project.status,
               organization: this.contractService.address,
               tasks: this.getTasks(project.id.toNumber()),
+              members: this.getProjectMembers(project.id.toNumber()),
               hours: 0, // TODO: calculate hours
               startDate,
               endDate,
@@ -72,6 +101,28 @@ export class OrganizationService {
           })
         );
       }),
+      toArray()
+    );
+  }
+
+  public getProjectsByMember(memberId: number): Observable<Project[]> {
+    return this.getProjects().pipe(
+      switchMap(projects => {
+        const requests = [];
+        for (const project of projects) {
+          requests.push(
+            project.members.pipe(filter(members => !members.find(member => member.id === memberId.toString())))
+          );
+        }
+        return forkJoin(requests).pipe(map(data => (data.length > 0 ? projects : [])));
+      })
+    );
+  }
+
+  public getProjectMembers(projectId: number): Observable<Profile[]> {
+    return this.contractService.getProjectMembers(projectId).pipe(
+      concatMap(data => data),
+      switchMap(id => this.profileService.getProfile(id)),
       toArray()
     );
   }
@@ -105,14 +156,28 @@ export class OrganizationService {
     );
   }
 
+  public getTasksByMember(memberId: number): Observable<Task[]> {
+    return this.getProjects().pipe(
+      switchMap(projects => {
+        const requests = [];
+        for (const project of projects) {
+          requests.push(project.tasks.pipe(filter(members => !members.find(member => member.id === memberId))));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data)
+    );
+  }
+
   public setTarget(targetAddress: string): void {
     this.contractService.setTarget(targetAddress);
   }
 
-  public getMembers(): Observable<Profile> {
+  public getMembers(): Observable<Profile[]> {
     return this.contractService.getMembers().pipe(
       concatMap(data => data),
-      switchMap(id => this.profileService.getProfile(id))
+      switchMap(id => this.profileService.getProfile(id)),
+      toArray()
     );
   }
   public updateTask(taskId: number, task: DataTypes.UpdateTaskStruct) {

@@ -10,7 +10,7 @@
       </div>
       <p>{{ project.description }}</p>
     </div>
-    <ng-container *ngIf="members$ | async as members">
+    <ng-container *ngIf="project.members | async as members">
       <app-people-detail [people]="members"></app-people-detail>
     </ng-container>
   </div>
