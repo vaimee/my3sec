@@ -89,8 +89,7 @@ export class OrganizationContractService {
         const total = count.toNumber();
         const requests = [];
         for (let i = 0; i < total; i++) {
-          //TODO: how to get the organization members?  I cannot call the getMember function
-          requests.push(this.contract!.getProjectMember(1, i));
+          requests.push(this.contract!.getMember(i));
         }
         return forkJoin(requests);
       }),

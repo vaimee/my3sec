@@ -20,19 +20,10 @@ export class OrganizationComponent implements OnInit {
 
   constructor(private organizationService: OrganizationService, private route: ActivatedRoute) {
     this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
-    this.organizationService.setTarget(this.organizationAddress);
   }
   ngOnInit(): void {
-    //this.organization$ = this.organizationService.getFullOrganization()
-    this.organization$ = of({
-      address: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
-      name: 'VAIMEE',
-      description:
-        'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      icon: 'https://picsum.photos/200/',
-      projectCount: 5,
-      memberCount: 10,
-    });
+    this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress)
+    
 
     this.managers$ = of([
       {

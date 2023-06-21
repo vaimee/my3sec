@@ -1,6 +1,6 @@
 <mat-list>
   <mat-list-item *ngFor="let organization of organizations | async" (click)="goTo(organization.address)">
-    <img matListItemAvatar src="{{ organization.icon }}" alt="..." />
+    <img matListItemAvatar src="{{ organization.icon }}" alt="{{ organization.name }} icon" />
     <span matListItemTitle>{{ organization.name }}</span>
     <span matListItemLine>{{ organization.description }}</span>
     <p matListItemLine>

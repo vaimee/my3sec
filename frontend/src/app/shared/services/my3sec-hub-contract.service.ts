@@ -56,7 +56,7 @@ export class My3secHubContractService {
     return from(this.contract.removeEnergyFrom(profileId, amount));
   }
 
-  public getOrganizationsIds(): Observable<string[]> {
+  public getOrganizationsAddress(): Observable<string[]> {
     return from(this.contract.getOrganizationCount()).pipe(
       mergeMap(total => {
         const requests = [];
@@ -68,8 +68,8 @@ export class My3secHubContractService {
     );
   }
 
-  public getOrganizationMetadataUri(organizationAddress: string): Observable<string> {
-    return from(this.contract.getOrganization(organizationAddress));
+  public getOrganizationAddress(index: string): Observable<string> {
+    return from(this.contract.getOrganization(index));
   }
 
   public getOrganizationCount(): Observable<BigNumber> {

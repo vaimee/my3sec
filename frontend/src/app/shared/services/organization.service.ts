@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -28,23 +28,17 @@ export class OrganizationService {
   ) {}
 
   public getOrganizations(): Observable<Organization[]> {
-    return this.my3secHub.getOrganizationsIds().pipe(
+    return this.my3secHub.getOrganizationsAddress().pipe(
       concatMap(data => data),
-      mergeMap(id => this.getOrganizationByAddress(id)),
+      mergeMap(address => this.getOrganizationByAddress(address)),
       toArray()
     );
   }
 
-  public getFullOrganization(): Observable<Organization> {
-    return this.getOrganization().pipe(
-      switchMap((organization: OrganizationMetadata) => this.getOrganizationFromMetadata(organization))
-    );
-  }
-
   public getOrganizationByAddress(address: string): Observable<Organization> {
-    return this.my3secHub.getOrganizationMetadataUri(address).pipe(
-      switchMap((uri: string) => this.ipfsService.retrieveJSON<OrganizationMetadata>(uri)),
-      switchMap((organization: OrganizationMetadata) => this.getOrganizationFromMetadata(organization))
+    this.contractService.setTarget(address);
+    return this.getOrganization().pipe(
+      switchMap((organization: OrganizationMetadata) => this.getOrganizationFromMetadata(organization, address))
     );
   }
 
@@ -134,11 +128,21 @@ export class OrganizationService {
     return current.getMonth() - start.getMonth() + 12 * (current.getFullYear() - start.getFullYear());
   }
 
-  private getOrganizationFromMetadata(organization: OrganizationMetadata): Observable<Organization> {
+  private getOrganizationFromMetadata(organization: OrganizationMetadata, address: string): Observable<Organization> {
+    const projectCount$ = this.contractService.getProjectCount();
+    const memberCount$ = this.contractService.getMemberCount();
+    console.log(organization);
     return forkJoin({
-      ...organization,
-      projectCount: this.contractService.getProjectCount(),
-      memberCount: this.contractService.getMemberCount(),
-    });
+      organization: of(organization),
+      projectCount: projectCount$,
+      memberCount: memberCount$,
+    }).pipe(
+      map(({ organization, projectCount, memberCount }) => ({
+        ...organization,
+        address,
+        projectCount,
+        memberCount,
+      }))
+    );
   }
 }
