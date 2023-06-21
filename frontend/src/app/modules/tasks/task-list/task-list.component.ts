@@ -6,9 +6,6 @@ import { Router } from '@angular/router';
 import { Status } from '@shared/enums';
 import { Task } from '@shared/interfaces/project.interface';
 
-import { Organization } from '@organizations/interfaces';
-import { Project } from '@profiles/interfaces';
-
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',

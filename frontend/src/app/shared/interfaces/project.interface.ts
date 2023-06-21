@@ -32,8 +32,9 @@ export interface Project extends Omit<ProjectMetadata, 'start' | 'end'> {
   durationInMonths: number;
 }
 
-export interface Task extends Omit<TaskMetadata, 'start' | 'end'>, Omit<DataTypes.UpdateTaskStruct, 'skills'> {
-  id: number;
+
+export interface Task extends Omit<TaskMetadata, 'start' | 'end'>, Omit<DataTypes.TaskViewStruct, 'skills' | 'id'> {
+  id: number,
   status: Status;
   hours: number;
   organization: string;
