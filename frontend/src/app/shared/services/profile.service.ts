@@ -1,10 +1,11 @@
-import { Observable, concatMap, filter, forkJoin, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
 import { Profile, ProfileMetadata } from '@shared/interfaces';
+import { Project } from '@shared/interfaces/project.interface';
 import { SkillService } from '@shared/services/skill.service';
 
 import { EndorserItem, ProfileSkill } from '@profiles/interfaces';
@@ -12,6 +13,7 @@ import { EndorserItem, ProfileSkill } from '@profiles/interfaces';
 import { EnergyWalletContractService } from './energy-wallet-contract.service';
 import { IpfsService } from './ipfs.service';
 import { My3secHubContractService } from './my3sec-hub-contract.service';
+import { OrganizationService } from './organization.service';
 import { SkillWalletContractService } from './skill-wallet-contract.service';
 
 @Injectable({

@@ -29,6 +29,7 @@ export class ProjectComponent implements OnInit {
       image: 'https://picsum.photos/200/',
       hours: 5,
       tasks: tasks$,
+      members: of([]),
       organization: '',
       currentMonth: 5,
       durationInMonths: 10,

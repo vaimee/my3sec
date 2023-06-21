@@ -4,6 +4,7 @@ import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { Status } from '../enums';
+import { Profile } from './profile.interface';
 
 export interface ProjectMetadata {
   name: string;
@@ -25,6 +26,7 @@ export interface Project extends Omit<ProjectMetadata, 'startDate' | 'endDate'> 
   status: Status;
   hours: number;
   tasks: Observable<Task[]>;
+  members: Observable<Profile[]>;
   organization: string;
   startDate: Date;
   endDate: Date;

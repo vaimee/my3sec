@@ -15,7 +15,7 @@
         <button mat-fab color="primary">
           <mat-icon>person_add</mat-icon>
         </button>
-        <ng-container *ngFor="let member of members$ | async">
+        <ng-container *ngFor="let member of project.members | async">
           <img class="round-image" src="{{ member.profileImage }}" />
         </ng-container>
       </div>
