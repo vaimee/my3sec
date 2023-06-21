@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Organization, ProfileMetadata } from '@shared/interfaces';
+import { Organization, ProfileMetadata, Project } from '@shared/interfaces';
 import { OrganizationService } from '@shared/services/organization.service';
 
 
@@ -15,6 +15,7 @@ import { OrganizationService } from '@shared/services/organization.service';
 export class OrganizationComponent implements OnInit {
   organizationAddress: string;
   organization$!: Observable<Organization>;
+  projects$!: Observable<Project[]>
   managers$!: Observable<ProfileMetadata[]>;
   members$!: Observable<ProfileMetadata[]>;
 
@@ -23,8 +24,8 @@ export class OrganizationComponent implements OnInit {
   }
   ngOnInit(): void {
     this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress)
-    
 
+    this.projects$ = this.organizationService.getProjects()
     this.managers$ = of([
       {
         firstName: 'John',

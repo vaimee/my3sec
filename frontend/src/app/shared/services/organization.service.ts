@@ -50,12 +50,13 @@ export class OrganizationService {
 
   public getProjects(): Observable<Project[]> {
     return this.contractService.getProjects().pipe(
-      switchMap(projects => from(projects)),
-      switchMap(project => {
+      concatMap(projects => projects),
+      mergeMap(project => {
+        console.log(project.id.toNumber());
         return this.ipfsService.retrieveJSON<ProjectMetadata>(project.metadataURI).pipe(
           map(data => {
-            const start = new Date(data.start);
-            const end = new Date(data.end);
+            const startDate = new Date(data.startDate);
+            const endDate = new Date(data.endDate);
             return {
               ...data,
               id: project.id.toNumber(),
@@ -63,10 +64,10 @@ export class OrganizationService {
               organization: this.contractService.address,
               tasks: this.getTasks(project.id.toNumber()),
               hours: 0, // TODO: calculate hours
-              start,
-              end,
-              currentMonth: this.calculateCurrentMonth(start),
-              durationInMonths: this.calculateDurationInMonths(start, end),
+              startDate,
+              endDate,
+              currentMonth: this.calculateCurrentMonth(startDate),
+              durationInMonths: this.calculateDurationInMonths(startDate, endDate),
             };
           })
         );
@@ -120,7 +121,12 @@ export class OrganizationService {
   }
 
   private calculateDurationInMonths(start: Date, end: Date): number {
-    return start.getMonth() - end.getMonth() + 12 * (start.getFullYear() - end.getFullYear());
+    const startYear = start.getFullYear();
+    const startMonth = start.getMonth();
+    const endYear = end.getFullYear();
+    const endMonth = end.getMonth();
+
+    return (endYear - startYear) * 12 + (endMonth - startMonth + 1);
   }
 
   private calculateCurrentMonth(start: Date): number {
@@ -131,7 +137,6 @@ export class OrganizationService {
   private getOrganizationFromMetadata(organization: OrganizationMetadata, address: string): Observable<Organization> {
     const projectCount$ = this.contractService.getProjectCount();
     const memberCount$ = this.contractService.getMemberCount();
-    console.log(organization);
     return forkJoin({
       organization: of(organization),
       projectCount: projectCount$,

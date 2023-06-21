@@ -20,8 +20,8 @@ export class ProjectComponent implements OnInit {
 
     this.project$ = of({
       id: 1,
-      start: new Date('2023-06-10'),
-      end: new Date('2023-06-27'),
+      startDate: new Date('2023-06-10'),
+      endDate: new Date('2023-06-27'),
       name: 'Project 1',
       status: Status.IN_PROGRESS,
       description:
