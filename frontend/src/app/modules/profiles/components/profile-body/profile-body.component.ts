@@ -45,6 +45,10 @@ export class ProfileBodyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadProfileDetail();
+  }
+
+  loadProfileDetail() {
     this.route.data.subscribe(data => {
       this.useDefaultProfile = data['useDefaultProfile'];
       this.loadingService.show();
@@ -102,20 +106,25 @@ export class ProfileBodyComponent implements OnInit {
       maxEnergy: maxEnergy,
     };
 
-    this.dialog.open(EndorseDialogComponent, {
+    const dialogRef = this.dialog.open(EndorseDialogComponent, {
       width: '400px',
       data: endorseDialogInterface,
     });
+
+    dialogRef.afterClosed().subscribe(changed => {
+      if (!changed) return;
+      this.loadProfileDetail();
+    });
   }
 
-  openEndorsersOrEndorsingDialog(isEndorser: boolean) {
+  openEndorsersOrEndorsingDialog(isEndorsing: boolean, endorsers: number | null): void {
+    if (!endorsers || endorsers <= 0) return;
     const dialogRef = this.dialog.open(EndorsersListComponent, {
       width: '400px',
-      data: { id: this.id, isEndorser: isEndorser },
+      data: { id: this.id, isEndorser: isEndorsing },
     });
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return;
-      console.log(result);
       this.router.navigate(['/profiles', result]);
     });
   }

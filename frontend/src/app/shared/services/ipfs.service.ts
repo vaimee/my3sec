@@ -6,7 +6,12 @@ import { finalize, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Skill } from '@profiles/interfaces';
+
 import { LoadingService } from './loading.service';
+
+//TODO: type the skill Ontology
+type skillOntology = any;
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +26,7 @@ export class IpfsService {
     this.nftstorage = new NFTStorage({ token: this.NFT_STORAGE_KEY });
   }
 
-  storeJSON(json: unknown): Observable<string> {
+  public storeJSON(json: unknown): Observable<string> {
     this.loading.show();
     const content = new Blob([JSON.stringify(json)]);
     return from(this.nftstorage.storeBlob(content)).pipe(
@@ -31,11 +36,25 @@ export class IpfsService {
     );
   }
 
-  retrieveJSON<T>(cid: string): Observable<T> {
+  public retrieveJSON<T>(cid: string): Observable<T> {
     return this.http.get<T>(`${this.httpGateway}/${cid}`).pipe(
       map(response => {
         return response;
       })
     );
+  }
+
+  public retrieveSkill(id: number, uri: string): Observable<Skill> {
+    return this.http.get<skillOntology>(`${uri}`).pipe(map(response => this.parseSkill(id, response)));
+  }
+
+  private parseSkill(id: number, incomingSkill: skillOntology): Skill {
+    const skill: Skill = {
+      id: id,
+      name: incomingSkill.name as string,
+      description: incomingSkill.description.en.literal as string,
+      category: incomingSkill.links.broaderSkill[0].title,
+    };
+    return skill;
   }
 }

@@ -1,5 +1,3 @@
-import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -72,9 +70,9 @@ export class CreateOrganizationComponent implements OnInit, OnDestroy {
   reset() {
     this.submitted = false;
   }
-  public formError = (controlName: string, errorName: string) =>{
+  public formError = (controlName: string, errorName: string) => {
     console.log(controlName, errorName);
-    
+
     return this.signUpForm.controls[controlName].hasError(errorName);
-  }
+  };
 }

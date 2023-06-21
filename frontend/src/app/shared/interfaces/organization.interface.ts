@@ -1,0 +1,7 @@
+export interface Organization {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  address: string;
+}

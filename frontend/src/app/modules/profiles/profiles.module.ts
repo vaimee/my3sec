@@ -19,7 +19,7 @@ import { ProfilesRoutingModule } from './profiles-routing.module';
     CertificatesComponent,
     ProjectsComponent,
     EndorseDialogComponent,
-    EndorsersListComponent
+    EndorsersListComponent,
   ],
   imports: [CommonModule, ProfilesRoutingModule, SharedModule, ReactiveFormsModule],
 })

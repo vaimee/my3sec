@@ -1,0 +1,40 @@
+::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+  border-color: #007bff !important;
+}
+
+::ng-deep .mat-calendar ::ng-deep .mat-calendar-body .mat-calendar-body-selected {
+  background-color: #dc3545 !important;
+  color: white !important;
+}
+
+.margin-left {
+  margin-left: 16px;
+}
+.margin-top {
+  margin-top: 16px;
+}
+
+.bg-color {
+  background-color: #d9d9d9;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px !important;
+  height: 45px !important;
+  border-radius: 50%;
+  border: 1.5px solid #000;
+  background-color: black !important;
+  color: white !important;
+}
+
+.circle-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 5px;
+  margin: 10px;
+}

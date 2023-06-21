@@ -1,6 +1,6 @@
 import { environment } from 'environments/environment';
-import { ethers, providers } from 'ethers';
-import { Observable, finalize, from, switchMap } from 'rxjs';
+import { BigNumber, ethers, providers } from 'ethers';
+import { Observable, forkJoin, from, mergeMap, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -12,16 +12,13 @@ import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 })
 export class My3secHubContractService {
   private contractAddress = environment.contracts.my3secHub;
-  private provider: ethers.providers.JsonRpcProvider;
-  private signer: ethers.Signer;
+
   private contract: My3SecHub;
 
   constructor() {
-    this.provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
-
-    this.signer = this.provider.getSigner();
-
-    this.contract = My3SecHub__factory.connect(this.contractAddress, this.signer);
+    const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
+    const signer = provider.getSigner();
+    this.contract = My3SecHub__factory.connect(this.contractAddress, signer);
   }
 
   public getDefaultProfile(account: string): Observable<DataTypes.ProfileViewStructOutput> {
@@ -57,5 +54,46 @@ export class My3secHubContractService {
 
   public removeEnergyFrom(profileId: number, amount: number): Observable<unknown> {
     return from(this.contract.removeEnergyFrom(profileId, amount));
+  }
+
+  public getOrganizationsIds(): Observable<string[]> {
+    return from(this.contract.getOrganizationCount()).pipe(
+      mergeMap(total => {
+        const requests = [];
+        for (let i = 0; i < total.toNumber(); i++) {
+          requests.push(this.contract.getOrganization(i));
+        }
+        return forkJoin(requests);
+      })
+    );
+  }
+
+  public getOrganizationMetadataUri(id: string): Observable<string> {
+    return from(this.contract.getOrganization(id));
+  }
+
+  public getOrganizationCount(): Observable<BigNumber> {
+    return from(this.contract.getOrganizationCount());
+  }
+
+  public withdrawExperience(organizationAddress: string, taskId: string): Observable<ethers.ContractTransaction> {
+    return from(this.contract.withdraw(organizationAddress, taskId));
+  }
+
+  private async wait(tx: ethers.ContractTransaction): Promise<void> {
+    await tx.wait();
+    return;
+  }
+
+  public giveEnergyBlocking(profileId: number, amount: number) {
+    return from(this.contract.giveEnergyTo(profileId, amount)).pipe(switchMap(this.wait));
+  }
+
+  public removeEnergyBlocking(profileId: number, amount: number) {
+    return from(this.contract.removeEnergyFrom(profileId, amount)).pipe(switchMap(this.wait));
+  }
+
+  public withdrawExperienceBlocking(organizationAddress: string, taskId: string) {
+    return from(this.contract.withdraw(organizationAddress, taskId)).pipe(switchMap(this.wait));
   }
 }

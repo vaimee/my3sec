@@ -20,8 +20,10 @@
           </td>
           <td class="border-0">
             <div class="d-flex flex-column text-center">
-              <h5 class="mb-0">{{ project.tasks.length }}</h5>
-              <small>Tasks</small>
+              <div *ngIf="project.tasks | async as tasks">
+                <h5 class="mb-0">{{ tasks.length }}</h5>
+                <small>Tasks</small>
+              </div>
             </div>
           </td>
           <td class="border-0">

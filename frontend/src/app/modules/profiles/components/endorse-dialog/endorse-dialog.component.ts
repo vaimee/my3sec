@@ -1,13 +1,15 @@
 import { Observable } from 'rxjs';
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { LoadingService } from '@shared/services/loading.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
 import { ProfileService } from '@shared/services/profile.service';
 
 import { EndorseDialogInterface } from '@profiles/interfaces';
+
+import { ProfileBodyComponent } from '../profile-body/profile-body.component';
 
 @Component({
   selector: 'app-endorse-dialog',
@@ -19,6 +21,7 @@ export class EndorseDialogComponent implements OnInit {
   targetEnergyToEndorse = 0;
 
   constructor(
+    public dialogRef: MatDialogRef<ProfileBodyComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EndorseDialogInterface,
     private my3secHubContractService: My3secHubContractService,
     private profileService: ProfileService,
@@ -45,13 +48,13 @@ export class EndorseDialogComponent implements OnInit {
     const valueToEndorse = this.targetEnergyToEndorse - currentEndorsing;
     if (valueToEndorse === 0) return;
     this.loadingService.show();
-    if (valueToEndorse > 0)
-      this.my3secHubContractService
-        .giveEnergyTo(this.data.endorsingId, valueToEndorse) //TODO: how giveEnergy works?
-        .subscribe(() => this.loadingService.hide());
-    else
-      this.my3secHubContractService
-        .removeEnergyFrom(this.data.endorsingId, -valueToEndorse)
-        .subscribe(() => this.loadingService.hide());
+    const energyTransaction$ =
+      valueToEndorse > 0
+        ? this.my3secHubContractService.giveEnergyBlocking(this.data.endorsingId, valueToEndorse)
+        : this.my3secHubContractService.removeEnergyBlocking(this.data.endorsingId, -valueToEndorse);
+    energyTransaction$.subscribe(() => {
+      this.loadingService.hide();
+      this.dialogRef.close(true);
+    });
   }
 }
