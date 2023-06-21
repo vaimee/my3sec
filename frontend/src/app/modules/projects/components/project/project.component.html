@@ -10,17 +10,9 @@
       </div>
       <p>{{ project.description }}</p>
     </div>
-    <div class="people-detail">
-      <div class="profile-list">
-        <button mat-fab color="primary">
-          <mat-icon>person_add</mat-icon>
-        </button>
-        <ng-container *ngFor="let member of members$ | async">
-          <img class="round-image" src="{{ member.profileImage }}" />
-        </ng-container>
-      </div>
-      <h4>Members</h4>
-    </div>
+    <ng-container *ngIf="members$ | async as members">
+      <app-people-detail [people]="members"></app-people-detail>
+    </ng-container>
   </div>
   <ng-container>
     <app-task-list [tasks]="project.tasks"></app-task-list>

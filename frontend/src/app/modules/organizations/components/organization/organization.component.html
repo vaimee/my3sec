@@ -8,28 +8,12 @@
       </div>
       <p>{{ organization.description }}</p>
     </div>
-    <div class="people-detail">
-      <div class="profile-list">
-        <button mat-fab color="primary">
-          <mat-icon>person_add</mat-icon>
-        </button>
-        <ng-container *ngFor="let manager of managers$ | async">
-          <img class="round-image" src="{{ manager.profileImage }}" alt="" />
-        </ng-container>
-      </div>
-      <h4>Managers</h4>
-    </div>
-    <div class="people-detail">
-      <div class="profile-list">
-        <button mat-fab color="primary">
-          <mat-icon>person_add</mat-icon>
-        </button>
-        <ng-container *ngFor="let member of members$ | async">
-          <img class="round-image" src="{{ member.profileImage }}" alt="" />
-        </ng-container>
-      </div>
-      <h4>Members</h4>
-    </div>
+    <ng-container *ngIf="managers$ | async as managers">
+      <app-people-detail [label]="'managers'" [people]="managers"></app-people-detail>
+    </ng-container>
+    <ng-container *ngIf="members$ | async as members">
+      <app-people-detail [people]="members"></app-people-detail>
+    </ng-container>
   </div>
-    <app-project-list [projects$]="projects$"></app-project-list>
+  <app-project-list [projects$]="projects$"></app-project-list>
 </ng-container>

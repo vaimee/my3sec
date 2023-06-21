@@ -33,6 +33,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { PeopleDetailComponent } from './components/people-detail/people-detail.component';
 import { ShowStatusComponent } from './components/show-status/show-status.component';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
@@ -66,9 +67,16 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [LoadingComponent, PageNotFoundComponent, LayoutComponent, NavbarComponent, ShowStatusComponent],
+  declarations: [
+    LoadingComponent,
+    PageNotFoundComponent,
+    LayoutComponent,
+    NavbarComponent,
+    ShowStatusComponent,
+    PeopleDetailComponent,
+  ],
   imports: [CommonModule, RouterModule, ReactiveFormsModule, materialModules],
-  exports: [LoadingComponent, ShowStatusComponent, materialModules],
+  exports: [LoadingComponent, ShowStatusComponent, PeopleDetailComponent, materialModules],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
