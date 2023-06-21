@@ -11,7 +11,6 @@ import { EnergyWalletContractService } from '@shared/services/energy-wallet-cont
 import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
-import { ProfileService } from '@shared/services/profile.service';
 
 import { EndorseDialogComponent } from '@profiles/components/endorse-dialog/endorse-dialog.component';
 import { EndorsersListComponent } from '@profiles/components/endorsers-list/endorsers-list.component';

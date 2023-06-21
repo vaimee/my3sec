@@ -5,9 +5,13 @@ import { Router } from '@angular/router';
 
 import { Status } from '@shared/enums';
 import { Profile } from '@shared/interfaces';
-import { ProfileService } from '@shared/services/profile.service';
+import { Task } from '@shared/interfaces/project.interface';
+import { LoadingService } from '@shared/services/loading.service';
+import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
+import { OrganizationService } from '@shared/services/organization.service';
 
-import { Task } from '../interfaces';
+import { Skill } from '@profiles/interfaces';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 @Component({
   selector: 'app-task',
@@ -50,26 +54,12 @@ export class TaskComponent {
       regulationCheckbox: true,
     },
   ]);
-  constructor(private router: Router, private profileService: ProfileService) {
-    const org = {
-      address: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
-      name: 'VAIMEE',
-      description:
-        'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      icon: 'https://picsum.photos/200/',
-      projectsCount: 5,
-      membersCount: 10,
-    };
-    const project = {
-      name: 'My3Sec',
-      status: 'In Progress',
-      description: 'Lorem ipsum dolor sit amet',
-      hours: 120,
-      tasks: ['Task 1', 'Task 2', 'Task 3'],
-      organization: 'ABC Company',
-      currentMonth: 6,
-      durationInMonths: 12,
-    };
+  constructor(
+    private router: Router,
+    private my3secHub: My3secHubContractService,
+    private organizationService: OrganizationService,
+    private loadingService: LoadingService
+  ) {
     const task: Task = {
       id: 1,
       name: 'Frontend Development',
@@ -91,40 +81,60 @@ export class TaskComponent {
       1. Updated HTML, CSS, and JavaScript files with the implemented changes.
       2. A visually enhanced web application that meets the requirements specified above.
 `,
-      organization: org,
-      project: project,
+      organization: '',
       hours: 10,
-      feedback: 0,
       status: Status.IN_PROGRESS,
-      skills: [
+      skills: of([
         {
+          id: 0,
           name: 'HTML',
           category: 'Front-end',
-          icon: 'html-icon',
-          progress: 80,
         },
         {
+          id: 1,
           name: 'CSS',
           category: 'Front-end',
-          icon: 'css-icon',
-          progress: 70,
         },
         {
+          id: 2,
           name: 'JavaScript',
+          description: 'The techniques and principles of software development, such as analysis, algorithms, coding, testing and compiling of programming paradigms in JavaScript.',
           category: 'Front-end',
-          icon: 'js-icon',
-          progress: 90,
         },
-      ],
-      creationDate: new Date(2023, 5, 10),
-      deadline: new Date(2023, 5, 27),
+      ]),
+      start: new Date(2023, 5, 10),
+      end: new Date(2023, 5, 27),
       reviewer: 1,
       members: [2, 3, 4],
+      metadataURI: '',
+      currentMonth: 0,
+      durationInMonths: 0,
     };
     this.task$ = of(task);
   }
 
   goTo(id: string) {
     this.router.navigate(['/profiles', id]);
+  }
+
+  getReward(id: number) {
+    //TODO: get org address
+    this.loadingService.show();
+    this.my3secHub.withdrawExperienceBlocking('', `${id}`).subscribe(() => {
+      this.loadingService.hide();
+    });
+  }
+
+  updateTask(closeTask: boolean, task: Task, skills: Skill[]) {
+    const taskStruct: DataTypes.UpdateTaskStruct = {
+      metadataURI: task.metadataURI,
+      status: closeTask ? Status.COMPLETED : Status.CANCELED,
+      skills: skills.map(skill => skill.id),
+    };
+    const numericId = Number(task.id);
+    this.loadingService.show();
+    this.organizationService.updateTask(numericId, taskStruct).subscribe(() => {
+      this.loadingService.hide();
+    });
   }
 }

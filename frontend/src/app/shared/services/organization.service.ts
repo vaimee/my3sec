@@ -1,20 +1,61 @@
-import { Observable, concatAll, from, map, of, switchMap, toArray } from 'rxjs';
+import { ethers } from 'ethers';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
+import { Profile } from '@shared/interfaces';
 import { Organization } from '@shared/interfaces/organization.interface';
 
-import { Status } from '../enums';
+import { Organization as FullOrganization } from '@organizations/interfaces';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
+
 import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';
 import { IpfsService } from './ipfs.service';
+import { My3secHubContractService } from './my3sec-hub-contract.service';
 import { OrganizationContractService } from './organization-contract.service';
+import { ProfileService } from './profile.service';
+import { SkillService } from './skill.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrganizationService {
-  constructor(private contractService: OrganizationContractService, private ipfsService: IpfsService) {}
+  constructor(
+    private contractService: OrganizationContractService,
+    private ipfsService: IpfsService,
+    private my3secHub: My3secHubContractService,
+    private profileService: ProfileService,
+    private skillService: SkillService
+  ) {}
 
+  public getOrganizations(): Observable<Organization[]> {
+    return this.my3secHub.getOrganizationsIds().pipe(
+      concatMap(data => data),
+      mergeMap(id => this.getOrganizationById(id)),
+      toArray()
+    );
+  }
+
+  public getFullOrganization(): Observable<FullOrganization> {
+    return this.getOrganization().pipe(
+      switchMap((organization: Organization) => {
+        return forkJoin({
+          ...organization,
+          projectCount: this.contractService.getProjectCount(),
+          memberCount: this.contractService.getMemberCount(),
+          address: this.contractService.address,
+        });
+      })
+    );
+  }
+  public getOrganizationById(id: string): Observable<Organization> {
+    return this.my3secHub.getOrganizationMetadataUri(id).pipe(
+      switchMap((uri: string) => this.ipfsService.retrieveJSON<Omit<Organization, 'id'>>(uri)),
+      map(data => {
+        return { ...data, id: id };
+      })
+    );
+  }
   public getOrganization(): Observable<Organization> {
     return this.contractService.getMetadataURI().pipe(
       switchMap((uri: string) => this.ipfsService.retrieveJSON<Omit<Organization, 'id'>>(uri)),
@@ -57,6 +98,7 @@ export class OrganizationService {
           map(data => {
             const start = new Date(data.start);
             const end = new Date(data.end);
+            const skills = task.skills.map(skill => this.skillService.getSkill(skill.toNumber()));
             return {
               ...data,
               id: task.id.toNumber(),
@@ -67,6 +109,8 @@ export class OrganizationService {
               end,
               currentMonth: this.calculateCurrentMonth(start),
               durationInMonths: this.calculateDurationInMonths(start, end),
+              skills: forkJoin(skills),
+              metadataURI: task.metadataURI,
             };
           })
         );
@@ -77,6 +121,17 @@ export class OrganizationService {
 
   public setTarget(targetAddress: string): void {
     this.contractService.setTarget(targetAddress);
+  }
+
+  public getMembers(): Observable<Profile> {
+    return this.contractService.getMembers().pipe(
+      concatMap(data => data),
+      switchMap(id => this.profileService.getProfile(id))
+    );
+  }
+  public updateTask(taskId: number, task: DataTypes.UpdateTaskStruct) {
+    const hexValue = ethers.utils.hexValue(taskId);
+    return from(this.contractService.updateTask(ethers.BigNumber.from(hexValue), task));
   }
 
   private calculateDurationInMonths(start: Date, end: Date): number {

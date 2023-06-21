@@ -1,9 +1,10 @@
+import { of } from 'rxjs';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Status } from '@shared/enums';
-
-import { Task } from '../interfaces';
+import { Task } from '@shared/interfaces/project.interface';
 
 @Component({
   selector: 'app-log-hours',
@@ -21,60 +22,44 @@ export class LogHoursComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadForm();
-
-    const org = {
-      address: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
-      name: 'VAIMEE',
-      description:
-        'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      icon: 'https://picsum.photos/200/',
-      projectsCount: 5,
-      membersCount: 10,
-    };
-    const project = {
-      name: 'My3Sec',
-      status: 'In Progress',
-      description: 'Lorem ipsum dolor sit amet',
-      hours: 120,
-      tasks: ['Task 1', 'Task 2', 'Task 3'],
-      organization: 'ABC Company',
-      currentMonth: 6,
-      durationInMonths: 12,
-    };
     const task: Task = {
       id: 1,
       name: 'Frontend Development',
       description:
         'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      organization: org,
-      project: project,
+      organization: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
       hours: 10,
-      feedback: 0,
       status: Status.IN_PROGRESS,
-      skills: [
+      metadataURI: '',
+      skills: of([
         {
+          id: 0,
           name: 'HTML',
           category: 'Front-end',
           icon: 'html-icon',
           progress: 80,
         },
         {
+          id: 1,
           name: 'CSS',
           category: 'Front-end',
           icon: 'css-icon',
           progress: 70,
         },
         {
+          id: 2,
           name: 'JavaScript',
           category: 'Front-end',
           icon: 'js-icon',
           progress: 90,
         },
-      ],
+      ]),
       reviewer: 1,
       members: [2, 3, 4],
-      creationDate: new Date(),
-      deadline: new Date(),
+      start: new Date(),
+      end: new Date(),
+      currentMonth: 0,
+      durationInMonths: 0,
     };
     this.tasks = [task];
   }

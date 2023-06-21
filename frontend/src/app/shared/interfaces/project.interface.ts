@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs';
 
+import { Skill } from '@profiles/interfaces';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
+
 import { Status } from '../enums';
 
 export interface ProjectMetadata {
@@ -29,7 +32,7 @@ export interface Project extends Omit<ProjectMetadata, 'start' | 'end'> {
   durationInMonths: number;
 }
 
-export interface Task extends Omit<TaskMetadata, 'start' | 'end'> {
+export interface Task extends Omit<TaskMetadata, 'start' | 'end'>, Omit<DataTypes.UpdateTaskStruct, 'skills'> {
   id: number;
   status: Status;
   hours: number;
@@ -38,5 +41,7 @@ export interface Task extends Omit<TaskMetadata, 'start' | 'end'> {
   end: Date;
   currentMonth: number;
   durationInMonths: number;
-  // TODO: add Skills Observable
+  skills: Observable<Skill[]>;
+  reviewer?: number;
+  members?: number[];
 }

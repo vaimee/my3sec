@@ -1,21 +1,22 @@
-import { Component, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import { MetamaskService } from '@auth/services/metamask.service';
+import { Component, Input, OnInit } from '@angular/core';
 
-import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
+import { SkillService } from '@shared/services/skill.service';
 
-import { Skill } from '@profiles/interfaces';
+import { ProfileSkill } from '@profiles/interfaces';
 
 @Component({
   selector: 'app-skills',
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.css'],
 })
-export class SkillsComponent {
-  @Input() skills!: Array<Skill>;
+export class SkillsComponent implements OnInit {
+  @Input() profileId!: number;
+  skills$!: Observable<ProfileSkill[]>;
 
-  constructor(
-    private my3secHubContractServiceService: My3secHubContractService,
-    private metamaskService: MetamaskService
-  ) {}
+  constructor(private skillService: SkillService) {}
+  ngOnInit(): void {
+    this.skills$ = this.skillService.getSkills(this.profileId);
+  }
 }

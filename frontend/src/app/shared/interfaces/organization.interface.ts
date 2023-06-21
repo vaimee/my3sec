@@ -3,4 +3,5 @@ export interface Organization {
   name: string;
   description: string;
   icon: string;
+  address: string;
 }
