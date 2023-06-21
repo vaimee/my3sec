@@ -6,12 +6,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@shared/shared.module';
 
-import { ShowStatusComponent } from './show-status/show-status.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { TasksRoutingModule, routedComponents } from './tasks-routing.module';
 
 @NgModule({
-  declarations: [routedComponents, TaskListComponent, ShowStatusComponent],
+  declarations: [routedComponents, TaskListComponent],
   exports: [TaskListComponent],
   imports: [MarkdownModule.forRoot(), CommonModule, SharedModule, TasksRoutingModule, FormsModule, ReactiveFormsModule],
 })
