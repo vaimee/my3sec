@@ -1,12 +1,12 @@
-<ng-container *ngIf="organization$ | async as orgData">
+<ng-container *ngIf="organization$ | async as organization">
   <div class="header">
     <div class="header-company">
-      <img class="round-image" src="{{ orgData.icon }}" alt="..." />
+      <img class="round-image" src="{{ organization.icon }}" alt="..." />
       <div class="header-company name">
-        <h2>{{ orgData.name }}</h2>
-        <span class="address">{{ orgData.address }}</span>
+        <h2>{{ organization.name }}</h2>
+        <span class="address">{{ organization.address }}</span>
       </div>
-      <p>{{ orgData.description }}</p>
+      <p>{{ organization.description }}</p>
     </div>
     <div class="people-detail">
       <div class="profile-list">

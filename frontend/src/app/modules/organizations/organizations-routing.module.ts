@@ -14,7 +14,7 @@ const routes: Routes = [
       { path: '', component: OrganizationListComponent },
       { path: 'new', component: CreateOrganizationComponent },
       {
-        path: ':id',
+        path: ':address',
         component: OrganizationComponent,
       },
     ],

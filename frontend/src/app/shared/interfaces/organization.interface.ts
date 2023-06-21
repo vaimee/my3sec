@@ -1,7 +1,11 @@
-export interface Organization {
-  id: string;
+export interface OrganizationMetadata {
+  address: string;
   name: string;
   description: string;
   icon: string;
-  address: string;
+}
+
+export interface Organization extends OrganizationMetadata {
+  projectCount: number;
+  memberCount: number;
 }

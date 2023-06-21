@@ -4,9 +4,8 @@ import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArra
 import { Injectable } from '@angular/core';
 
 import { Profile } from '@shared/interfaces';
-import { Organization } from '@shared/interfaces/organization.interface';
+import { OrganizationMetadata, Organization} from '@shared/interfaces/organization.interface';
 
-import { Organization as FullOrganization } from '@organizations/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';
@@ -28,37 +27,33 @@ export class OrganizationService {
     private skillService: SkillService
   ) {}
 
-  public getOrganizations(): Observable<Organization[]> {
+  public getOrganizations(): Observable<OrganizationMetadata[]> {
     return this.my3secHub.getOrganizationsIds().pipe(
       concatMap(data => data),
-      mergeMap(id => this.getOrganizationById(id)),
+      mergeMap(id => this.getOrganizationByAddress(id)),
       toArray()
     );
   }
 
-  public getFullOrganization(): Observable<FullOrganization> {
+  public getFullOrganization(): Observable<Organization> {
     return this.getOrganization().pipe(
-      switchMap((organization: Organization) => {
+      switchMap((organization: OrganizationMetadata) => {
         return forkJoin({
           ...organization,
           projectCount: this.contractService.getProjectCount(),
           memberCount: this.contractService.getMemberCount(),
-          address: this.contractService.address,
         });
       })
     );
   }
-  public getOrganizationById(id: string): Observable<Organization> {
-    return this.my3secHub.getOrganizationMetadataUri(id).pipe(
-      switchMap((uri: string) => this.ipfsService.retrieveJSON<Omit<Organization, 'id'>>(uri)),
-      map(data => {
-        return { ...data, id: id };
-      })
-    );
+  public getOrganizationByAddress(address: string): Observable<OrganizationMetadata> {
+    return this.my3secHub
+      .getOrganizationMetadataUri(address)
+      .pipe(switchMap((uri: string) => this.ipfsService.retrieveJSON<OrganizationMetadata>(uri)));
   }
-  public getOrganization(): Observable<Organization> {
+  public getOrganization(): Observable<OrganizationMetadata> {
     return this.contractService.getMetadataURI().pipe(
-      switchMap((uri: string) => this.ipfsService.retrieveJSON<Omit<Organization, 'id'>>(uri)),
+      switchMap((uri: string) => this.ipfsService.retrieveJSON<Omit<OrganizationMetadata, 'id'>>(uri)),
       map(data => ({ ...data, id: this.contractService.address }))
     );
   }

@@ -68,8 +68,8 @@ export class My3secHubContractService {
     );
   }
 
-  public getOrganizationMetadataUri(id: string): Observable<string> {
-    return from(this.contract.getOrganization(id));
+  public getOrganizationMetadataUri(organizationAddress: string): Observable<string> {
+    return from(this.contract.getOrganization(organizationAddress));
   }
 
   public getOrganizationCount(): Observable<BigNumber> {

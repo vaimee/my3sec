@@ -4,8 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { OrganizationService } from '@shared/services/organization.service';
+import { Organization } from '@shared/interfaces';
 
-import { Organization } from '../../interfaces/organization.interface';
 
 @Component({
   selector: 'app-organization-list',
@@ -20,7 +20,6 @@ export class OrganizationListComponent implements OnInit {
     this.organizationService.getOrganizations().subscribe(data => console.log(data));
     this.organizations = of([
       {
-        id: '1',
         address: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
         name: 'VAIMEE',
         description:
@@ -30,7 +29,6 @@ export class OrganizationListComponent implements OnInit {
         memberCount: 10,
       },
       {
-        id: '2',
         address: '0x09BEd5176c33a876fe1FAfc12ea9979B12274bB2',
         name: 'Apple',
         description:
@@ -40,7 +38,6 @@ export class OrganizationListComponent implements OnInit {
         memberCount: 10000,
       },
       {
-        id: '3',
         address: '0x09BEd5176c33a876fe1FAfc12ea9979B12274bB2',
         name: 'Greenpeace',
         description:

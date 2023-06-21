@@ -1,11 +1,11 @@
 <mat-list>
-  <mat-list-item *ngFor="let org of organizations | async" (click)="goTo(org.address)">
-    <img matListItemAvatar src="{{ org.icon }}" alt="..." />
-    <span matListItemTitle>{{ org.name }}</span>
-    <span matListItemLine>{{ org.description }}</span>
+  <mat-list-item *ngFor="let organization of organizations | async" (click)="goTo(organization.address)">
+    <img matListItemAvatar src="{{ organization.icon }}" alt="..." />
+    <span matListItemTitle>{{ organization.name }}</span>
+    <span matListItemLine>{{ organization.description }}</span>
     <p matListItemLine>
       Bologna, Italy &#8226; <mat-icon class="line-icon" fontIcon="auto_awesome_mosaic"></mat-icon>
-      {{ org.projectCount }} &#8226; <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ org.memberCount }}
+      {{ organization.projectCount }} &#8226; <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ organization.memberCount }}
     </p>
     <button
       mat-icon-button

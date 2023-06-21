@@ -3,10 +3,9 @@ import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { ProfileMetadata } from '@shared/interfaces';
+import { Organization, ProfileMetadata } from '@shared/interfaces';
 import { OrganizationService } from '@shared/services/organization.service';
 
-import { Organization } from '../../interfaces';
 
 @Component({
   selector: 'app-organization',
@@ -20,13 +19,12 @@ export class OrganizationComponent implements OnInit {
   members$!: Observable<ProfileMetadata[]>;
 
   constructor(private organizationService: OrganizationService, private route: ActivatedRoute) {
-    this.organizationAddress = this.route.snapshot.paramMap.get('id') as string;
+    this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
     this.organizationService.setTarget(this.organizationAddress);
   }
   ngOnInit(): void {
     //this.organization$ = this.organizationService.getFullOrganization()
     this.organization$ = of({
-      id: '1',
       address: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
       name: 'VAIMEE',
       description:
