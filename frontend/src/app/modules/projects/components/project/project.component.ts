@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ProfileMetadata } from '@shared/interfaces';
 import { Project } from '@shared/interfaces/project.interface';
@@ -10,9 +10,8 @@ import { Project } from '@shared/interfaces/project.interface';
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css'],
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent  {
   project$!: Observable<Project>;
   members$!: Observable<ProfileMetadata[]>;
 
-  ngOnInit(): void {}
 }

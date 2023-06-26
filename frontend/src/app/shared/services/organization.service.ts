@@ -76,6 +76,26 @@ export class OrganizationService {
       .pipe(switchMap((uri: string) => this.ipfsService.retrieveJSON<OrganizationMetadata>(uri)));
   }
 
+  public createProject(project: ProjectMetadata, members: Profile[]): Observable<ethers.ContractTransaction[]> {
+    return this.ipfsService.storeJSON(project).pipe(
+      switchMap(metadataURI => this.contractService.createProject({ metadataURI })),
+      switchMap(() => this.contractService.getProjectCount()),
+      switchMap(projectCount => {
+        const requests = [];
+        for (let member of members) {
+          requests.push(this.contractService.addProjectMember(projectCount - 1, +member.id));
+        }
+        return forkJoin(requests);
+      })
+    );
+  }
+
+  public createProjectBlocking(project: ProjectMetadata, members: Profile[]): Observable<void> {
+    return this.createProject(project, members).pipe(
+      concatMap(data => data),
+      switchMap(this.wait)
+    );
+  }
   public getProjects(): Observable<Project[]> {
     return this.contractService.getProjects().pipe(
       concatMap(projects => projects),
@@ -180,6 +200,7 @@ export class OrganizationService {
       toArray()
     );
   }
+
   public updateTask(taskId: number, task: DataTypes.UpdateTaskStruct) {
     const hexValue = ethers.utils.hexValue(taskId);
     return from(this.contractService.updateTask(ethers.BigNumber.from(hexValue), task));
@@ -214,5 +235,10 @@ export class OrganizationService {
         memberCount,
       }))
     );
+  }
+
+  private async wait(tx: ethers.ContractTransaction): Promise<void> {
+    await tx.wait();
+    return;
   }
 }

@@ -179,6 +179,16 @@ export class OrganizationContractService {
     return from(this.contract!.updateTask(taskId, task));
   }
 
+  public createProject(projectStruct: DataTypes.CreateProjectStruct): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.createProject(projectStruct));
+  }
+
+  public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.addProjectMember(projectId, profileId));
+  }
+
   private assertTargetSet(): asserts this is { contract: Organization } {
     if (!this.contract) throw new Error('Target address not set');
   }
