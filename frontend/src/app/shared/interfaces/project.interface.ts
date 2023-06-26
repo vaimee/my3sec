@@ -9,6 +9,7 @@ import { Profile } from './profile.interface';
 export interface ProjectMetadata {
   name: string;
   description: string;
+  headline: string;
   icon?: string;
   startDate: string;
   endDate: string;
