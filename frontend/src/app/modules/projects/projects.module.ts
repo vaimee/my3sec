@@ -10,7 +10,7 @@ import { ProjectListComponent } from './components/project-list/project-list.com
 import { ProjectsRoutingModule, routedComponents } from './projects-routing.module';
 
 @NgModule({
-  declarations: [routedComponents, CreateProjectComponent],
+  declarations: [routedComponents],
   imports: [CommonModule, SharedModule, ProjectsRoutingModule, TasksModule, FormsModule, ReactiveFormsModule],
   exports: [ProjectListComponent],
 })

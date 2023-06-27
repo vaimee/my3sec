@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Status } from '@shared/enums';
 import { Task } from '@shared/interfaces/project.interface';
@@ -14,7 +14,7 @@ import { Task } from '@shared/interfaces/project.interface';
 export class TaskListComponent implements OnInit {
   @Input() tasks!: Observable<Task[]>;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     const task: Task = {
@@ -60,6 +60,6 @@ export class TaskListComponent implements OnInit {
   }
 
   goTo(id: number): void {
-    this.router.navigate([`/tasks/${id}`]);
+    this.router.navigate([`${id}`], { relativeTo: this.route });
   }
 }

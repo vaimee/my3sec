@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { CreateProjectComponent } from './components/create/create-project.component';
 import { ProjectListComponent } from './components/project-list/project-list.component';
 import { ProjectComponent } from './components/project/project.component';
 import { ProjectsComponent } from './projects.component';
-import { CreateProjectComponent } from './components/create/create-project.component';
 
 const routes: Routes = [
   {
@@ -13,6 +13,10 @@ const routes: Routes = [
     children: [
       { path: '', component: ProjectListComponent },
       { path: 'new', component: CreateProjectComponent },
+      {
+        path: ':id/tasks',
+        loadChildren: () => import('../tasks/tasks.module').then(m => m.TasksModule),
+      },
       {
         path: ':id',
         component: ProjectComponent,
@@ -27,4 +31,4 @@ const routes: Routes = [
 })
 export class ProjectsRoutingModule {}
 
-export const routedComponents = [ProjectsComponent, ProjectListComponent, ProjectComponent];
+export const routedComponents = [ProjectsComponent, ProjectListComponent, ProjectComponent, CreateProjectComponent];
