@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { Profile } from '@shared/interfaces';
 import { Organization, OrganizationMetadata } from '@shared/interfaces/organization.interface';
 
+import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';
@@ -26,6 +27,67 @@ export class OrganizationService {
     private profileService: ProfileService,
     private skillService: SkillService
   ) {}
+
+  public createOrganization(organizationMetadata: OrganizationMetadata): Observable<string> {
+    return this.ipfsService
+      .storeJSON(organizationMetadata)
+      .pipe(switchMap(metadataUri => this.my3secHub.createOrganization(metadataUri)));
+  }
+
+  public createProject(project: ProjectMetadata, members: Profile[]): Observable<number> {
+    let projectId: number;
+    return this.ipfsService.storeJSON(project).pipe(
+      switchMap(metadataURI => this.contractService.createProject({ metadataURI })),
+      switchMap(tx => from(tx.wait())),
+      switchMap(receipt => {
+        const projectEvent = receipt.events?.filter(event => event.event === 'ProjectCreated')[0];
+        projectId = projectEvent ? Number(projectEvent) : 0;
+        console.log(projectId);
+        const requests = [];
+        for (const member of members) {
+          //TODO: get project Id (this event name current does not exist)
+          requests.push(this.contractService.addProjectMember(1, +member.id));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      switchMap(this.wait),
+      map(() => projectId)
+    );
+  }
+
+  public createTask(
+    projectId: number,
+    taskMetadata: TaskMetadata,
+    skills: Skill[],
+    members: Profile[]
+  ): Observable<number> {
+    let taskId: number;
+    return this.ipfsService.storeJSON(taskMetadata).pipe(
+      map(metadataUri => {
+        const createTaskStruct: DataTypes.CreateTaskStruct = {
+          metadataURI: metadataUri,
+          skills: skills.map(skill => skill.id),
+        };
+        return createTaskStruct;
+      }),
+      switchMap(createTaskStruct => this.contractService.createTask(projectId, createTaskStruct)),
+      switchMap(tx => from(tx.wait())),
+      switchMap(receipt => {
+        const taskEvent = receipt.events?.filter(event => event.event === 'TaskCreated')[0];
+        taskId = taskEvent ? Number(taskEvent) : 0;
+        console.log(taskId);
+        const requests = [];
+        for (const member of members) {
+          requests.push(this.contractService.addTaskMember(taskId, +member.id));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      switchMap(this.wait),
+      map(() => taskId)
+    );
+  }
 
   public getOrganizations(): Observable<Organization[]> {
     return this.my3secHub.getOrganizationsAddress().pipe(
@@ -76,31 +138,10 @@ export class OrganizationService {
       .pipe(switchMap((uri: string) => this.ipfsService.retrieveJSON<OrganizationMetadata>(uri)));
   }
 
-  public createProject(project: ProjectMetadata, members: Profile[]): Observable<ethers.ContractTransaction[]> {
-    return this.ipfsService.storeJSON(project).pipe(
-      switchMap(metadataURI => this.contractService.createProject({ metadataURI })),
-      switchMap(() => this.contractService.getProjectCount()),
-      switchMap(projectCount => {
-        const requests = [];
-        for (let member of members) {
-          requests.push(this.contractService.addProjectMember(projectCount - 1, +member.id));
-        }
-        return forkJoin(requests);
-      })
-    );
-  }
-
-  public createProjectBlocking(project: ProjectMetadata, members: Profile[]): Observable<void> {
-    return this.createProject(project, members).pipe(
-      concatMap(data => data),
-      switchMap(this.wait)
-    );
-  }
   public getProjects(): Observable<Project[]> {
     return this.contractService.getProjects().pipe(
       concatMap(projects => projects),
       mergeMap(project => {
-        console.log(project.id.toNumber());
         return this.ipfsService.retrieveJSON<ProjectMetadata>(project.metadataURI).pipe(
           map(data => {
             const startDate = new Date(data.startDate);
@@ -140,6 +181,7 @@ export class OrganizationService {
   }
 
   public getProjectMembers(projectId: number): Observable<Profile[]> {
+    console.log('getProjectMembers');
     return this.contractService.getProjectMembers(projectId).pipe(
       concatMap(data => data),
       switchMap(id => this.profileService.getProfile(id)),
@@ -201,9 +243,30 @@ export class OrganizationService {
     );
   }
 
+  public getManagers(): Observable<Profile[]> {
+    return this.contractService.getManagers().pipe(
+      concatMap(data => data),
+      //TODO: what do I do with address?
+      switchMap(id => this.profileService.getProfile(1)),
+      toArray()
+    );
+  }
+
+  public getPendingMembers(): Observable<Profile[]> {
+    return this.contractService.getPendingMembers().pipe(
+      concatMap(data => data),
+      switchMap(id => this.profileService.getProfile(id)),
+      toArray()
+    );
+  }
+
   public updateTask(taskId: number, task: DataTypes.UpdateTaskStruct) {
     const hexValue = ethers.utils.hexValue(taskId);
     return from(this.contractService.updateTask(ethers.BigNumber.from(hexValue), task));
+  }
+
+  public isMember(profileId: number): Observable<boolean> {
+    return this.contractService.isMember(profileId);
   }
 
   private calculateDurationInMonths(start: Date, end: Date): number {
@@ -237,8 +300,7 @@ export class OrganizationService {
     );
   }
 
-  private async wait(tx: ethers.ContractTransaction): Promise<void> {
-    await tx.wait();
-    return;
+  private async wait(tx: ethers.ContractTransaction): Promise<ethers.ContractReceipt> {
+    return await tx.wait();
   }
 }

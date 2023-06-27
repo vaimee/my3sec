@@ -48,11 +48,10 @@ export class OrganizationContractService {
     return from(this.contract!.approvePendingMember(profileId));
   }
 
-  /* TODO:
-    public getManagers(): Observable<HubTypes.ProfileViewStructOutput[]> {
-      this.assertTargetSet();
-      return undefined;
-    }*/
+  /*   public isManager(profileId: number) {
+    this.assertTargetSet();
+    return this.contract!.isWhitelisted(profileId);
+  } */
 
   public getProjectCount(): Observable<number> {
     this.assertTargetSet();
@@ -84,12 +83,52 @@ export class OrganizationContractService {
 
   public getMembers(): Observable<number[]> {
     this.assertTargetSet();
-    return from(this.contract!.getMemberCount()).pipe(
+    return from(this.getMemberCount()).pipe(
       mergeMap(count => {
-        const total = count.toNumber();
         const requests = [];
-        for (let i = 0; i < total; i++) {
+        for (let i = 0; i < count; i++) {
           requests.push(this.contract!.getMember(i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      map(data => data.toNumber()),
+      toArray()
+    );
+  }
+
+  public getManagersCount(): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getWhitelistCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  }
+
+  public getManagers(): Observable<string[]> {
+    this.assertTargetSet();
+    return from(this.getManagersCount()).pipe(
+      mergeMap(count => {
+        const requests = [];
+        for (let i = 0; i < count; i++) {
+          requests.push(this.contract!.getWhitelistMember(i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      toArray()
+    );
+  }
+
+  public getPendingMemberCount(): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getPendingMemberCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  }
+
+  public getPendingMembers(): Observable<number[]> {
+    this.assertTargetSet();
+    return from(this.getPendingMemberCount()).pipe(
+      mergeMap(count => {
+        const requests = [];
+        for (let i = 0; i < count; i++) {
+          requests.push(this.contract!.getPendingMember(i));
         }
         return forkJoin(requests);
       }),
@@ -174,6 +213,11 @@ export class OrganizationContractService {
     );
   }
 
+  public createTask(projectId: number, taskStruct: DataTypes.CreateTaskStruct): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.createTask(projectId, taskStruct));
+  }
+
   public updateTask(taskId: BigNumber, task: DataTypes.UpdateTaskStruct): Observable<unknown> {
     this.assertTargetSet();
     return from(this.contract!.updateTask(taskId, task));
@@ -187,6 +231,11 @@ export class OrganizationContractService {
   public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractTransaction> {
     this.assertTargetSet();
     return from(this.contract!.addProjectMember(projectId, profileId));
+  }
+
+  public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.addTaskMember(taskId, profileId));
   }
 
   private assertTargetSet(): asserts this is { contract: Organization } {

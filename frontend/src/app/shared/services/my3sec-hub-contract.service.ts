@@ -44,6 +44,19 @@ export class My3secHubContractService {
     );
   }
 
+  public createOrganization(metadataURI: string): Observable<string> {
+    return from(this.contract.createOrganization(metadataURI)).pipe(
+      switchMap(async tx => {
+        const receipt = await tx.wait();
+        const event = receipt.events?.[0];
+        if (!event) {
+          throw new Error('Event not found in transaction receipt');
+        }
+        return event.address;
+      })
+    );
+  }
+
   public setDefaultProfile(profileId: number): Observable<unknown> {
     return from(this.contract.setDefaultProfile(profileId));
   }
@@ -85,6 +98,7 @@ export class My3secHubContractService {
     return;
   }
 
+  // and wait
   public giveEnergyBlocking(profileId: number, amount: number) {
     return from(this.contract.giveEnergyTo(profileId, amount)).pipe(switchMap(this.wait));
   }
