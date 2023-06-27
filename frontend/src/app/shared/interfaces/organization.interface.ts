@@ -1,6 +1,7 @@
 export interface OrganizationMetadata {
   name: string;
   description: string;
+  headline: string;
   icon: string;
 }
 
