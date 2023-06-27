@@ -1,12 +1,11 @@
-import { Observable, finalize, map, startWith } from 'rxjs';
+import { Observable, map, startWith } from 'rxjs';
 
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Profile, ProjectMetadata } from '@shared/interfaces';
 import { ImageConversionService } from '@shared/services/image-conversion.service';
@@ -18,37 +17,17 @@ import { OrganizationService } from '@shared/services/organization.service';
   templateUrl: './create-project.component.html',
   styleUrls: ['./create-project.component.css'],
 })
-export class CreateProjectComponent {
-  @Input() allMembers: Profile[] = [
-    {
-      id: '5',
-      firstName: 'Ivan',
-      surname: 'Zyrianoff',
-      organization: 'ABC Company',
-      role: 'Developer',
-      profileImage: '../../../assets/images/ivan.jpg',
-      walletAddress: '0x1234567890abcdef',
-      regulationCheckbox: true,
-    },
-    {
-      id: '4',
-      firstName: 'Lorenzo',
-      surname: 'Gigli',
-      organization: 'ABC Company',
-      role: 'Developer',
-      profileImage: '../../../assets/images/gigli.jpg',
-      walletAddress: '0x1234567890abcdef',
-      regulationCheckbox: true,
-    },
-  ];
-  @ViewChild('memberInput') memberInput!: ElementRef<HTMLInputElement>;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredMembers: Observable<Profile[]>;
-  selectedMembers: Profile[] = [];
+export class CreateProjectComponent implements OnInit, OnDestroy {
+  @ViewChild('memberInput') memberTextInput!: ElementRef<HTMLInputElement>;
+  allMembers!: Profile[];
+  members$!: Observable<Profile[]>;
   createProjectForm!: FormGroup;
+  organizationAddress: string;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  filteredMembers$!: Observable<Profile[]>;
+  selectedMembers: Profile[] = [];
   today = new Date();
   submitted = false;
-  memberCtrl = new FormControl('');
   base64Image = '';
 
   constructor(
@@ -56,46 +35,80 @@ export class CreateProjectComponent {
     private loadingService: LoadingService,
     private organizationService: OrganizationService,
     private imageConversionService: ImageConversionService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.filteredMembers = this.memberCtrl.valueChanges.pipe(
-      startWith(null),
-      map((memberName: string | null) => (memberName ? this.filter(memberName) : this.allMembers.slice()))
-    );
+    this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
   }
 
   ngOnDestroy() {
-    this.reset();
+    this.submitted = false;
   }
 
   ngOnInit(): void {
     this.loadForm();
+    this.organizationService.setTarget(this.organizationAddress);
+    this.members$ = this.organizationService.getMembers();
+    this.members$.subscribe(members => {
+      this.allMembers = members;
+    });
   }
 
-  loadForm() {
+  private loadForm() {
     this.createProjectForm = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required])],
-      description: ['', Validators.compose([Validators.required])],
-      headline: ['', Validators.compose([Validators.required])],
+      name: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      description: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      headline: new FormControl('', [Validators.required, Validators.minLength(10)]),
       projectIcon: null,
-      start: [new FormControl<Date | null>(null), Validators.compose([Validators.required])],
-      end: [new FormControl<Date | null>(null), Validators.compose([Validators.required])],
+      start: new FormControl(null, [Validators.required]),
+      end: new FormControl(null, [Validators.required]),
+      membersName: new FormControl(null, [Validators.required]),
+      memberInput: [null],
     });
+
+    this.filteredMembers$ = this.memberInput.valueChanges.pipe(
+      startWith(''),
+      map(memberName => {
+        if (typeof memberName !== 'string') return this.filter('');
+        return this.filter(memberName);
+      })
+    );
+  }
+
+  get memberInput(): FormControl {
+    return this.createProjectForm.get('memberInput') as FormControl;
   }
 
   get organizationIcon() {
     return this.createProjectForm.get('projectIcon');
   }
 
-  async onSubmit() {
+  public formError = (controlName: string, errorName: string) => {
+    return this.createProjectForm.controls[controlName].hasError(errorName);
+  };
+
+  public onSubmit() {
     this.submitted = true;
+    this.createProjectForm.markAllAsTouched();
+    console.log(this.createProjectForm.value);
 
     if (!this.createProjectForm.valid) return;
 
     const formValue: ProjectMetadata = { ...this.createProjectForm.value };
     if (this.base64Image !== '') formValue.icon = this.base64Image;
     this.loadingService.show();
-    this.organizationService.createProjectBlocking(formValue, this.selectedMembers);
+
+    this.organizationService.createProject(formValue, this.selectedMembers).subscribe({
+      next: projectId => {
+        this.loadingService.hide();
+        this.router.navigate(['projects', projectId], { relativeTo: this.route });
+      },
+      error: err => {
+        this.loadingService.hide();
+        console.error(`Failed to create project`);
+        console.error(err);
+      },
+    });
   }
 
   async onFileSelected(fileInputEvent: Event, label: HTMLDivElement): Promise<void> {
@@ -106,34 +119,36 @@ export class CreateProjectComponent {
     label.innerText = file.name;
   }
 
-  reset() {
-    this.submitted = false;
-  }
-
-  public formError = (controlName: string, errorName: string) => {
-    return this.createProjectForm.controls[controlName].hasError(errorName);
-  };
-
   public add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     this.addMember(value);
     event.chipInput!.clear();
-    this.memberCtrl.setValue(null);
+    this.memberInput.setValue('');
   }
 
   public remove(memberToRemove: any): void {
-    this.selectedMembers = this.selectedMembers.filter(member => member !== memberToRemove);
+    const index = this.selectedMembers.indexOf(memberToRemove);
+    if (index >= 0) {
+      this.selectedMembers.splice(index, 1);
+      this.memberInput.setValue('');
+    }
   }
 
   public selected(event: MatAutocompleteSelectedEvent): void {
     const memberName = event.option.viewValue;
     this.addMember(memberName);
-    this.memberInput.nativeElement.value = '';
-    this.memberCtrl.setValue(null);
+    this.memberTextInput.nativeElement.value = '';
+    this.memberInput.setValue('');
+  }
+
+  public getMemberName(member: Profile): string {
+    return `${member.firstName} ${member.surname}`;
   }
 
   private addMember(memberName: string): Profile | null {
-    const selectedMember = this.allMembers.find(member => memberName === this.getMemberName(member));
+    const selectedMember = this.allMembers.find(
+      member => memberName.toLowerCase() === this.getMemberName(member).toLowerCase()
+    );
     if (!selectedMember) return null;
     if (this.selectedMembers.includes(selectedMember)) return null;
     this.selectedMembers.push(selectedMember);
@@ -141,10 +156,12 @@ export class CreateProjectComponent {
   }
 
   private filter(value: string): Profile[] {
-    return this.allMembers.filter(member => this.getMemberName(member).includes(value));
-  }
-
-  public getMemberName(member: Profile): string {
-    return `${member.firstName} ${member.surname}`;
+    const matchingMembers = this.allMembers.filter(member => {
+      const memberName = this.getMemberName(member).toLowerCase();
+      return memberName.includes(value.toLowerCase());
+    });
+    return matchingMembers.filter(
+      member => !this.selectedMembers.find((selectedMember: Profile) => selectedMember.id === member.id)
+    );
   }
 }
