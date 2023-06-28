@@ -10,8 +10,7 @@ import { Project } from '@shared/interfaces/project.interface';
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css'],
 })
-export class ProjectComponent  {
+export class ProjectComponent {
   project$!: Observable<Project>;
   members$!: Observable<ProfileMetadata[]>;
-
 }

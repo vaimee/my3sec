@@ -3,6 +3,7 @@ import { Observable, concatMap, forkJoin, mergeMap, switchMap, toArray } from 'r
 import { Injectable } from '@angular/core';
 
 import { Skill } from '@profiles/interfaces';
+import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/governance/SkillRegistry';
 
 import { IpfsService } from './ipfs.service';
 import { SkillRegistryContractService } from './skill-registry-contract.service';
@@ -11,15 +12,12 @@ import { SkillRegistryContractService } from './skill-registry-contract.service'
   providedIn: 'root',
 })
 export class SkillService {
-  constructor(
-    private skillRegistry: SkillRegistryContractService,
-    private ipfs: IpfsService
-  ) {}
+  constructor(private skillRegistry: SkillRegistryContractService, private ipfs: IpfsService) {}
 
   public getAllSkills(): Observable<Skill[]> {
     return this.skillRegistry.getSkillCount().pipe(
       mergeMap(total => {
-        const requests = [];
+        const requests: Observable<DataTypes.SkillViewStructOutput>[] = [];
         for (let i = 0; i < total; i++) {
           requests.push(this.skillRegistry.getSkill(i));
         }

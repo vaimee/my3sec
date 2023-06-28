@@ -122,11 +122,11 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
   public add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     this.addMember(value);
-    event.chipInput!.clear();
+    event.chipInput.clear();
     this.memberInput.setValue('');
   }
 
-  public remove(memberToRemove: any): void {
+  public remove(memberToRemove: Profile): void {
     const index = this.selectedMembers.indexOf(memberToRemove);
     if (index >= 0) {
       this.selectedMembers.splice(index, 1);

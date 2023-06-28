@@ -11,14 +11,13 @@ import { EnergyWalletContractService } from '@shared/services/energy-wallet-cont
 import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
 import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
-import { ProfileService } from '@shared/services/profile.service';
+import { OrganizationService } from '@shared/services/organization.service';
 
 import { EndorseDialogComponent } from '@profiles/components/endorse-dialog/endorse-dialog.component';
 import { EndorsersListComponent } from '@profiles/components/endorsers-list/endorsers-list.component';
 import { EndorseDialogInterface } from '@profiles/interfaces/endorse-dialog-data.interface';
 import { Profile } from '@profiles/interfaces/profile.interface';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
-import { OrganizationService } from '@shared/services/organization.service';
 
 @Component({
   selector: 'app-profile-body',

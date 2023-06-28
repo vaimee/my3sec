@@ -1,11 +1,11 @@
-import { Observable, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import { ethers } from 'ethers';
+import { Observable, concatMap, filter, forkJoin, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
 import { Profile, ProfileMetadata } from '@shared/interfaces';
-import { Project } from '@shared/interfaces/project.interface';
 import { SkillService } from '@shared/services/skill.service';
 
 import { EndorserItem, ProfileSkill } from '@profiles/interfaces';
@@ -13,7 +13,6 @@ import { EndorserItem, ProfileSkill } from '@profiles/interfaces';
 import { EnergyWalletContractService } from './energy-wallet-contract.service';
 import { IpfsService } from './ipfs.service';
 import { My3secHubContractService } from './my3sec-hub-contract.service';
-import { OrganizationService } from './organization.service';
 import { SkillWalletContractService } from './skill-wallet-contract.service';
 
 @Injectable({
@@ -32,7 +31,7 @@ export class ProfileService {
   public getEndorsers(profileId: number): Observable<EndorserItem[]> {
     return this.energyWalletContract.totalEnergizedBy(profileId).pipe(
       mergeMap((energizers: number) => {
-        const requests = [];
+        const requests: Observable<[number, number]>[] = [];
         for (let i = 0; i < energizers; i++) {
           requests.push(this.energyWalletContract.energizedBy(profileId, i));
         }
@@ -58,7 +57,7 @@ export class ProfileService {
   public getEndorsing(profileId: number): Observable<EndorserItem[]> {
     return this.energyWalletContract.totalEnergizersOf(profileId).pipe(
       mergeMap((energizers: number) => {
-        const requests = [];
+        const requests: Observable<[number, number]>[] = [];
         for (let i = 0; i < energizers; i++) {
           requests.push(this.energyWalletContract.energizersOf(profileId, i));
         }
@@ -85,7 +84,7 @@ export class ProfileService {
     return this.energyWalletContract.totalEnergizersOf(endorsedId).pipe(
       mergeMap((energizers: number) => {
         if (energizers <= 0) return of(0);
-        const requests = [];
+        const requests: Observable<[number, number]>[] = [];
         for (let i = 0; i < energizers; i++) {
           requests.push(this.energyWalletContract.energizersOf(endorsedId, i));
         }
@@ -131,7 +130,7 @@ export class ProfileService {
   public getSkills(profileId: number): Observable<ProfileSkill[]> {
     return this.skillWallet.getSkillCount(profileId).pipe(
       mergeMap(total => {
-        const requests = [];
+        const requests: Observable<[ethers.BigNumber, ethers.BigNumber]>[] = [];
         for (let i = 0; i < total; i++) {
           requests.push(this.skillWallet.getSkill(profileId, i));
         }
