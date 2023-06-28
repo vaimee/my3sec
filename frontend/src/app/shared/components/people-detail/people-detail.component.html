@@ -1,7 +1,7 @@
 <div class="people-detail">
   <div class="profile-list">
     <ng-container *ngIf="showAddPeopleIcon">
-      <button mat-fab color="primary">
+      <button mat-fab color="primary" (click)="addPerson()">
         <mat-icon>person_add</mat-icon>
       </button>
     </ng-container>

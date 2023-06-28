@@ -5,7 +5,7 @@
     <span matListItemLine>{{ organization.headline }}</span>
     <p matListItemLine>
       Bologna, Italy &#8226; <mat-icon class="line-icon" fontIcon="auto_awesome_mosaic"></mat-icon>
-      {{ organization.projectCount }} &#8226; <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ organization.memberCount }}
+      {{ organization.projectCount }} &#8226; <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ getOrganizationMembers(organization) }}
     </p>
     <button
       mat-icon-button

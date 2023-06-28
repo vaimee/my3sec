@@ -1,11 +1,12 @@
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { Organization, ProfileMetadata, Project } from '@shared/interfaces';
+import { Organization, Project } from '@shared/interfaces';
+import { LoadingService } from '@shared/services/loading.service';
 import { OrganizationService } from '@shared/services/organization.service';
-
 
 @Component({
   selector: 'app-organization',
@@ -15,68 +16,46 @@ import { OrganizationService } from '@shared/services/organization.service';
 export class OrganizationComponent implements OnInit {
   organizationAddress: string;
   organization$!: Observable<Organization>;
-  projects$!: Observable<Project[]>
-  managers$!: Observable<ProfileMetadata[]>;
-  members$!: Observable<ProfileMetadata[]>;
+  projects$!: Observable<Project[]>;
+  isMember$!: Observable<boolean>;
+  isManager$!: Observable<boolean>;
 
-  constructor(private organizationService: OrganizationService, private route: ActivatedRoute) {
+  constructor(
+    private organizationService: OrganizationService,
+    private loadingService: LoadingService,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
   }
   ngOnInit(): void {
-    this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress)
+    this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress);
+    this.projects$ = this.organizationService.getProjects();
+    this.isMember$ = this.organizationService.isCurrentUserMember();
+    this.isManager$ = this.organizationService.isCurrentUserManager();
+  }
 
-    this.projects$ = this.organizationService.getProjects()
-    this.managers$ = of([
-      {
-        firstName: 'John',
-        surname: 'Doe',
-        organization: 'VAIMEE',
-        role: 'idk',
-        profileImage: 'https://picsum.photos/200/',
-        regulationCheckbox: true,
+  public joinOrganization() {
+    this.loadingService.show();
+    this.organizationService.join().subscribe({
+      next: () => {
+        this.loadingService.hide();
+        this.snackBar.open('Added to the pending members list', 'Dismiss', {
+          duration: 3000,
+        });
       },
-      {
-        firstName: 'John',
-        surname: 'Doe',
-        organization: 'VAIMEE',
-        role: 'idk',
-        profileImage: 'https://picsum.photos/200/',
-        regulationCheckbox: true,
+      error: err => {
+        this.loadingService.hide();
+        console.error(err);
+        this.snackBar.open('Failed to add to the organization', 'Dismiss', {
+          duration: 3000,
+        });
       },
-    ]);
-    this.members$ = of([
-      {
-        firstName: 'John',
-        surname: 'Doe',
-        organization: 'VAIMEE',
-        role: 'idk',
-        profileImage: 'https://picsum.photos/200/',
-        regulationCheckbox: true,
-      },
-      {
-        firstName: 'John',
-        surname: 'Doe',
-        organization: 'VAIMEE',
-        role: 'idk',
-        profileImage: 'https://picsum.photos/200/',
-        regulationCheckbox: true,
-      },
-      {
-        firstName: 'John',
-        surname: 'Doe',
-        organization: 'VAIMEE',
-        role: 'idk',
-        profileImage: 'https://picsum.photos/200/',
-        regulationCheckbox: true,
-      },
-      {
-        firstName: 'John',
-        surname: 'Doe',
-        organization: 'VAIMEE',
-        role: 'idk',
-        profileImage: 'https://picsum.photos/200/',
-        regulationCheckbox: true,
-      },
-    ]);
+    });
+  }
+
+  public goToCreateProject() {
+    this.router.navigate(['projects', 'new'], { relativeTo: this.route });
   }
 }

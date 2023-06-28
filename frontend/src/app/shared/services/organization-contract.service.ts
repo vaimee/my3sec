@@ -1,5 +1,5 @@
 import { BigNumber, ethers, providers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, map, mergeMap, toArray } from 'rxjs';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -28,9 +28,9 @@ export class OrganizationContractService {
     return from(this.contract!.getMetadataURI());
   }
 
-  public join(profileId: BigNumber): Observable<unknown> {
+  public join(profileId: BigNumber): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract!.join(profileId));
+    return from(this.contract!.join(profileId)).pipe(switchMap(this.wait));
   }
 
   public leave(profileId: BigNumber): Observable<unknown> {
@@ -48,10 +48,10 @@ export class OrganizationContractService {
     return from(this.contract!.approvePendingMember(profileId));
   }
 
-  /*   public isManager(profileId: number) {
+  public isManager(address: string) {
     this.assertTargetSet();
-    return this.contract!.isWhitelisted(profileId);
-  } */
+    return from(this.contract!.isWhitelisted(address));
+  }
 
   public getProjectCount(): Observable<number> {
     this.assertTargetSet();
@@ -126,9 +126,9 @@ export class OrganizationContractService {
     this.assertTargetSet();
     return from(this.getPendingMemberCount()).pipe(
       mergeMap(count => {
-        const requests = [];
+        const requests: Observable<ethers.BigNumber>[] = [];
         for (let i = 0; i < count; i++) {
-          requests.push(this.contract!.getPendingMember(i));
+          requests.push(from(this.contract!.getPendingMember(i)));
         }
         return forkJoin(requests);
       }),
@@ -183,22 +183,6 @@ export class OrganizationContractService {
     return from(this.contract!.isMember(profileId));
   }
 
-  /*TODO:
-  public getPendingMembers(): Observable<HubTypes.ProfileViewStructOutput[]> {
-    this.assertTargetSet();
-    return from(this.contract!.getMemberCount()).pipe(
-      mergeMap(count => {
-        const total = count.toNumber();
-        const requests = [];
-        for (let i = 0; i < total; i++) {
-          requests.push(this.contract!.getProjectMember(i));
-        }
-        return forkJoin(requests);
-      })
-    }
-    );
-  */
-
   public getTasks(projectId: number): Observable<DataTypes.TaskViewStructOutput[]> {
     this.assertTargetSet();
     return from(this.contract!.getTaskCount(projectId)).pipe(
@@ -236,6 +220,10 @@ export class OrganizationContractService {
   public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractTransaction> {
     this.assertTargetSet();
     return from(this.contract!.addTaskMember(taskId, profileId));
+  }
+
+  private wait(tx: ethers.ContractTransaction): Observable<ethers.ContractReceipt> {
+    return from(tx.wait());
   }
 
   private assertTargetSet(): asserts this is { contract: Organization } {

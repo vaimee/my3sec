@@ -19,6 +19,10 @@ export class OrganizationListComponent implements OnInit {
     this.organizations = this.organizationService.getOrganizations();
   }
 
+  getOrganizationMembers(organization: Organization): number {
+    return organization.members.length + organization.managers.length;
+  }
+
   goTo(address: string): void {
     this.router.navigate([`/organizations/${address}`]);
   }

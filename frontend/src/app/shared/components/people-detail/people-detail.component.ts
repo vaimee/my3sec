@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { ProfileMetadata } from '@shared/interfaces';
 
@@ -8,13 +8,18 @@ import { ProfileMetadata } from '@shared/interfaces';
   styleUrls: ['./people-detail.component.css'],
 })
 export class PeopleDetailComponent implements OnInit {
-  @Input() label: string = 'members';
+  @Input() label = 'members';
   @Input() people!: ProfileMetadata[];
-  @Input() showAddPeopleIcon = true;
+  @Input() showAddPeopleIcon = false;
+  @Output() add: EventEmitter<void> = new EventEmitter();
   peopleToShow!: ProfileMetadata[];
 
   ngOnInit(): void {
     if (this.people.length > 4) this.peopleToShow = this.people.slice(0, 4);
     else this.peopleToShow = this.people;
+  }
+
+  public addPerson() {
+    this.add.emit();
   }
 }
