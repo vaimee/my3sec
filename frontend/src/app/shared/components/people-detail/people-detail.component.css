@@ -1,0 +1,27 @@
+.profile-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+
+.people-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.profile-list img {
+  max-width: 50px;
+}
+
+.profile-list img:not(:first-child) {
+  margin-left: -25px;
+  transition: margin 0.1s ease-in-out;
+}
+
+.profile-list:hover img:not(:first-child) {
+  margin: -10px;
+}

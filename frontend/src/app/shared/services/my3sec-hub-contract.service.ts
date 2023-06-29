@@ -44,6 +44,19 @@ export class My3secHubContractService {
     );
   }
 
+  public createOrganization(metadataURI: string): Observable<string> {
+    return from(this.contract.createOrganization(metadataURI)).pipe(
+      switchMap(async tx => {
+        const receipt = await tx.wait();
+        const event = receipt.events?.[0];
+        if (!event) {
+          throw new Error('Event not found in transaction receipt');
+        }
+        return event.address;
+      })
+    );
+  }
+
   public setDefaultProfile(profileId: number): Observable<unknown> {
     return from(this.contract.setDefaultProfile(profileId));
   }
@@ -56,7 +69,7 @@ export class My3secHubContractService {
     return from(this.contract.removeEnergyFrom(profileId, amount));
   }
 
-  public getOrganizationsIds(): Observable<string[]> {
+  public getOrganizationsAddress(): Observable<string[]> {
     return from(this.contract.getOrganizationCount()).pipe(
       mergeMap(total => {
         const requests = [];
@@ -68,8 +81,8 @@ export class My3secHubContractService {
     );
   }
 
-  public getOrganizationMetadataUri(organizationAddress: string): Observable<string> {
-    return from(this.contract.getOrganization(organizationAddress));
+  public getOrganizationAddress(index: string): Observable<string> {
+    return from(this.contract.getOrganization(index));
   }
 
   public getOrganizationCount(): Observable<BigNumber> {
@@ -85,6 +98,7 @@ export class My3secHubContractService {
     return;
   }
 
+  // and wait
   public giveEnergyBlocking(profileId: number, amount: number) {
     return from(this.contract.giveEnergyTo(profileId, amount)).pipe(switchMap(this.wait));
   }

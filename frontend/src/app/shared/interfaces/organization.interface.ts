@@ -1,11 +1,16 @@
+import { Profile } from '.';
+
 export interface OrganizationMetadata {
-  address: string;
   name: string;
   description: string;
+  headline: string;
   icon: string;
 }
 
 export interface Organization extends OrganizationMetadata {
   projectCount: number;
-  memberCount: number;
+  members: Profile[];
+  pendingMembers: Profile[];
+  managers: Profile[];
+  address: string;
 }

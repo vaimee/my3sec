@@ -1,0 +1,13 @@
+<div class="people-detail">
+  <div class="profile-list">
+    <ng-container *ngIf="showAddPeopleIcon">
+      <button mat-fab color="primary" (click)="addPerson()">
+        <mat-icon>person_add</mat-icon>
+      </button>
+    </ng-container>
+    <ng-container *ngFor="let person of people">
+      <img class="round-image" src="{{ person.profileImage }}" />
+    </ng-container>
+  </div>
+  <h4>{{ label | titlecase }}</h4>
+</div>

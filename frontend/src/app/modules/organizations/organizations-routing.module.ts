@@ -14,6 +14,10 @@ const routes: Routes = [
       { path: '', component: OrganizationListComponent },
       { path: 'new', component: CreateOrganizationComponent },
       {
+        path: ':address/projects',
+        loadChildren: () => import('../projects/projects.module').then(m => m.ProjectsModule),
+      },
+      {
         path: ':address',
         component: OrganizationComponent,
       },

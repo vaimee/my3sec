@@ -4,13 +4,15 @@ import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { Status } from '../enums';
+import { Profile } from './profile.interface';
 
 export interface ProjectMetadata {
   name: string;
   description: string;
+  headline: string;
   icon?: string;
-  start: string;
-  end: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface TaskMetadata {
@@ -20,21 +22,21 @@ export interface TaskMetadata {
   end: string;
 }
 
-export interface Project extends Omit<ProjectMetadata, 'start' | 'end'> {
+export interface Project extends Omit<ProjectMetadata, 'startDate' | 'endDate'> {
   id: number;
   status: Status;
   hours: number;
   tasks: Observable<Task[]>;
+  members: Observable<Profile[]>;
   organization: string;
-  start: Date;
-  end: Date;
+  startDate: Date;
+  endDate: Date;
   currentMonth: number;
   durationInMonths: number;
 }
 
-
 export interface Task extends Omit<TaskMetadata, 'start' | 'end'>, Omit<DataTypes.TaskViewStruct, 'skills' | 'id'> {
-  id: number,
+  id: number;
   status: Status;
   hours: number;
   organization: string;

@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -33,9 +34,12 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { PeopleDetailComponent } from './components/people-detail/people-detail.component';
+import { ShowStatusComponent } from './components/show-status/show-status.component';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 const materialModules = [
+  MatAutocompleteModule,
   MatSelectModule,
   MatInputModule,
   MatFormFieldModule,
@@ -65,10 +69,18 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [LoadingComponent, PageNotFoundComponent, LayoutComponent, NavbarComponent],
+  declarations: [
+    LoadingComponent,
+    PageNotFoundComponent,
+    LayoutComponent,
+    NavbarComponent,
+    ShowStatusComponent,
+    PeopleDetailComponent,
+  ],
   imports: [CommonModule, RouterModule, ReactiveFormsModule, materialModules],
-  exports: [LoadingComponent, materialModules],
+  exports: [LoadingComponent, ShowStatusComponent, PeopleDetailComponent, materialModules],
   providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,

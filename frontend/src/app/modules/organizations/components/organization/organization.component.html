@@ -6,30 +6,21 @@
         <h2>{{ organization.name }}</h2>
         <span class="address">{{ organization.address }}</span>
       </div>
-      <p>{{ organization.description }}</p>
+      <p>{{ organization.headline }}</p>
     </div>
-    <div class="people-detail">
-      <div class="profile-list">
-        <button mat-fab color="primary">
-          <mat-icon>person_add</mat-icon>
-        </button>
-        <ng-container *ngFor="let manager of managers$ | async">
-          <img class="round-image" src="{{ manager.profileImage }}" alt="" />
-        </ng-container>
-      </div>
-      <h4>Managers</h4>
-    </div>
-    <div class="people-detail">
-      <div class="profile-list">
-        <button mat-fab color="primary">
-          <mat-icon>person_add</mat-icon>
-        </button>
-        <ng-container *ngFor="let member of members$ | async">
-          <img class="round-image" src="{{ member.profileImage }}" alt="" />
-        </ng-container>
-      </div>
-      <h4>Members</h4>
-    </div>
+
+    <ng-container *ngIf="{ isMember: (isMember$ | async), isManager: (isManager$ | async) } as memberCheck">
+      <app-people-detail [label]="'managers'" [people]="organization.managers"></app-people-detail>
+      <app-people-detail
+        [people]="organization.members"
+        [showAddPeopleIcon]="!memberCheck.isMember && !memberCheck.isManager"
+        (add)="joinOrganization()"></app-people-detail>
+      <ng-container *ngIf="memberCheck.isManager">
+        <app-people-detail [label]="'pending members'" [people]="organization.pendingMembers"></app-people-detail>
+        <a href="javascript:void(0)" class="btn btn-outline-dark" (click)="goToCreateProject()">CREATE PROJECT</a>
+      </ng-container>
+    </ng-container>
   </div>
-  <app-project-list></app-project-list>
+  <app-project-list [projects$]="projects$"></app-project-list>
 </ng-container>
+<router-outlet></router-outlet>

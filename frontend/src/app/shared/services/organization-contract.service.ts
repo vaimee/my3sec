@@ -1,5 +1,5 @@
 import { BigNumber, ethers, providers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, map, mergeMap, toArray } from 'rxjs';
+import { Observable, concatMap, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -10,7 +10,7 @@ import { DataTypes, Organization } from '@vaimee/my3sec-contracts/dist/contracts
   providedIn: 'root',
 })
 export class OrganizationContractService {
-  private contract: Organization | undefined;
+  protected contract: Organization | undefined;
 
   public setTarget(targetAddress: string): void {
     const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
@@ -28,9 +28,9 @@ export class OrganizationContractService {
     return from(this.contract!.getMetadataURI());
   }
 
-  public join(profileId: BigNumber): Observable<unknown> {
+  public join(profileId: BigNumber): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract!.join(profileId));
+    return from(this.contract!.join(profileId)).pipe(switchMap(this.wait));
   }
 
   public leave(profileId: BigNumber): Observable<unknown> {
@@ -48,11 +48,10 @@ export class OrganizationContractService {
     return from(this.contract!.approvePendingMember(profileId));
   }
 
-  /* TODO:
-    public getManagers(): Observable<HubTypes.ProfileViewStructOutput[]> {
-      this.assertTargetSet();
-      return undefined;
-    }*/
+  public isManager(address: string) {
+    this.assertTargetSet();
+    return from(this.contract!.isWhitelisted(address));
+  }
 
   public getProjectCount(): Observable<number> {
     this.assertTargetSet();
@@ -84,13 +83,52 @@ export class OrganizationContractService {
 
   public getMembers(): Observable<number[]> {
     this.assertTargetSet();
-    return from(this.contract!.getMemberCount()).pipe(
+    return from(this.getMemberCount()).pipe(
       mergeMap(count => {
-        const total = count.toNumber();
         const requests = [];
-        for (let i = 0; i < total; i++) {
-          //TODO: how to get the organization members?  I cannot call the getMember function
-          requests.push(this.contract!.getProjectMember(1, i));
+        for (let i = 0; i < count; i++) {
+          requests.push(this.contract!.getMember(i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      map(data => data.toNumber()),
+      toArray()
+    );
+  }
+
+  public getManagersCount(): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getWhitelistCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  }
+
+  public getManagers(): Observable<string[]> {
+    this.assertTargetSet();
+    return from(this.getManagersCount()).pipe(
+      mergeMap(count => {
+        const requests = [];
+        for (let i = 0; i < count; i++) {
+          requests.push(this.contract!.getWhitelistMember(i));
+        }
+        return forkJoin(requests);
+      }),
+      concatMap(data => data),
+      toArray()
+    );
+  }
+
+  public getPendingMemberCount(): Observable<number> {
+    this.assertTargetSet();
+    return from(this.contract!.getPendingMemberCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  }
+
+  public getPendingMembers(): Observable<number[]> {
+    this.assertTargetSet();
+    return from(this.getPendingMemberCount()).pipe(
+      mergeMap(count => {
+        const requests: Observable<ethers.BigNumber>[] = [];
+        for (let i = 0; i < count; i++) {
+          requests.push(from(this.contract!.getPendingMember(i)));
         }
         return forkJoin(requests);
       }),
@@ -120,7 +158,6 @@ export class OrganizationContractService {
     );
   }
 
-
   public getTaskMemberCount(taskId: number): Observable<number> {
     this.assertTargetSet();
     return from(this.contract!.getTaskMemberCount(taskId)).pipe(map(value => value.toNumber()));
@@ -146,22 +183,6 @@ export class OrganizationContractService {
     return from(this.contract!.isMember(profileId));
   }
 
-  /*TODO:
-  public getPendingMembers(): Observable<HubTypes.ProfileViewStructOutput[]> {
-    this.assertTargetSet();
-    return from(this.contract!.getMemberCount()).pipe(
-      mergeMap(count => {
-        const total = count.toNumber();
-        const requests = [];
-        for (let i = 0; i < total; i++) {
-          requests.push(this.contract!.getProjectMember(i));
-        }
-        return forkJoin(requests);
-      })
-    }
-    );
-  */
-
   public getTasks(projectId: number): Observable<DataTypes.TaskViewStructOutput[]> {
     this.assertTargetSet();
     return from(this.contract!.getTaskCount(projectId)).pipe(
@@ -176,12 +197,36 @@ export class OrganizationContractService {
     );
   }
 
+  public createTask(projectId: number, taskStruct: DataTypes.CreateTaskStruct): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.createTask(projectId, taskStruct));
+  }
+
   public updateTask(taskId: BigNumber, task: DataTypes.UpdateTaskStruct): Observable<unknown> {
     this.assertTargetSet();
     return from(this.contract!.updateTask(taskId, task));
   }
 
-  private assertTargetSet(): void {
+  public createProject(projectStruct: DataTypes.CreateProjectStruct): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.createProject(projectStruct));
+  }
+
+  public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.addProjectMember(projectId, profileId));
+  }
+
+  public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractTransaction> {
+    this.assertTargetSet();
+    return from(this.contract!.addTaskMember(taskId, profileId));
+  }
+
+  private wait(tx: ethers.ContractTransaction): Observable<ethers.ContractReceipt> {
+    return from(tx.wait());
+  }
+
+  private assertTargetSet(): asserts this is { contract: Organization } {
     if (!this.contract) throw new Error('Target address not set');
   }
 }

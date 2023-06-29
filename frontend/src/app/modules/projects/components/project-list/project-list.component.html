@@ -27,7 +27,7 @@
                 </div>
               </div>
             </td>
-            <td class="border-0">
+            <td class="border-0" *ngIf="showOrganization">
               <div class="d-flex flex-column text-center">
                 <h5 class="mb-0">{{ project.organization }}</h5>
                 <span><mat-icon>account_circle</mat-icon> </span>
@@ -40,38 +40,11 @@
               </div>
             </td>
             <td class="border-0">
-              <div class="text-center">
-                <div class="profileMultiUserBlock">
-                  <ul class="mb-4">
-                    <li>
-                      <mat-icon class="text-black">account_circle</mat-icon>
-                    </li>
-                    <li>
-                      <mat-icon class="text-black">account_circle</mat-icon>
-                    </li>
-                    <li>
-                      <mat-icon class="text-black">account_circle</mat-icon>
-                    </li>
-                    <li>
-                      <mat-icon class="text-black">account_circle</mat-icon>
-                    </li>
-                  </ul>
-                  <small> Workers </small>
-                </div>
-              </div>
-            </td>
+<!--                <app-people-detail [people]="project.managers"></app-people-detail> 
+ -->            </td>
             <td class="border-0">
               <div class="d-flex flex-column text-center">
-                <span><mat-icon>account_circle</mat-icon> </span>
-                <small>Project Manager</small>
-              </div>
-            </td>
-            <td class="border-0">
-              <div class="d-flex flex-column text-center">
-                <h5 class="mb-0 text-success" *ngIf="project.status; else closed">ACTIVE</h5>
-                <ng-template #closed>
-                  <h5 class="mb-0 text-warning">CLOSED</h5>
-                </ng-template>
+                <app-show-status [status]="project.status"></app-show-status>
               </div>
             </td>
           </tr>

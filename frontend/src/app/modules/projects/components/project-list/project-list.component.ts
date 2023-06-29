@@ -1,6 +1,6 @@
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { Project } from '@shared/interfaces/project.interface';
 
@@ -9,10 +9,7 @@ import { Project } from '@shared/interfaces/project.interface';
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css'],
 })
-export class ProjectListComponent implements OnInit {
-  projects$!: Observable<Project[]>;
-
-  ngOnInit(): void {
-    this.projects$ = of([]);
-  }
+export class ProjectListComponent {
+  @Input() projects$!: Observable<Project[]>;
+  @Input() showOrganization = false;
 }

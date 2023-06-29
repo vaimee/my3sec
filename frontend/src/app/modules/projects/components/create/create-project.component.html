@@ -1,0 +1,112 @@
+<div class="dark-wrapper p-5">
+  <div class="container">
+    <div class="my3sec-modal">
+      <div class="logo-img text-center mb-5">
+        <img src="../../../assets/images/my3sec-logo-cropped.png" />
+      </div>
+      <h2>Create Project</h2>
+      <ng-container *ngIf="members$ | async as allMembers">
+        <form action="#" class="form form-label-right" [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <mat-form-field class="flex-1" appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput type="text" name="name" autocomplete="off" formControlName="name" />
+              <mat-error *ngIf="formError('name', 'required')">Name is required</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Project Schedule</mat-label>
+              <mat-date-range-input [formGroup]="createProjectForm" [rangePicker]="picker" [min]="today">
+                <input matStartDate formControlName="start" placeholder="Start date" />
+                <input matEndDate formControlName="end" placeholder="End date" />
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+              <mat-error *ngIf="formError('start', 'matStartDateInvalid') || formError('start', 'required')"
+                >Insert a valid start date</mat-error
+              >
+              <mat-error *ngIf="formError('end', 'matStartDateInvalid') || formError('end', 'required')"
+                >Insert a valid end date</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <mat-form-field class="d-block" appearance="outline">
+            <mat-label>Headline</mat-label>
+            <input
+              matInput
+              type="text"
+              name="headline"
+              autocomplete="off"
+              formControlName="headline"
+              maxlength="70"
+              placeholder="A catching sentence that summarizes the project!" />
+            <mat-error *ngIf="formError('headline', 'required')">Headline is required</mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block" appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              type="text"
+              autocomplete="off"
+              formControlName="description"
+              placeholder="You can use markdown syntax to power your description!"></textarea>
+            <mat-error *ngIf="formError('description', 'required')">Description is required</mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block" appearance="outline">
+            <mat-label>Members</mat-label>
+            <mat-chip-grid #chipGrid ariac-label="Member Selection" formControlName="membersName">
+              <mat-chip-row *ngFor="let member of selectedMembers" (removed)="remove(member)">
+                <img matChipAvatar [src]="member.profileImage" alt="Profile pic of {{ this.getMemberName(member) }}" />
+                {{ this.getMemberName(member) }}
+                <button matChipRemove attr.aria-label="remove {{ this.getMemberName(member) }}">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+            <input
+              formControlName="memberInput"
+              placeholder="Add member..."
+              #memberInput
+              [matChipInputAddOnBlur]="false"
+              [matChipInputFor]="chipGrid"
+              [matAutocomplete]="auto"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event)" />
+
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let filteredMember of filteredMembers$ | async" [value]="filteredMember">
+                <img
+                  class="round-image max-size"
+                  [src]="filteredMember.profileImage"
+                  alt="Profile pic of {{ this.getMemberName(filteredMember) }}" />
+                {{ this.getMemberName(filteredMember) }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error>Choose at least a member</mat-error>
+          </mat-form-field>
+          <input
+            class="file-input"
+            type="file"
+            id="projectIcon"
+            name="avatar"
+            accept="image/*"
+            formControlName="projectIcon"
+            (change)="onFileSelected($event, fileInputLabel)"
+            #projectIconInput />
+          <div class="avatar">
+            <div class="avatar-label">
+              <div class="project-icon cursor-pointer">
+                <img
+                  src="https://effigy.im/a/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045.png"
+                  (click)="projectIconInput.click()" />
+              </div>
+              <div class="cursor-pointer" (click)="projectIconInput.click()" #fileInputLabel>Project logo</div>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-dark text-uppercase" type="submit">Create</button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </div>
+</div>

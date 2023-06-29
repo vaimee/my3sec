@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
 import { metamaskLoginGuard } from '@auth/guards/metamask-login.guard';
 import { metamaskNotInstalledGuard } from '@auth/guards/metamask-not-installed.guard';
@@ -27,10 +27,6 @@ const routes: Routes = [
         path: 'organizations',
         loadChildren: () => import('./modules/organizations/organizations.module').then(m => m.OrganizationsModule),
       },
-      {
-        path: 'tasks',
-        loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule),
-      },
     ],
     canActivate: [metamaskNotInstalledGuard, metamaskLoginGuard, rightChainGuard, my3secLoginGuard],
   },
@@ -44,8 +40,12 @@ const routes: Routes = [
   },
 ];
 
+const routingConfiguration: ExtraOptions = {
+  paramsInheritanceStrategy: 'always',
+};
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, routingConfiguration)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
