@@ -9,6 +9,7 @@ library Errors {
     error NotWhitelisted();
     error NotProfileOwner();
     error NotRegistered();
+    error CallerNotOrganization();
     error AlreadyRegistered();
     error AlreadyMember();
     error NotMember();

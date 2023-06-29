@@ -209,6 +209,18 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
         }
     }
 
+    /// @inheritdoc IMy3SecHub
+    function emitProjectCreated(address organizationAddress, uint256 projectId) external {
+        if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
+        emit Events.ProjectCreated(organizationAddress, projectId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitTaskCreated(address organizationAddress, uint256 projectId, uint256 taskId) external {
+        if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
+        emit Events.TaskCreated(organizationAddress, projectId, taskId);
+    }
+
     function _isOrganizationContract(address organization) internal view returns (bool) {
         try IOrganization(organization).getMemberCount() returns (uint256) {
             return true;

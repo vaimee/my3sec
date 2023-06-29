@@ -31,4 +31,8 @@ interface IMy3SecHub {
     function logTime(address organizationAddress, uint256 taskId, uint256 time) external;
 
     function withdraw(address organizationAddress, uint256 taskId) external;
+
+    function emitProjectCreated(address organizationAddress, uint256 projectId) external;
+
+    function emitTaskCreated(address organizationAddress, uint256 projectId, uint256 taskId) external;
 }
