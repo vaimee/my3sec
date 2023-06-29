@@ -1,12 +1,18 @@
 import { Observable } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Organization, Project } from '@shared/interfaces';
+import { Organization, Profile, Project } from '@shared/interfaces';
 import { LoadingService } from '@shared/services/loading.service';
 import { OrganizationService } from '@shared/services/organization.service';
+import { ProfileService } from '@shared/services/profile.service';
+
+import { MemberType } from '@organizations/types';
+
+import { ShowMembersComponent } from '../show-members/show-members.component';
 
 @Component({
   selector: 'app-organization',
@@ -19,21 +25,26 @@ export class OrganizationComponent implements OnInit {
   projects$!: Observable<Project[]>;
   isMember$!: Observable<boolean>;
   isManager$!: Observable<boolean>;
+  userId$!: Observable<number>;
 
   constructor(
     private organizationService: OrganizationService,
+    private profileService: ProfileService,
     private loadingService: LoadingService,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
   }
+
   ngOnInit(): void {
     this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress);
     this.projects$ = this.organizationService.getProjects();
     this.isMember$ = this.organizationService.isCurrentUserMember();
     this.isManager$ = this.organizationService.isCurrentUserManager();
+    this.userId$ = this.profileService.getUserId();
   }
 
   public joinOrganization() {
@@ -52,6 +63,36 @@ export class OrganizationComponent implements OnInit {
           duration: 3000,
         });
       },
+    });
+  }
+
+  //What is the right way to deal with observables as input?
+  public showAddMemberIcon(
+    isMember: boolean | null,
+    isManager: boolean | null,
+    pendingMembers: Profile[],
+    userId: number | null
+  ): boolean {
+    if (isManager || isMember) return false;
+    for (const member of pendingMembers) if (Number(member.id) === userId) return false;
+
+    return true;
+  }
+
+  public openMemberDialog(memberType: MemberType, members: Profile[], isManager: boolean | null): void {
+    if (members.length === 0) return;
+    if (isManager === null) isManager = false;
+
+    const showMembersData = { members: members, memberType: memberType, isManager: isManager };
+
+    const dialogRef = this.dialog.open(ShowMembersComponent, {
+      width: '600px',
+      data: showMembersData,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.router.navigate(['/profiles', result]);
     });
   }
 

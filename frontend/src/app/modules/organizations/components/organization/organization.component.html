@@ -10,17 +10,41 @@
     </div>
 
     <ng-container *ngIf="{ isMember: (isMember$ | async), isManager: (isManager$ | async) } as memberCheck">
-      <app-people-detail [label]="'managers'" [people]="organization.managers"></app-people-detail>
       <app-people-detail
-        [people]="organization.members"
-        [showAddPeopleIcon]="!memberCheck.isMember && !memberCheck.isManager"
-        (add)="joinOrganization()"></app-people-detail>
+        class="clickable"
+        [class.clickable]="organization.managers.length > 0"
+        [label]="'managers'"
+        [people]="organization.managers"
+        (click)="openMemberDialog('manager', organization.managers, memberCheck.isManager)"></app-people-detail>
+      <ng-container *ngIf="organization.members.length > 0 && !memberCheck.isManager">
+        <app-people-detail
+          class="clickable"
+          [people]="organization.members"
+          [showAddPeopleIcon]="
+            this.showAddMemberIcon(
+              memberCheck.isMember,
+              memberCheck.isManager,
+              organization.pendingMembers,
+              userId$ | async
+            )
+          "
+          (add)="joinOrganization()"
+          (click)="openMemberDialog('member', organization.members, memberCheck.isManager)"></app-people-detail>
+      </ng-container>
       <ng-container *ngIf="memberCheck.isManager">
-        <app-people-detail [label]="'pending members'" [people]="organization.pendingMembers"></app-people-detail>
+        <ng-container *ngIf="organization.pendingMembers.length > 0">
+          <app-people-detail
+            class="clickable"
+            [label]="'pending members'"
+            [people]="organization.pendingMembers"
+            (click)="
+              openMemberDialog('pendingMember', organization.pendingMembers, memberCheck.isManager)
+            "></app-people-detail>
+        </ng-container>
         <a href="javascript:void(0)" class="btn btn-outline-dark" (click)="goToCreateProject()">CREATE PROJECT</a>
       </ng-container>
     </ng-container>
   </div>
+  <p>{{ organization.description }}</p>
   <app-project-list [projects$]="projects$"></app-project-list>
 </ng-container>
-<router-outlet></router-outlet>

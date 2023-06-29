@@ -127,6 +127,10 @@ export class ProfileService {
     );
   }
 
+  public getUserId(): Observable<number> {
+    return this.my3secHub.getDefaultProfile(this.metamaskService.userAddress).pipe(map(({ id }) => id.toNumber()));
+  }
+
   public getSkills(profileId: number): Observable<ProfileSkill[]> {
     return this.skillWallet.getSkillCount(profileId).pipe(
       mergeMap(total => {
