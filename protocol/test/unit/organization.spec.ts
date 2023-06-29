@@ -1,21 +1,35 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
+import { deployMockContract, MockContract } from "ethereum-waffle";
 
 import { Organization } from "../../typechain-types";
-import { getRandomProfileId, waitForTx } from "../helpers/utils";
+import { getRandomProfileId, impersonateContract, stopImpersonatingContract, waitForTx } from "../helpers/utils";
+import { Signer } from "ethers";
 
 const FAKE_METADATA_URI = "urn:dev:fake";
 
 describe("Organization", () => {
+  let hub: MockContract;
   let contract: Organization;
+
+  let deployer: Signer;
+  let deployerAddress: string;
 
   beforeEach(async () => {
     const accounts = await ethers.getSigners();
-    const deployer = accounts[0];
-    const deployerAddress = deployer.address;
+    deployer = accounts[0];
+    deployerAddress = await deployer.getAddress();
+
+    const hubFactory = await ethers.getContractFactory("My3SecHub", deployer);
+    hub = await deployMockContract(deployer, hubFactory.interface.format() as string[]);
+
+    await hub.mock.emitProjectCreated.returns();
+    await hub.mock.emitTaskCreated.returns();
 
     const contractFactory = await ethers.getContractFactory("Organization");
-    contract = await contractFactory.deploy(deployerAddress, FAKE_METADATA_URI);
+    contract = await contractFactory.deploy(hub.address, FAKE_METADATA_URI);
+
+    await contract.addToWhitelist(hub.address);
     await contract.addToWhitelist(deployerAddress);
   });
 
@@ -40,7 +54,9 @@ describe("Organization", () => {
     it("should let a profile join", async () => {
       const profileId = getRandomProfileId();
 
-      await contract.join(profileId);
+      const hubSigner = await impersonateContract(hub.address);
+      await contract.connect(hubSigner).join(profileId);
+      await stopImpersonatingContract(hub.address);
 
       const pendingMemberCount = await contract.getPendingMemberCount();
       const isMember = await contract.isMember(profileId);
@@ -51,8 +67,10 @@ describe("Organization", () => {
     it("should not add twice a profile if is pending", async () => {
       const profileId = getRandomProfileId();
 
-      await contract.join(profileId);
-      await contract.join(profileId);
+      const hubSigner = await impersonateContract(hub.address);
+      await contract.connect(hubSigner).join(profileId);
+      await contract.connect(hubSigner).join(profileId);
+      await stopImpersonatingContract(hub.address);
 
       const pendingMemberCount = await contract.getPendingMemberCount();
       const isMember = await contract.isMember(profileId);
@@ -64,7 +82,9 @@ describe("Organization", () => {
       it("should approve joined member", async () => {
         const profileId = getRandomProfileId();
 
-        await contract.join(profileId);
+        const hubSigner = await impersonateContract(hub.address);
+        await contract.connect(hubSigner).join(profileId);
+        await stopImpersonatingContract(hub.address);
 
         let pendingMembers = await contract.getPendingMemberCount();
         expect(pendingMembers).to.be.equal(1);
@@ -89,7 +109,10 @@ describe("Organization", () => {
       it("should revert if is already a member", async () => {
         const profileId = getRandomProfileId();
 
-        await contract.join(profileId);
+        const hubSigner = await impersonateContract(hub.address);
+        await contract.connect(hubSigner).join(profileId);
+        await stopImpersonatingContract(hub.address);
+
         await contract.approvePendingMember(profileId);
 
         const pendingMembers = contract.approvePendingMember(profileId);
@@ -100,10 +123,15 @@ describe("Organization", () => {
         it("should let a member leave", async () => {
           const profileId = getRandomProfileId();
 
-          await contract.join(profileId);
+          let hubSigner = await impersonateContract(hub.address);
+          await contract.connect(hubSigner).join(profileId);
+          await stopImpersonatingContract(hub.address);
+
           await contract.approvePendingMember(profileId);
 
-          await contract.leave(profileId);
+          hubSigner = await impersonateContract(hub.address);
+          await contract.connect(hubSigner).leave(profileId);
+          await stopImpersonatingContract(hub.address);
 
           const memberCount = await contract.getMemberCount();
           const isMember = await contract.isMember(profileId);
@@ -114,9 +142,10 @@ describe("Organization", () => {
         it("should let a member leave also if his only pending", async () => {
           const profileId = getRandomProfileId();
 
-          await contract.join(profileId);
-
-          await contract.leave(profileId);
+          const hubSigner = await impersonateContract(hub.address);
+          await contract.connect(hubSigner).join(profileId);
+          await contract.connect(hubSigner).leave(profileId);
+          await stopImpersonatingContract(hub.address);
 
           const pendingMemberCount = await contract.getPendingMemberCount();
           const isMember = await contract.isMember(profileId);
@@ -127,8 +156,12 @@ describe("Organization", () => {
         it("should revert if not a member", async () => {
           const profileId = getRandomProfileId();
 
-          const leave = contract.leave(profileId);
+          const hubSigner = await impersonateContract(hub.address);
+          const leave = contract.connect(hubSigner).leave(profileId);
+
           await expect(leave).to.be.revertedWithCustomError(contract, "NotMember");
+
+          await stopImpersonatingContract(hub.address);
         });
       });
     });
@@ -137,7 +170,9 @@ describe("Organization", () => {
       it("should reject pending member", async () => {
         const profileId = getRandomProfileId();
 
-        await contract.join(profileId);
+        const hubSigner = await impersonateContract(hub.address);
+        await contract.connect(hubSigner).join(profileId);
+        await stopImpersonatingContract(hub.address);
 
         await contract.rejectPendingMember(profileId);
 
@@ -356,7 +391,9 @@ describe("Organization", () => {
         const TASK_ID = 0;
         await waitForTx(contract.addTaskMember(TASK_ID, PROFILE_ID));
 
-        await waitForTx(contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME));
+        const hubSigner = await impersonateContract(hub.address);
+        await waitForTx(contract.connect(hubSigner).updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME));
+        await stopImpersonatingContract(hub.address);
 
         const loggedTimeCount = await contract.getTaskLoggedTimeCount(TASK_ID);
         expect(loggedTimeCount).to.be.eq(1);
@@ -378,8 +415,12 @@ describe("Organization", () => {
 
         const TASK_ID = 0;
 
-        const txUpdate = contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
-        expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
+        const hubSigner = await impersonateContract(hub.address);
+        const txUpdate = contract.connect(hubSigner).updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
+
+        await expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
+
+        await stopImpersonatingContract(hub.address);
       });
 
       it("should revert when profile is not task member", async () => {
@@ -391,8 +432,12 @@ describe("Organization", () => {
 
         const TASK_ID = 0;
 
-        const txUpdate = contract.updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
-        expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
+        const hubSigner = await impersonateContract(hub.address);
+        const txUpdate = contract.connect(hubSigner).updateTaskTime(PROFILE_ID, TASK_ID, UPDATED_TIME);
+
+        await expect(txUpdate).to.be.revertedWithCustomError(contract, "NotMember");
+
+        await stopImpersonatingContract(hub.address);
       });
 
       it("should revert when there is no task", async () => {
