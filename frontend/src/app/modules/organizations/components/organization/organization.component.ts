@@ -38,7 +38,7 @@ export class OrganizationComponent implements OnInit {
 
   public joinOrganization() {
     this.loadingService.show();
-    this.organizationService.join().subscribe({
+    this.organizationService.join(this.organizationAddress).subscribe({
       next: () => {
         this.loadingService.hide();
         this.snackBar.open('Added to the pending members list', 'Dismiss', {
