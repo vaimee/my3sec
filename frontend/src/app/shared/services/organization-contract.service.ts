@@ -236,6 +236,6 @@ export class OrganizationContractService {
   }
 
   private assertTargetSet(): asserts this is { contract: Organization } {
-    if (this.contract) throw new Error('Target address not set');
+    if (this.contract === undefined) throw new Error('Target address not set');
   }
 }
