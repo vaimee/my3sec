@@ -1,6 +1,6 @@
 import { Signer, ContractTransaction, ContractReceipt, logger, Contract } from "ethers";
-import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
-import { ethers } from "hardhat";
+import { keccak256, parseEther, toUtf8Bytes } from "ethers/lib/utils";
+import hardhat, { ethers } from "hardhat";
 import { expect } from "chai";
 
 export async function getRandomSigner(): Promise<Signer> {
@@ -65,4 +65,25 @@ export function findEvent(receipt: ContractReceipt, name: string, eventContract:
   } else {
     logger.throwError("No events were emitted");
   }
+}
+
+export async function impersonateContract(address: string): Promise<Signer> {
+  await hardhat.network.provider.request({
+    method: "hardhat_impersonateAccount",
+    params: [address],
+  });
+
+  const signer = await ethers.getSigner(address);
+
+  const [bank] = await ethers.getSigners();
+  await bank.sendTransaction({ to: address, value: parseEther("1") });
+
+  return signer;
+}
+
+export async function stopImpersonatingContract(address: string) {
+  await hardhat.network.provider.request({
+    method: "hardhat_stopImpersonatingAccount",
+    params: [address],
+  });
 }

@@ -163,6 +163,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         project.id = newProjectId;
         project.metadataURI = args.metadataURI;
         project.status = DataTypes.ProjectStatus.NOT_STARTED;
+        IMy3SecHub(HUB).emitProjectCreated(address(this), newProjectId);
         return newProjectId;
     }
 
@@ -268,17 +269,17 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         uint256 projectId,
         DataTypes.CreateTask calldata args
     ) external projectExists(projectId) onlyWhitelisted returns (uint256) {
-        uint256 newTasktId = _tasks.length;
+        uint256 newTaskId = _tasks.length;
         _tasks.push();
-        DataTypes.Task storage task = _tasks[newTasktId];
-        task.id = newTasktId;
+        DataTypes.Task storage task = _tasks[newTaskId];
+        task.id = newTaskId;
         task.metadataURI = args.metadataURI;
         task.status = DataTypes.TaskStatus.NOT_STARTED;
         task.skills = args.skills;
 
-        _projects[projectId].tasks.push(newTasktId);
-        emit Events.TaskCreated(newTasktId);
-        return newTasktId;
+        _projects[projectId].tasks.push(newTaskId);
+        IMy3SecHub(HUB).emitTaskCreated(address(this), projectId, newTaskId);
+        return newTaskId;
     }
 
     /// @inheritdoc IOrganization
@@ -329,9 +330,5 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
 
     function transferOwnership(address newOwner) public override(IOrganization, Ownable) {
         super.transferOwnership(newOwner);
-    }
-
-    function isWhitelisted(address account) public view override(IOrganization, Whitelistable) returns (bool) {
-        return super.isWhitelisted(account);
     }
 }

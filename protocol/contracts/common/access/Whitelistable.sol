@@ -4,9 +4,10 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import "../interfaces/IWhitelistable.sol";
 import "../libraries/Errors.sol";
 
-abstract contract Whitelistable is Ownable {
+abstract contract Whitelistable is IWhitelistable, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private _whitelist;
@@ -28,7 +29,7 @@ abstract contract Whitelistable is Ownable {
         return _whitelist.contains(account);
     }
 
-    function addToWhitelist(address account) external onlyOwner {
+    function addToWhitelist(address account) public virtual onlyOwner {
         _whitelist.add(account);
     }
 

@@ -125,8 +125,9 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
 
     /// @inheritdoc IMy3SecHub
     function createOrganization(string calldata metadataURI) external returns (address) {
-        address organizationAddress = _organizationFactory.createOrganization(metadataURI);
+        address organizationAddress = _organizationFactory.createOrganization(address(this), metadataURI);
         IOrganization organization = IOrganization(organizationAddress);
+        organization.addToWhitelist(msg.sender);
         organization.transferOwnership(msg.sender);
 
         _organizations.add(organizationAddress);
@@ -207,6 +208,18 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
             uint256 time = organization.getTaskLoggedTimeOfProfile(taskId, senderProfileId);
             _skillWallet.recordExperience(senderProfileId, task.skills[i], time / 1 hours);
         }
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitProjectCreated(address organizationAddress, uint256 projectId) external {
+        if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
+        emit Events.ProjectCreated(organizationAddress, projectId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitTaskCreated(address organizationAddress, uint256 projectId, uint256 taskId) external {
+        if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
+        emit Events.TaskCreated(organizationAddress, projectId, taskId);
     }
 
     function _isOrganizationContract(address organization) internal view returns (bool) {

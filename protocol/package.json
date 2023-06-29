@@ -1,6 +1,6 @@
 {
   "name": "@vaimee/my3sec-contracts",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A set of contracts that implements the My3Sec protocol",
   "main": "index.mjs",
   "module": "index.mjs",
@@ -41,6 +41,7 @@
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "ethereum-waffle": "^4.0.10",
     "ethers": "^5.7.2",
     "hardhat": "^2.12.3",
     "prettier": "^2.8.4",
