@@ -30,10 +30,8 @@ export class OrganizationService {
     private metamaskService: MetamaskService
   ) {}
 
-  public join(): Observable<ethers.ContractReceipt> {
-    return this.my3secHub
-      .getDefaultProfile(this.metamaskService.userAddress)
-      .pipe(switchMap(({ id }) => this.contractService.join(id)));
+  public join(organizationAddress: string): Observable<ethers.ContractReceipt> {
+    return this.my3secHub.joinOrganization(organizationAddress);
   }
 
   public createOrganization(organizationMetadata: OrganizationMetadata): Observable<string> {
@@ -271,6 +269,23 @@ export class OrganizationService {
   public updateTask(taskId: number, task: DataTypes.UpdateTaskStruct) {
     const hexValue = ethers.utils.hexValue(taskId);
     return from(this.contractService.updateTask(ethers.BigNumber.from(hexValue), task));
+  }
+
+  public rejectPendingMember(profileId: number): Observable<ethers.ContractReceipt> {
+    return this.contractService.rejectPendingMember(profileId);
+  }
+
+  public approvePendingMember(profileId: number): Observable<ethers.ContractReceipt> {
+    return this.contractService.approvePendingMember(profileId);
+  }
+
+  //different name from the contract function, but more intuitive
+  public removeMember(profileId: number): Observable<ethers.ContractReceipt> {
+    return this.contractService.leave(profileId);
+  }
+
+  public promoteToManager(profileAddress: string): Observable<ethers.ContractReceipt> {
+    return this.contractService.promoteToManager(profileAddress);
   }
 
   public isManager(address: string): Observable<boolean> {

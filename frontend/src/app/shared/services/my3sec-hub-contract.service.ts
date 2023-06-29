@@ -61,6 +61,10 @@ export class My3secHubContractService {
     return from(this.contract.setDefaultProfile(profileId));
   }
 
+  public joinOrganization(organizationAddress: string): Observable<ethers.ContractReceipt> {
+    return from(this.contract.joinOrganization(organizationAddress)).pipe(switchMap(this.wait));
+  }
+
   public giveEnergyTo(profileId: number, amount: number): Observable<unknown> {
     return from(this.contract.giveEnergyTo(profileId, amount));
   }
@@ -93,9 +97,8 @@ export class My3secHubContractService {
     return from(this.contract.withdraw(organizationAddress, taskId));
   }
 
-  private async wait(tx: ethers.ContractTransaction): Promise<void> {
-    await tx.wait();
-    return;
+  private wait(tx: ethers.ContractTransaction): Observable<ethers.ContractReceipt> {
+    return from(tx.wait());
   }
 
   // and wait

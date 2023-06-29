@@ -28,24 +28,29 @@ export class OrganizationContractService {
     return from(this.contract!.getMetadataURI());
   }
 
-  public join(profileId: BigNumber): Observable<ethers.ContractReceipt> {
+  public join(profileId: number): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
     return from(this.contract!.join(profileId)).pipe(switchMap(this.wait));
   }
 
-  public leave(profileId: BigNumber): Observable<unknown> {
+  public leave(profileId: number): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract!.leave(profileId));
+    return from(this.contract!.leave(profileId)).pipe(switchMap(this.wait));
   }
 
-  public rejectPendingMember(profileId: BigNumber): Observable<unknown> {
+  public rejectPendingMember(profileId: number): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract!.rejectPendingMember(profileId));
+    return from(this.contract!.rejectPendingMember(profileId)).pipe(switchMap(this.wait));
   }
 
-  public approvePendingMember(profileId: BigNumber): Observable<unknown> {
+  public approvePendingMember(profileId: number): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract!.approvePendingMember(profileId));
+    return from(this.contract!.approvePendingMember(profileId)).pipe(switchMap(this.wait));
+  }
+
+  public promoteToManager(memberAccount: string): Observable<ethers.ContractReceipt> {
+    this.assertTargetSet();
+    return from(this.contract!.addToWhitelist(memberAccount)).pipe(switchMap(this.wait));
   }
 
   public isManager(address: string) {
