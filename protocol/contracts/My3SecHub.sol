@@ -125,8 +125,9 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
 
     /// @inheritdoc IMy3SecHub
     function createOrganization(string calldata metadataURI) external returns (address) {
-        address organizationAddress = _organizationFactory.createOrganization(metadataURI);
+        address organizationAddress = _organizationFactory.createOrganization(address(this), metadataURI);
         IOrganization organization = IOrganization(organizationAddress);
+        organization.addToWhitelist(msg.sender);
         organization.transferOwnership(msg.sender);
 
         _organizations.add(organizationAddress);

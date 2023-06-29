@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "../interfaces/IWhitelistable.sol";
 import "../libraries/DataTypes.sol";
 
-interface IOrganization {
+interface IOrganization is IWhitelistable {
     function getMetadataURI() external view returns (string memory);
 
     function getMemberCount() external view returns (uint256);
@@ -87,6 +88,4 @@ interface IOrganization {
     //=============================================================================
 
     function transferOwnership(address newOwner) external;
-
-    function isWhitelisted(address account) external view returns (bool);
 }

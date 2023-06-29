@@ -6,8 +6,8 @@ import "../common/interfaces/IOrganization.sol";
 import "../organizations/Organization.sol";
 
 contract OrganizationFactory {
-    function createOrganization(string calldata metadataURI) external returns (address) {
-        IOrganization organization = new Organization(msg.sender, metadataURI);
+    function createOrganization(address hub, string calldata metadataURI) external returns (address) {
+        IOrganization organization = new Organization(hub, metadataURI);
         organization.transferOwnership(msg.sender);
         return address(organization);
     }
