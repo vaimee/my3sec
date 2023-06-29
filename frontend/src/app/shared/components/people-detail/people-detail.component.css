@@ -13,9 +13,11 @@
   justify-content: space-evenly;
 }
 
+
 .profile-list img {
-  max-width: 50px;
-}
+  width: 45px;
+  height: 45px;
+  object-fit: cover;}
 
 .profile-list img:not(:first-child) {
   margin-left: -25px;
