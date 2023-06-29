@@ -5,7 +5,7 @@
         <img src="../../../assets/images/my3sec-logo-cropped.png" />
       </div>
       <h2>Create Project</h2>
-      <ng-container *ngIf="members$ | async as allMembers">
+      <ng-container *ngIf="memberChip.items$ | async as allMembers">
         <form action="#" class="form form-label-right" [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
           <div class="form-row">
             <mat-form-field class="flex-1" appearance="outline">
@@ -54,7 +54,7 @@
           <mat-form-field class="d-block" appearance="outline">
             <mat-label>Members</mat-label>
             <mat-chip-grid #chipGrid ariac-label="Member Selection" formControlName="membersName">
-              <mat-chip-row *ngFor="let member of selectedMembers" (removed)="remove(member)">
+              <mat-chip-row *ngFor="let member of memberChip.selectedItems" (removed)="remove(member)">
                 <img matChipAvatar [src]="member.profileImage" alt="Profile pic of {{ this.getMemberName(member) }}" />
                 {{ this.getMemberName(member) }}
                 <button matChipRemove attr.aria-label="remove {{ this.getMemberName(member) }}">
@@ -73,7 +73,7 @@
               (matChipInputTokenEnd)="add($event)" />
 
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-              <mat-option *ngFor="let filteredMember of filteredMembers$ | async" [value]="filteredMember">
+              <mat-option *ngFor="let filteredMember of memberChip.filteredItems$ | async" [value]="filteredMember">
                 <img
                   class="round-image max-size"
                   [src]="filteredMember.profileImage"

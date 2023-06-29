@@ -1,1 +1,125 @@
-<p>create-task works!</p>
+<div class="dark-wrapper p-5">
+  <div class="container">
+    <div class="my3sec-modal">
+      <div class="logo-img text-center mb-5">
+        <img src="../../../assets/images/my3sec-logo-cropped.png" />
+      </div>
+      <h2>Create Task</h2>
+      <ng-container *ngIf="skillChip.items$ | async as allSkills">
+        <form action="#" class="form form-label-right" [formGroup]="createTaskForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <mat-form-field class="flex-1" appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput type="text" name="name" autocomplete="off" formControlName="name" />
+              <mat-error *ngIf="formError('name', 'required')">Name is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="flex-1" appearance="outline">
+              <mat-label>Schedule</mat-label>
+              <mat-date-range-input [formGroup]="createTaskForm" [rangePicker]="picker" [min]="today">
+                <input matStartDate formControlName="start" placeholder="Start date" />
+                <input matEndDate formControlName="end" placeholder="End date" />
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+              <mat-error *ngIf="formError('start', 'matStartDateInvalid') || formError('start', 'required')"
+                >Insert a valid start date</mat-error
+              >
+              <mat-error *ngIf="formError('end', 'matStartDateInvalid') || formError('end', 'required')"
+                >Insert a valid end date</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <mat-form-field class="d-block" appearance="outline">
+            <mat-label>Headline</mat-label>
+            <input
+              matInput
+              type="text"
+              name="headline"
+              autocomplete="off"
+              formControlName="headline"
+              maxlength="70"
+              placeholder="A catching sentence that summarizes the Task!" />
+            <mat-error *ngIf="formError('headline', 'required')">Headline is required</mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block" appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              type="text"
+              autocomplete="off"
+              formControlName="description"
+              placeholder="You can use markdown syntax to power your description!"></textarea>
+            <mat-error *ngIf="formError('description', 'required')">Description is required</mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block" appearance="outline">
+            <mat-label>Skills</mat-label>
+            <mat-chip-grid #chipGrid ariac-label="Skill Selection" formControlName="skillsName">
+              <mat-chip-row *ngFor="let skill of skillChip.selectedItems" (removed)="remove(skill, true)">
+                {{ skill.name }}
+                <button matChipRemove attr.aria-label="remove {{ skill.name }}">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+            <input
+              formControlName="skillInput"
+              placeholder="Add skill..."
+              #skillInput
+              [matChipInputAddOnBlur]="false"
+              [matChipInputFor]="chipGrid"
+              [matAutocomplete]="auto"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event, true)" />
+
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, true)">
+              <mat-option *ngFor="let filteredSkill of skillChip.filteredItems$ | async" [value]="filteredSkill">
+                {{ filteredSkill.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error>Choose at least a skill</mat-error>
+          </mat-form-field>
+          <ng-container *ngIf="memberChip.items$ | async as allMembers">
+            <mat-form-field class="d-block" appearance="outline">
+              <mat-label>Members</mat-label>
+              <mat-chip-grid #chipGrid ariac-label="Member Selection" formControlName="membersName">
+                <mat-chip-row *ngFor="let member of memberChip.selectedItems" (removed)="remove(member, false)">
+                  <img
+                    matChipAvatar
+                    [src]="member.profileImage"
+                    alt="Profile pic of {{ this.getMemberName(member) }}" />
+                  {{ this.getMemberName(member) }}
+                  <button matChipRemove attr.aria-label="remove {{ this.getMemberName(member) }}">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              </mat-chip-grid>
+              <input
+                formControlName="memberInput"
+                placeholder="Add member..."
+                #memberInput
+                [matChipInputAddOnBlur]="false"
+                [matChipInputFor]="chipGrid"
+                [matAutocomplete]="auto"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="add($event, false)" />
+
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, false)">
+                <mat-option *ngFor="let filteredMember of memberChip.filteredItems$ | async" [value]="filteredMember">
+                  <img
+                    class="round-image max-size"
+                    [src]="filteredMember.profileImage"
+                    alt="Profile pic of {{ this.getMemberName(filteredMember) }}" />
+                  {{ this.getMemberName(filteredMember) }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error>Choose at least a member</mat-error>
+            </mat-form-field>
+          </ng-container>
+          <div class="text-center mt-4">
+            <button class="btn btn-dark text-uppercase" type="submit">Create</button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,7 @@ const routes: Routes = [
     children: [
       { path: '', component: TaskListComponent },
       { path: 'log-hours', component: LogHoursComponent },
+      { path: 'new', component: CreateTaskComponent },
       {
         path: ':id',
         component: TaskComponent,

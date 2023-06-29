@@ -1,3 +1,4 @@
+import { ChipInput } from 'app/modules/tasks/models';
 import { Observable, map, startWith } from 'rxjs';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -19,13 +20,10 @@ import { OrganizationService } from '@shared/services/organization.service';
 })
 export class CreateProjectComponent implements OnInit, OnDestroy {
   @ViewChild('memberInput') memberTextInput!: ElementRef<HTMLInputElement>;
-  allMembers!: Profile[];
-  members$!: Observable<Profile[]>;
+  memberChip!: ChipInput<Profile>;
   createProjectForm!: FormGroup;
   organizationAddress: string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredMembers$!: Observable<Profile[]>;
-  selectedMembers: Profile[] = [];
   today = new Date();
   submitted = false;
   base64Image = '';
@@ -38,6 +36,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.memberChip = new ChipInput<Profile>();
     this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
   }
 
@@ -48,9 +47,9 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadForm();
     this.organizationService.setTarget(this.organizationAddress);
-    this.members$ = this.organizationService.getMembers();
-    this.members$.subscribe(members => {
-      this.allMembers = members;
+    this.memberChip.items$ = this.organizationService.getMembers();
+    this.memberChip.items$.subscribe(members => {
+      this.memberChip.all = members;
     });
   }
 
@@ -66,7 +65,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
       memberInput: [null],
     });
 
-    this.filteredMembers$ = this.memberInput.valueChanges.pipe(
+    this.memberChip.filteredItems$ = this.memberInput.valueChanges.pipe(
       startWith(''),
       map(memberName => {
         if (typeof memberName !== 'string') return this.filter('');
@@ -98,7 +97,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
     if (this.base64Image !== '') formValue.icon = this.base64Image;
     this.loadingService.show();
 
-    this.organizationService.createProject(formValue, this.selectedMembers).subscribe({
+    this.organizationService.createProject(formValue, this.memberChip.selectedItems).subscribe({
       next: projectId => {
         this.loadingService.hide();
         this.router.navigate(['projects', projectId], { relativeTo: this.route });
@@ -127,9 +126,9 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
   }
 
   public remove(memberToRemove: Profile): void {
-    const index = this.selectedMembers.indexOf(memberToRemove);
+    const index = this.memberChip.selectedItems.indexOf(memberToRemove);
     if (index >= 0) {
-      this.selectedMembers.splice(index, 1);
+      this.memberChip.selectedItems.splice(index, 1);
       this.memberInput.setValue('');
     }
   }
@@ -146,22 +145,22 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
   }
 
   private addMember(memberName: string): Profile | null {
-    const selectedMember = this.allMembers.find(
+    const selectedMember = this.memberChip.all.find(
       member => memberName.toLowerCase() === this.getMemberName(member).toLowerCase()
     );
     if (!selectedMember) return null;
-    if (this.selectedMembers.includes(selectedMember)) return null;
-    this.selectedMembers.push(selectedMember);
+    if (this.memberChip.selectedItems.includes(selectedMember)) return null;
+    this.memberChip.selectedItems.push(selectedMember);
     return selectedMember;
   }
 
   private filter(value: string): Profile[] {
-    const matchingMembers = this.allMembers.filter(member => {
+    const matchingMembers = this.memberChip.all.filter(member => {
       const memberName = this.getMemberName(member).toLowerCase();
       return memberName.includes(value.toLowerCase());
     });
     return matchingMembers.filter(
-      member => !this.selectedMembers.find((selectedMember: Profile) => selectedMember.id === member.id)
+      member => !this.memberChip.selectedItems.find((selectedMember: Profile) => selectedMember.id === member.id)
     );
   }
 }
