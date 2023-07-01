@@ -13,6 +13,7 @@ import { ProfileService } from '@shared/services/profile.service';
 import { MemberType } from '@organizations/types';
 
 import { ShowMembersComponent } from '../show-members/show-members.component';
+import { ShowMembersInput, ShowMembersOutput } from './../../interfaces/show-members.interface';
 
 @Component({
   selector: 'app-organization',
@@ -24,6 +25,7 @@ export class OrganizationComponent implements OnInit {
   organization$!: Observable<Organization>;
   projects$!: Observable<Project[]>;
   isMember$!: Observable<boolean>;
+  isPendingMember$!: Observable<boolean>;
   isManager$!: Observable<boolean>;
   userId$!: Observable<number>;
 
@@ -43,6 +45,7 @@ export class OrganizationComponent implements OnInit {
     this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress);
     this.projects$ = this.organizationService.getProjects();
     this.isMember$ = this.organizationService.isCurrentUserMember();
+    this.isPendingMember$ = this.organizationService.isCurrentUserPendingMember();
     this.isManager$ = this.organizationService.isCurrentUserManager();
     this.userId$ = this.profileService.getUserId();
   }
@@ -83,16 +86,23 @@ export class OrganizationComponent implements OnInit {
     if (members.length === 0) return;
     if (isManager === null) isManager = false;
 
-    const showMembersData = { members: members, memberType: memberType, isManager: isManager };
+    const showMembersData: ShowMembersInput = {
+      address: this.organizationAddress,
+      memberType: memberType,
+      isManager: isManager,
+    };
 
     const dialogRef = this.dialog.open(ShowMembersComponent, {
-      width: '600px',
+      width: '700px',
       data: showMembersData,
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) return;
-      this.router.navigate(['/profiles', result]);
+    dialogRef.afterClosed().subscribe((showMembersOutput: ShowMembersOutput) => {
+      if (showMembersOutput.profileId) return this.router.navigate(['/profiles', showMembersOutput.profileId]);
+      if (showMembersOutput.changed)
+        this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress);
+      return;
     });
   }
 

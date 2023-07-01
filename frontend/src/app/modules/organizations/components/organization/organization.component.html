@@ -9,16 +9,19 @@
       <p>{{ organization.headline }}</p>
     </div>
 
-    <ng-container *ngIf="{ isMember: (isMember$ | async), isManager: (isManager$ | async) } as memberCheck">
+    <ng-container
+      *ngIf="{
+        isMember: (isMember$ | async),
+        isPendingMember: (isPendingMember$ | async),
+        isManager: (isManager$ | async)
+      } as memberCheck">
       <app-people-detail
-        class="clickable"
         [class.clickable]="organization.managers.length > 0"
         [label]="'managers'"
         [people]="organization.managers"
-        (click)="openMemberDialog('manager', organization.managers, memberCheck.isManager)"></app-people-detail>
-      <ng-container *ngIf="organization.members.length > 0 && !memberCheck.isManager">
+        (openDialog)="openMemberDialog('manager', organization.managers, memberCheck.isManager)"></app-people-detail>
+      <ng-container *ngIf="organization.members.length > 0 || (!memberCheck.isManager && !memberCheck.isPendingMember)">
         <app-people-detail
-          class="clickable"
           [people]="organization.members"
           [showAddPeopleIcon]="
             this.showAddMemberIcon(
@@ -29,15 +32,14 @@
             )
           "
           (add)="joinOrganization()"
-          (click)="openMemberDialog('member', organization.members, memberCheck.isManager)"></app-people-detail>
+          (openDialog)="openMemberDialog('member', organization.members, memberCheck.isManager)"></app-people-detail>
       </ng-container>
       <ng-container *ngIf="memberCheck.isManager">
         <ng-container *ngIf="organization.pendingMembers.length > 0">
           <app-people-detail
-            class="clickable"
             [label]="'pending members'"
             [people]="organization.pendingMembers"
-            (click)="
+            (openDialog)="
               openMemberDialog('pendingMember', organization.pendingMembers, memberCheck.isManager)
             "></app-people-detail>
         </ng-container>

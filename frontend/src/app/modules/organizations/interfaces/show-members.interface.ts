@@ -1,9 +1,12 @@
-import { Profile } from '@shared/interfaces';
-
 import { MemberType } from '@organizations/types';
 
-export interface ShowMembers {
-  members: Profile[];
+export interface ShowMembersInput {
+  address: string;
   memberType: MemberType;
   isManager: boolean;
+}
+
+export interface ShowMembersOutput {
+  profileId?: string;
+  changed: boolean;
 }
