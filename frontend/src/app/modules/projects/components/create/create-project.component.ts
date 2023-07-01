@@ -100,7 +100,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
     this.organizationService.createProject(formValue, this.memberChip.selectedItems).subscribe({
       next: projectId => {
         this.loadingService.hide();
-        this.router.navigate(['projects', projectId], { relativeTo: this.route });
+        this.router.navigate(['organizations', this.organizationAddress, 'projects', projectId]);
       },
       error: err => {
         this.loadingService.hide();
