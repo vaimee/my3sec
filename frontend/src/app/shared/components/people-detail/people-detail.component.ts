@@ -11,6 +11,9 @@ export class PeopleDetailComponent implements OnInit {
   @Input() label = 'members';
   @Input() people!: ProfileMetadata[];
   @Input() showAddPeopleIcon = false;
+  @Input() showLabel = true;
+  @Input() iconSize = 45;
+
   @Output() add: EventEmitter<void> = new EventEmitter();
   @Output() openDialog: EventEmitter<void> = new EventEmitter();
 

@@ -11,8 +11,8 @@ export interface ProjectMetadata {
   description: string;
   headline: string;
   icon?: string;
-  startDate: string;
-  endDate: string;
+  start: string;
+  end: string;
 }
 
 export interface TaskMetadata {

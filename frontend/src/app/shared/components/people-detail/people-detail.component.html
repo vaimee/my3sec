@@ -6,8 +6,15 @@
       </button>
     </ng-container>
     <ng-container *ngFor="let person of people">
-      <img class="round-image clickable" src="{{ person.profileImage }}" (click)="emitOpenDialog()" />
+      <img
+        class="round-image clickable"
+        [src]="person.profileImage"
+        [style.width.px]="iconSize"
+        [style.height.px]="iconSize"
+        (click)="emitOpenDialog()" />
     </ng-container>
   </div>
-  <h4 class="clickable" (click)="emitOpenDialog()">{{ label | titlecase }}</h4>
+  <ng-container *ngIf="showLabel">
+    <h4 class="clickable" (click)="emitOpenDialog()">{{ label | titlecase }}</h4>
+  </ng-container>
 </div>
