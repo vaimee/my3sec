@@ -5,12 +5,19 @@ import { Injectable } from '@angular/core';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
-import { Organization, OrganizationMetadata, Profile } from '@shared/interfaces';
+import {
+  Organization,
+  OrganizationMetadata,
+  Profile,
+  Project,
+  ProjectMetadata,
+  Task,
+  TaskMetadata,
+} from '@shared/interfaces';
 
 import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
-import { Project, ProjectMetadata, Task, TaskMetadata } from '../interfaces/project.interface';
 import { IpfsService } from './ipfs.service';
 import { My3secHubContractService } from './my3sec-hub-contract.service';
 import { OrganizationContractService } from './organization-contract.service';
@@ -48,7 +55,6 @@ export class OrganizationService {
       switchMap(receipt => {
         const projectEvent = receipt.events?.filter(event => event.event === 'ProjectCreated')[0];
         projectId = projectEvent ? Number(projectEvent) : 0;
-        console.log(projectId);
         const requests = [];
         for (const member of members) {
           //TODO: get project Id (this event name current does not exist)
@@ -82,7 +88,6 @@ export class OrganizationService {
       switchMap(receipt => {
         const taskEvent = receipt.events?.filter(event => event.event === 'TaskCreated')[0];
         taskId = taskEvent ? Number(taskEvent) : 0;
-        console.log(taskId);
         const requests = [];
         for (const member of members) {
           requests.push(this.contractService.addTaskMember(taskId, +member.id));
@@ -144,14 +149,24 @@ export class OrganizationService {
       .pipe(switchMap((uri: string) => this.ipfsService.retrieveJSON<OrganizationMetadata>(uri)));
   }
 
+  public getProject(projectId: number): Observable<Project> {
+    return this.contractService.getProject(projectId).pipe(
+      mergeMap(project => {
+        return this.ipfsService
+          .retrieveJSON<ProjectMetadata>(project.metadataURI)
+          .pipe(map(projectMetadata => this.getProjectFromMetadata(projectMetadata, project)));
+      })
+    );
+  }
+
   public getProjects(): Observable<Project[]> {
     return this.contractService.getProjects().pipe(
       concatMap(projects => projects),
       mergeMap(project => {
         return this.ipfsService.retrieveJSON<ProjectMetadata>(project.metadataURI).pipe(
           map(data => {
-            const startDate = new Date(data.startDate);
-            const endDate = new Date(data.endDate);
+            const startDate = new Date(data.start);
+            const endDate = new Date(data.end);
             return {
               ...data,
               id: project.id.toNumber(),
@@ -292,12 +307,22 @@ export class OrganizationService {
     return this.contractService.isManager(address);
   }
 
+  public isPendingMember(profileId: number): Observable<boolean> {
+    return this.contractService.isPendingMember(profileId);
+  }
+
   public isMember(profileId: number): Observable<boolean> {
     return this.contractService.isMember(profileId);
   }
 
   public isCurrentUserManager(): Observable<boolean> {
     return this.contractService.isManager(this.metamaskService.userAddress);
+  }
+
+  public isCurrentUserPendingMember(): Observable<boolean> {
+    return this.my3secHub
+      .getDefaultProfile(this.metamaskService.userAddress)
+      .pipe(switchMap(({ id }) => this.contractService.isPendingMember(id.toNumber())));
   }
 
   public isCurrentUserMember(): Observable<boolean> {
@@ -317,7 +342,9 @@ export class OrganizationService {
 
   private calculateCurrentMonth(start: Date): number {
     const current = new Date();
-    return current.getMonth() - start.getMonth() + 12 * (current.getFullYear() - start.getFullYear());
+    const currentMonth = current.getMonth() - start.getMonth() + 12 * (current.getFullYear() - start.getFullYear());
+    if (currentMonth < 0) return 0;
+    return currentMonth;
   }
 
   private getOrganizationFromMetadata(organization: OrganizationMetadata, address: string): Observable<Organization> {
@@ -333,6 +360,27 @@ export class OrganizationService {
         address: address,
       }))
     );
+  }
+
+  private getProjectFromMetadata(
+    projectMetadata: ProjectMetadata,
+    projectStruct: DataTypes.ProjectViewStructOutput
+  ): Project {
+    const startDate = new Date(projectMetadata.start);
+    const endDate = new Date(projectMetadata.end);
+    return {
+      ...projectMetadata,
+      id: projectStruct.id.toNumber(),
+      status: projectStruct.status,
+      organization: this.contractService.address,
+      tasks: this.getTasks(projectStruct.id.toNumber()),
+      members: this.getProjectMembers(projectStruct.id.toNumber()),
+      hours: 0, // TODO: calculate hours
+      startDate,
+      endDate,
+      currentMonth: this.calculateCurrentMonth(startDate),
+      durationInMonths: this.calculateDurationInMonths(startDate, endDate),
+    };
   }
 
   private async wait(tx: ethers.ContractTransaction): Promise<ethers.ContractReceipt> {

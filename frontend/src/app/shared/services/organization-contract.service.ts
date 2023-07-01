@@ -63,6 +63,11 @@ export class OrganizationContractService {
     return from(this.contract.getProjectCount()).pipe(map(bigNumber => bigNumber.toNumber()));
   }
 
+  public getProject(projectId: number): Observable<DataTypes.ProjectViewStructOutput> {
+    this.assertTargetSet();
+    return from(this.contract.getProject(projectId));
+  }
+
   public getProjects(): Observable<DataTypes.ProjectViewStructOutput[]> {
     return from(this.getProjectCount()).pipe(
       mergeMap(total => {
@@ -155,7 +160,7 @@ export class OrganizationContractService {
         const requests = [];
         for (let i = 0; i < total; i++) {
           this.assertTargetSet();
-          requests.push(this.contract.getProjectMember(1, i));
+          requests.push(from(this.contract.getProjectMember(projectId, i)));
         }
         return forkJoin(requests);
       }),
@@ -189,6 +194,11 @@ export class OrganizationContractService {
   public isMember(profileId: number): Observable<boolean> {
     this.assertTargetSet();
     return from(this.contract.isMember(profileId));
+  }
+
+  public isPendingMember(profileId: number): Observable<boolean> {
+    this.assertTargetSet();
+    return from(this.contract.isPendingMember(profileId));
   }
 
   public getTasks(projectId: number): Observable<DataTypes.TaskViewStructOutput[]> {
