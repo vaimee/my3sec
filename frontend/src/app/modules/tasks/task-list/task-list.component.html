@@ -1,15 +1,21 @@
-<mat-list>
-  <mat-list-item *ngFor="let task of tasks | async" (click)="goTo(task.id)">
-    <div class="clickable">
-      <span matListItemTitle
-        >{{ task.name }}
-        <app-show-status [status]="task.status"></app-show-status>
-      </span>
-      <span matListItemLine>{{ task.description }}</span>
-      <p matListItemLine>
-        <mat-icon class="line-icon" fontIcon="hourglass_top"></mat-icon> {{ task.hours }}h &#8226;
-        <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ task.members?.length }}
-      </p>
-    </div>
-  </mat-list-item>
-</mat-list>
+<h2>Tasks</h2>
+<ng-container *ngIf="(tasks$ | async)?.length !== 0; else noTasks">
+  <mat-list>
+    <mat-list-item *ngFor="let task of tasks$ | async" (click)="goTo(task.id)">
+      <div class="clickable">
+        <span matListItemTitle
+          >{{ task.name }}
+          <app-show-status [status]="task.status"></app-show-status>
+        </span>
+        <span matListItemLine>{{ task.description }}</span>
+        <p matListItemLine>
+          <mat-icon class="line-icon" fontIcon="hourglass_top"></mat-icon> {{ task.hours }}h &#8226;
+          <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ task.members?.length }}
+        </p>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</ng-container>
+<ng-template #noTasks>
+  <span>No tasks to show</span>
+</ng-template>
