@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
+import { Status } from '@shared/enums';
 import {
   Organization,
   OrganizationMetadata,
@@ -284,6 +285,19 @@ export class OrganizationService {
   public updateTask(taskId: number, task: DataTypes.UpdateTaskStruct) {
     const hexValue = ethers.utils.hexValue(taskId);
     return from(this.contractService.updateTask(ethers.BigNumber.from(hexValue), task));
+  }
+
+  public updateProject(projectId: number, status: Status) {
+    return this.contractService.getProject(projectId).pipe(
+      switchMap(data => {
+        const project: DataTypes.UpdateProjectStruct = {
+          metadataURI: data.metadataURI,
+          status: status,
+        };
+        const hexValue = ethers.utils.hexValue(projectId);
+        return this.contractService.updateProject(ethers.BigNumber.from(hexValue), project);
+      })
+    );
   }
 
   public rejectPendingMember(profileId: number): Observable<ethers.ContractReceipt> {

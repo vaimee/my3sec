@@ -81,9 +81,12 @@ export class OrganizationContractService {
     );
   }
 
-  public updateProject(projectId: BigNumber, project: DataTypes.UpdateProjectStruct): Observable<unknown> {
+  public updateProject(
+    projectId: BigNumber,
+    project: DataTypes.UpdateProjectStruct
+  ): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract.updateProject(projectId, project));
+    return from(this.contract.updateProject(projectId, project)).pipe(switchMap(this.wait));
   }
 
   public getMemberCount(): Observable<number> {
