@@ -5,6 +5,7 @@ import { CreateProjectComponent } from './components/create/create-project.compo
 import { ProjectListComponent } from './components/project-list/project-list.component';
 import { ProjectComponent } from './components/project/project.component';
 import { ProjectsComponent } from './projects.component';
+import { managerGuard } from '@auth/guards/manager.guard';
 
 const routes: Routes = [
   {
@@ -12,7 +13,7 @@ const routes: Routes = [
     component: ProjectsComponent,
     children: [
       { path: '', component: ProjectListComponent },
-      { path: 'new', component: CreateProjectComponent },
+      { path: 'new', component: CreateProjectComponent, canActivate: [managerGuard]},
       {
         path: ':id/tasks',
         loadChildren: () => import('../tasks/tasks.module').then(m => m.TasksModule),
