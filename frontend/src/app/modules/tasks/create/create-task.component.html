@@ -30,18 +30,6 @@
             </mat-form-field>
           </div>
           <mat-form-field class="d-block" appearance="outline">
-            <mat-label>Headline</mat-label>
-            <input
-              matInput
-              type="text"
-              name="headline"
-              autocomplete="off"
-              formControlName="headline"
-              maxlength="70"
-              placeholder="A catching sentence that summarizes the Task!" />
-            <mat-error *ngIf="formError('headline', 'required')">Headline is required</mat-error>
-          </mat-form-field>
-          <mat-form-field class="d-block" appearance="outline">
             <mat-label>Description</mat-label>
             <textarea
               matInput
