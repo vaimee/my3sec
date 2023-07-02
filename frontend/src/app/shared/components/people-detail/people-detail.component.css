@@ -13,17 +13,17 @@
   justify-content: space-evenly;
 }
 
-
 .profile-list img {
   width: 45px;
   height: 45px;
-  object-fit: cover;}
+  object-fit: cover;
+}
 
 .profile-list img:not(:first-child) {
-  margin-left: -25px;
+  margin-left: -15px;
   transition: margin 0.1s ease-in-out;
 }
 
 .profile-list:hover img:not(:first-child) {
-  margin: -10px;
+  margin: -5px;
 }

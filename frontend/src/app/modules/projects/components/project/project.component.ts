@@ -1,14 +1,19 @@
 import { Observable } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Status } from '@shared/enums';
-import { ProfileMetadata } from '@shared/interfaces';
+import { Profile, ProfileMetadata } from '@shared/interfaces';
 import { Project } from '@shared/interfaces/project.interface';
 import { LoadingService } from '@shared/services/loading.service';
 import { OrganizationService } from '@shared/services/organization.service';
+
+import { ShowMembersInput, ShowMembersOutput } from '@projects/interfaces';
+
+import { ShowMembersComponent } from '../show-members/show-members.component';
 
 @Component({
   selector: 'app-project',
@@ -27,21 +32,25 @@ export class ProjectComponent implements OnInit {
     private loadingService: LoadingService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private router: Router
   ) {
     this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
     this.projectId = Number(this.route.snapshot.paramMap.get('id') as string);
   }
+
   ngOnInit(): void {
-    this.organizationService.setTarget(this.organizationAddress);
-    this.project$ = this.organizationService.getProject(this.projectId);
-    this.isManager$ = this.organizationService.isCurrentUserManager();
+    this.setUp();
   }
 
   public setUp() {
     this.organizationService.setTarget(this.organizationAddress);
     this.project$ = this.organizationService.getProject(this.projectId);
     this.isManager$ = this.organizationService.isCurrentUserManager();
+
+    this.organizationService.getProjectMembers(this.projectId).subscribe(data => {
+      console.log(`project members: ${data}`);
+    });
   }
 
   public goToCreateTask() {
@@ -60,14 +69,32 @@ export class ProjectComponent implements OnInit {
     return Status;
   }
 
-  public showStart(projectStatus: Status) {
-    return projectStatus === Status.NOT_STARTED;
+  public showAddMember(isManager: boolean, status: Status) {
+    if (!isManager) return false;
+    return status === Status.IN_PROGRESS || status === Status.NOT_STARTED;
   }
-  public showComplete(projectStatus: Status) {
-    return projectStatus === Status.IN_PROGRESS;
-  }
-  public showCancel(projectStatus: Status) {
-    return projectStatus === Status.IN_PROGRESS || projectStatus === Status.NOT_STARTED;
+
+  public openMemberDialog(isManager: boolean, isAddMembers: boolean, membersCount?: Profile[]): void {
+    if (!isAddMembers && membersCount?.length === 0) return;
+
+    const showMembersData: ShowMembersInput = {
+      address: this.organizationAddress,
+      isManager: isManager,
+      projectId: this.projectId,
+      isAddMember: isAddMembers,
+    };
+
+    const dialogRef = this.dialog.open(ShowMembersComponent, {
+      width: '700px',
+      data: showMembersData,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((showMembersOutput: ShowMembersOutput) => {
+      if (showMembersOutput.profileId) return this.router.navigate(['/profiles', showMembersOutput.profileId]);
+      if (showMembersOutput.changed) this.setUp();
+      return;
+    });
   }
 
   private handleObservable(message: string, err?: Error) {

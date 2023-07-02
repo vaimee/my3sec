@@ -11,11 +11,17 @@
       <p>{{ project.headline }}</p>
     </div>
     <ng-container *ngIf="project.members | async as members">
-      <app-people-detail [people]="members" [showAddPeopleIcon]="(isManager$ | async) || false"></app-people-detail>
+      <ng-container *ngIf="{ value: isManager$ | async } as isManager">
+        <app-people-detail
+          [people]="members"
+          [showAddPeopleIcon]="showAddMember(isManager.value || false, project.status)"
+          (openDialog)="openMemberDialog(isManager.value || false, false)"
+          (add)="openMemberDialog(isManager.value || false, true, members)"></app-people-detail>
+      </ng-container>
     </ng-container>
     <ng-container *ngIf="isManager$ | async as isManager">
       <a
-        *ngIf="showStart(project.status)"
+        *ngIf="project.status === Status.NOT_STARTED"
         href="javascript:void(0)"
         class="btn btn-outline-dark m-1"
         (click)="updateProject(Status.IN_PROGRESS)">
@@ -25,7 +31,7 @@
         </div>
       </a>
       <a
-        *ngIf="showComplete(project.status)"
+        *ngIf="project.status === Status.IN_PROGRESS"
         href="javascript:void(0)"
         class="btn btn-outline-dark m-1"
         (click)="updateProject(Status.COMPLETED)">
@@ -35,7 +41,7 @@
         </div>
       </a>
       <a
-        *ngIf="showCancel(project.status)"
+        *ngIf="project.status === Status.IN_PROGRESS || project.status === Status.NOT_STARTED"
         href="javascript:void(0)"
         class="btn btn-outline-dark m-1"
         (click)="updateProject(Status.CANCELED)">
@@ -47,14 +53,14 @@
       <a
         *ngIf="project.status === Status.IN_PROGRESS"
         href="javascript:void(0)"
-        class="btn btn-outline-dark"
-        (click)="goToCreateTask()"
-        >CREATE TASK</a
-      >
+        class="btn btn-outline-dark m-1"
+        (click)="goToCreateTask()">
+        <div class="d-flex align-items-center justify-content-evenly m-1">CREATE TASK</div>
+      </a>
     </ng-container>
   </div>
   <ng-container>
     <markdown>{{ project.description }}</markdown>
-    <app-task-list [tasks]="project.tasks"></app-task-list>
+    <app-task-list [tasks$]="project.tasks"></app-task-list>
   </ng-container>
 </ng-container>

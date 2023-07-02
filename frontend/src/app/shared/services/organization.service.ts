@@ -58,15 +58,17 @@ export class OrganizationService {
         projectId = projectEvent ? Number(projectEvent) : 0;
         const requests = [];
         for (const member of members) {
-          //TODO: get project Id (this event name current does not exist)
-          requests.push(this.contractService.addProjectMember(projectId, +member.id));
+          requests.push(this.addProjectMember(projectId, +member.id));
         }
         return forkJoin(requests);
       }),
       concatMap(data => data),
-      switchMap(this.wait),
       map(() => projectId)
     );
+  }
+
+  public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
+    return this.contractService.addProjectMember(projectId, profileId);
   }
 
   public createTask(
@@ -208,6 +210,19 @@ export class OrganizationService {
       switchMap(id => this.profileService.getProfile(id)),
       toArray()
     );
+  }
+
+  public getOrganizationMembersNotInProject(projectId: number): Observable<Profile[]> {
+    return forkJoin([this.contractService.getMembers(), this.contractService.getProjectMembers(projectId)]).pipe(
+      map(([organizationMembers, projectMembers]) => organizationMembers.filter(id => !projectMembers.includes(id))),
+      concatMap(data => data),
+      switchMap(id => this.profileService.getProfile(id)),
+      toArray()
+    );
+  }
+
+  public removeProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
+    return this.contractService.removeProjectMember(projectId, profileId);
   }
 
   public getTasks(projectId: number): Observable<Task[]> {

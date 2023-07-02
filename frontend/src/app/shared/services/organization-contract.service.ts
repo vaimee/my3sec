@@ -48,6 +48,11 @@ export class OrganizationContractService {
     return from(this.contract.approvePendingMember(profileId)).pipe(switchMap(this.wait));
   }
 
+  public removeProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
+    this.assertTargetSet();
+    return from(this.contract.removeProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
+  }
+
   public promoteToManager(memberAccount: string): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
     return from(this.contract.addToWhitelist(memberAccount)).pipe(switchMap(this.wait));
@@ -234,9 +239,9 @@ export class OrganizationContractService {
     return from(this.contract.createProject(projectStruct));
   }
 
-  public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractTransaction> {
+  public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract.addProjectMember(projectId, profileId));
+    return from(this.contract.addProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
   }
 
   public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractTransaction> {

@@ -1,5 +1,5 @@
 import { ChipInput } from 'app/modules/tasks/models';
-import { Observable, map, startWith } from 'rxjs';
+import { map, startWith } from 'rxjs';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
