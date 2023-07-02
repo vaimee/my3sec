@@ -18,7 +18,7 @@ const routes: Routes = [
       { path: 'log-hours', component: LogHoursComponent },
       { path: 'new', component: CreateTaskComponent, canActivate: [managerGuard] },
       {
-        path: ':id',
+        path: ':taskId',
         component: TaskComponent,
       },
     ],
