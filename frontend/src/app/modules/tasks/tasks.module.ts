@@ -1,5 +1,3 @@
-import { MarkdownModule } from 'ngx-markdown';
-
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,6 +10,6 @@ import { TasksRoutingModule, routedComponents } from './tasks-routing.module';
 @NgModule({
   declarations: [routedComponents, TaskListComponent],
   exports: [TaskListComponent],
-  imports: [MarkdownModule.forRoot(), CommonModule, SharedModule, TasksRoutingModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, SharedModule, TasksRoutingModule, FormsModule, ReactiveFormsModule],
 })
 export class TasksModule {}
