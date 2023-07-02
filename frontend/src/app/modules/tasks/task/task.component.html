@@ -13,7 +13,7 @@
               </div>
               <div class="col-md-5">
                 <div *ngIf="showCloseTask; else checkReward">
-                  <ng-container *ngIf="taskData.skills | async as skills">
+                  <ng-container *ngIf="taskData.skills$ | async as skills">
                     <a
                       href="javascript:void(0)"
                       class="btn btn-outline-dark m-1"
@@ -54,23 +54,25 @@
             <div class="col-md-4">
               <div class="p-4 bg-white mt-2 mb-2 h-100">
                 <h3>Responsible</h3>
-                <div *ngIf="this.reviewer$ | async as reviewer" class="d-flex align-items-center flex-column">
+                <!-- <div *ngIf="this.reviewer$ | async as reviewer" class="d-flex align-items-center flex-column">
                   <img class="mb-0" src="{{ reviewer.profileImage }}" class="circle-image" />
                   <h4 class="mb-0">{{ reviewer.firstName }} {{ reviewer.surname }}</h4>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="col-md-8">
               <div class="p-4 bg-white mt-2 mb-2 h-100">
                 <h3>Members</h3>
-                <div *ngIf="members$ | async as members">
+                <div *ngIf="taskData.members$ | async as members">
                   <mat-list>
-                    <mat-list-item *ngFor="let member of members" (click)="goTo(member.id)">
+                    <mat-list-item class="clickable" *ngFor="let member of members" (click)="goTo(member.id)">
                       <img
                         matListItemAvatar
                         src="{{ member.profileImage }}"
                         alt="{{ member.firstName }} {{ member.surname }} profile image" />
+
                       <div matListItemTitle>{{ member.firstName }} {{ member.surname }}</div>
+                      <div matListItemLine>1 h</div>
                     </mat-list-item>
                   </mat-list>
                 </div>
@@ -82,7 +84,7 @@
         <div class="col-md-4">
           <div class="p-4 bg-white">
             <h2 class="d-flex justify-content-between align-items-center mb-3">Skills</h2>
-            <mat-list *ngIf="taskData.skills | async as skills">
+            <mat-list *ngIf="taskData.skills$ | async as skills">
               <mat-list-item *ngFor="let skill of skills">
                 <div matListItemTitle>{{ skill.name }}</div>
                 <div matListItemLine>{{ skill.category }}</div>

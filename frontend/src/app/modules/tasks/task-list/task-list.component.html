@@ -10,7 +10,9 @@
         <span matListItemLine>{{ task.description }}</span>
         <p matListItemLine>
           <mat-icon class="line-icon" fontIcon="hourglass_top"></mat-icon> {{ task.hours }}h &#8226;
-          <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ task.members?.length }}
+          <ng-container *ngIf="task.members$ | async as members">
+            <mat-icon class="line-icon" fontIcon="group"></mat-icon> {{ members.length }}
+          </ng-container>
         </p>
       </div>
     </mat-list-item>

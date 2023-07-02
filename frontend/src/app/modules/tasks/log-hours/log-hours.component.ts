@@ -31,7 +31,7 @@ export class LogHoursComponent implements OnInit, OnDestroy {
       hours: 10,
       status: Status.IN_PROGRESS,
       metadataURI: '',
-      skills: of([
+      skills$: of([
         {
           id: 0,
           name: 'HTML',
@@ -54,8 +54,7 @@ export class LogHoursComponent implements OnInit, OnDestroy {
           progress: 90,
         },
       ]),
-      reviewer: 1,
-      members: [2, 3, 4],
+      members$: of([]),
       start: new Date(),
       end: new Date(),
       currentMonth: 0,

@@ -212,6 +212,14 @@ export class OrganizationService {
     );
   }
 
+  public getTaskMembers(taskId: number): Observable<Profile[]> {
+    return this.contractService.getTaskMembers(taskId).pipe(
+      concatMap(data => data),
+      switchMap(id => this.profileService.getProfile(id)),
+      toArray()
+    );
+  }
+
   public getOrganizationMembersNotInProject(projectId: number): Observable<Profile[]> {
     return forkJoin([this.contractService.getMembers(), this.contractService.getProjectMembers(projectId)]).pipe(
       map(([organizationMembers, projectMembers]) => organizationMembers.filter(id => !projectMembers.includes(id))),
@@ -225,30 +233,23 @@ export class OrganizationService {
     return this.contractService.removeProjectMember(projectId, profileId);
   }
 
+  public getTask(projectId: number, taskId: number): Observable<Task> {
+    return this.contractService.getTask(projectId, taskId).pipe(
+      switchMap(task => {
+        return this.ipfsService
+          .retrieveJSON<TaskMetadata>(task.metadataURI)
+          .pipe(map(metadata => this.getTaskFromMetadata(metadata, task)));
+      })
+    );
+  }
+
   public getTasks(projectId: number): Observable<Task[]> {
     return this.contractService.getTasks(projectId).pipe(
       switchMap(tasks => from(tasks)),
       switchMap(task => {
-        return this.ipfsService.retrieveJSON<TaskMetadata>(task.metadataURI).pipe(
-          map(data => {
-            const start = new Date(data.start);
-            const end = new Date(data.end);
-            const skills = task.skills.map(skill => this.skillService.getSkill(skill.toNumber()));
-            return {
-              ...data,
-              id: task.id.toNumber(),
-              status: task.status,
-              organization: this.contractService.address,
-              hours: 0, // TODO: calculate hours
-              start,
-              end,
-              currentMonth: this.calculateCurrentMonth(start),
-              durationInMonths: this.calculateDurationInMonths(start, end),
-              skills: forkJoin(skills),
-              metadataURI: task.metadataURI,
-            };
-          })
-        );
+        return this.ipfsService
+          .retrieveJSON<TaskMetadata>(task.metadataURI)
+          .pipe(map(metadata => this.getTaskFromMetadata(metadata, task)));
       }),
       toArray()
     );
@@ -360,6 +361,14 @@ export class OrganizationService {
       .pipe(switchMap(({ id }) => this.contractService.isMember(id.toNumber())));
   }
 
+  public getTaskLoggedTime(taskId: number): Observable<number> {
+    return this.contractService.getTaskLoggedTime(taskId);
+  }
+
+  public getTaskLoggedTimeOfProfile(taskId: number, profileId: number): Observable<number> {
+    return this.contractService.getTaskLoggedTimeOfProfile(taskId, profileId);
+  }
+
   private calculateDurationInMonths(start: Date, end: Date): number {
     const startYear = start.getFullYear();
     const startMonth = start.getMonth();
@@ -409,6 +418,26 @@ export class OrganizationService {
       endDate,
       currentMonth: this.calculateCurrentMonth(startDate),
       durationInMonths: this.calculateDurationInMonths(startDate, endDate),
+    };
+  }
+
+  getTaskFromMetadata(taskMetadata: TaskMetadata, task: DataTypes.TaskViewStructOutput): Task {
+    const start = new Date(taskMetadata.start);
+    const end = new Date(taskMetadata.end);
+    const skills = task.skills.map(skill => this.skillService.getSkill(skill.toNumber()));
+    return {
+      ...taskMetadata,
+      id: task.id.toNumber(),
+      status: task.status,
+      organization: this.contractService.address,
+      hours: 0, // TODO: calculate hours
+      start,
+      end,
+      currentMonth: this.calculateCurrentMonth(start),
+      durationInMonths: this.calculateDurationInMonths(start, end),
+      skills$: forkJoin(skills),
+      metadataURI: task.metadataURI,
+      members$: this.getTaskMembers(task.id.toNumber()),
     };
   }
 

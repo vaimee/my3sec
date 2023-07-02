@@ -44,7 +44,6 @@ export interface Task extends Omit<TaskMetadata, 'start' | 'end'>, Omit<DataType
   end: Date;
   currentMonth: number;
   durationInMonths: number;
-  skills: Observable<Skill[]>;
-  reviewer?: number;
-  members?: number[];
+  skills$: Observable<Skill[]>;
+  members$: Observable<Profile[]>;
 }
