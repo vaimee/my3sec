@@ -21,7 +21,6 @@
         <ng-container *ngIf="isManager.value">
           <a
             *ngIf="project.status === Status.NOT_STARTED"
-            href="javascript:void(0)"
             class="btn btn-outline-dark m-1"
             (click)="updateProject(Status.IN_PROGRESS)">
             <div class="d-flex align-items-center justify-content-evenly m-1">
@@ -31,7 +30,6 @@
           </a>
           <a
             *ngIf="project.status === Status.IN_PROGRESS"
-            href="javascript:void(0)"
             class="btn btn-outline-dark m-1"
             (click)="updateProject(Status.COMPLETED)">
             <div class="d-flex align-items-center justify-content-evenly m-1">
@@ -41,7 +39,6 @@
           </a>
           <a
             *ngIf="project.status === Status.IN_PROGRESS || project.status === Status.NOT_STARTED"
-            href="javascript:void(0)"
             class="btn btn-outline-dark m-1"
             (click)="updateProject(Status.CANCELED)">
             <div class="d-flex align-items-center justify-content-evenly m-1">
@@ -49,11 +46,7 @@
               <span class="margin-left">CANCEL PROJECT</span>
             </div>
           </a>
-          <a
-            *ngIf="project.status === Status.IN_PROGRESS"
-            href="javascript:void(0)"
-            class="btn btn-outline-dark m-1"
-            (click)="goToCreateTask()">
+          <a *ngIf="project.status === Status.IN_PROGRESS" class="btn btn-outline-dark m-1" (click)="goToCreateTask()">
             <div class="d-flex align-items-center justify-content-evenly m-1">CREATE TASK</div>
           </a>
         </ng-container>

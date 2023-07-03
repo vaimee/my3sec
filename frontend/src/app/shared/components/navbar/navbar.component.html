@@ -30,9 +30,7 @@
 
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item d-flex align-items-center">
-          <a class="nav-link" aria-current="page" href="javascript:void(0)"
-            >{{ freeEnergy | async }} / {{ totalEnergy | async }}</a
-          >
+          <a class="nav-link" aria-current="page">{{ freeEnergy | async }} / {{ totalEnergy | async }}</a>
           <mat-icon class="text-white">flash_on</mat-icon>
         </li>
         <li class="nav-item d-flex align-items-center add-button">
@@ -59,7 +57,7 @@
           </mat-menu>
         </li>
         <li class="nav-item d-flex align-items-center" (click)="redirectToProfile()">
-          <a class="nav-link" href="javascript:void(0)">{{ (profile$ | async)?.firstName }}</a>
+          <a class="nav-link">{{ (profile$ | async)?.firstName }}</a>
           <img class="round-image profile-icon" src="{{ (profile$ | async)?.profileImage }}" />
         </li>
       </ul>

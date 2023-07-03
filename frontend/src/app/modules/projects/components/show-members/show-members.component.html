@@ -12,16 +12,8 @@
           <div matListItemTitle class="container">
             <span class="clickable" (click)="goTo(member.id)"> {{ member.firstName }} {{ member.surname }}</span>
             <div class="container-buttons" *ngIf="isManager">
-              <a *ngIf="isAddMember" href="javascript:void(0)" class="btn btn-outline-dark" (click)="add(member.id)"
-                >ADD</a
-              >
-              <a
-                *ngIf="!isAddMember"
-                href="javascript:void(0)"
-                class="btn btn-outline-danger"
-                (click)="remove(member.id)"
-                >REMOVE</a
-              >
+              <a *ngIf="isAddMember" class="btn btn-outline-dark" (click)="add(member.id)">ADD</a>
+              <a *ngIf="!isAddMember" class="btn btn-outline-danger" (click)="remove(member.id)">REMOVE</a>
             </div>
           </div>
         </mat-list-item>
