@@ -1,0 +1,14 @@
+.no-skills {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.no-skills > img {
+  max-width: 200px;
+}
+
+.no-skills p {
+  color: rgb(85, 85, 85);
+}

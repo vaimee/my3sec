@@ -35,6 +35,13 @@
               <mat-error *ngIf="formError('role', 'required')">Role is required</mat-error>
             </mat-form-field>
           </div>
+          <div class="login-input-col-2 login-input-col-1">
+            <mat-form-field class="example-form-field d-block" appearance="outline">
+              <mat-label>Bio</mat-label>
+              <textarea matInput type="text" autocomplete="off" formControlName="bio"></textarea>
+              <mat-error *ngIf="formError('role', 'required')">Bio should be shorter than 150 characters</mat-error>
+            </mat-form-field>
+          </div>
           <input
             class="file-input"
             type="file"

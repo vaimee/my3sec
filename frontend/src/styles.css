@@ -7,12 +7,22 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: #f1f1f1;
 }
 
 .address {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #797979;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.black {
+  color: #000;
 }
 
 .round-image {
@@ -43,4 +53,8 @@ body {
 
 .clickable {
   cursor: pointer;
+}
+
+.w-full {
+  width: 100%;
 }

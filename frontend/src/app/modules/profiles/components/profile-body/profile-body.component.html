@@ -1,4 +1,79 @@
 <div *ngIf="this.profileData$ | async as profileData">
+  <div class="container">
+    <div >
+      <div class="bio">
+        <img src="{{ profileData.profileImage }}" alt="Profile Picture" class="circle-image" />
+        <ng-container
+          *ngIf="{
+            value: profileData.energy.freeEnergyOf$ | async
+          } as freeEnergy">
+          <div class="profiletitleBlock">
+            <h1 class="fw-bold">{{ profileData.firstName }} {{ profileData.surname }}</h1>
+            <p class="address">
+              {{ profileData.walletAddress }}
+            </p>
+            <p *ngIf="profileData.bio">
+              {{ profileData.bio }}
+            </p>
+            <button
+              mat-flat-button
+              class="w-full mt-1 mb-2"
+              color="primary"
+              *ngIf="!this.useDefaultProfile; else editProfile"
+              (click)="openSliderDialog(profileData, freeEnergy.value || 0)">
+              Endorse
+            </button>
+            <ng-template #editProfile>
+              <button class="w-full mt-1 mb-2" mat-stroked-button>Edit Profile</button>
+            </ng-template>
+          </div>
+        </ng-container>
+        <div
+          class="profile-energy-panel"
+          *ngIf="{
+            value: profileData.energy.totalEndorsing$ | async
+          } as totalEndorsing">
+          <p class="profile-energy-panel">
+            <mat-icon>group</mat-icon>
+          </p>
+
+          <div
+            class="clickable-text"
+            [class.clickable]="totalEndorsing.value && totalEndorsing.value > 0"
+            (click)="openEndorsersOrEndorsingDialog(true, totalEndorsing.value)">
+            <span class="bold black">{{ totalEndorsing.value }}&nbsp;</span>
+            <span>Endorsing</span>
+          </div>
+          <ng-container
+            *ngIf="{
+              value: profileData.energy.totalEndorsers$ | async
+            } as totalEndorsers">
+            <span>&nbsp;•&nbsp;</span>
+            <div
+              class="clickable-text"
+              [class.clickable]="totalEndorsers.value && totalEndorsers.value > 0"
+              (click)="openEndorsersOrEndorsingDialog(false, totalEndorsers.value)">
+              <span class="bold black">{{ totalEndorsers.value }}&nbsp;</span>
+              <span class="mb-0">Endorsers</span>
+            </div>
+          </ng-container>
+          <ng-container
+            *ngIf="{
+              value: profileData.energy.receivedEnergyOf$ | async
+            } as receivedEnergyOf">
+            <mat-icon>flash_on</mat-icon>
+            <span class="bold black">{{ receivedEnergyOf.value }}&nbsp;</span>
+            <span class="mb-0">Energy</span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="cv">
+      <app-skills [profileId]="id"></app-skills>
+      <app-projects [projects]="profileData.projects"></app-projects>
+    </div>
+  </div>
+  <!--
   <div class="profileComponentBlock bg-light h-100vh">
     <div class="container-fluid">
       <div class="profileMainBlock">
@@ -75,12 +150,9 @@
 
           <div class="profileSkillSection">
             <div class="row">
-              <!-- Skill -->
               <div class="col-md-8">
                 <app-skills [profileId]="id"></app-skills>
               </div>
-              <!-- Skill-->
-              <!-- Certificates -->
               <div class="col-md-4">
                 <app-certificates [certificates]="profileData.certificates"></app-certificates>
               </div>
@@ -88,9 +160,8 @@
           </div>
         </div>
       </div>
-      <!--Project-->
       <app-projects [projects]="profileData.projects"></app-projects>
-      <!--Project-->
     </div>
   </div>
+  -->
 </div>

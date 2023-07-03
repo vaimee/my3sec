@@ -4,6 +4,7 @@ export interface ProfileMetadata {
   organization: string;
   role: string;
   profileImage: string;
+  bio?: string;
   regulationCheckbox: boolean;
 }
 

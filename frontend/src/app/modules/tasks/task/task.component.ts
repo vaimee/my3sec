@@ -98,7 +98,8 @@ export class TaskComponent {
         {
           id: 2,
           name: 'JavaScript',
-          description: 'The techniques and principles of software development, such as analysis, algorithms, coding, testing and compiling of programming paradigms in JavaScript.',
+          description:
+            'The techniques and principles of software development, such as analysis, algorithms, coding, testing and compiling of programming paradigms in JavaScript.',
           category: 'Front-end',
         },
       ]),
