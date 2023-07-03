@@ -5,6 +5,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Profile, TaskMetadata } from '@shared/interfaces';
@@ -39,6 +40,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     private organizationService: OrganizationService,
     private skillService: SkillService,
     private router: Router,
+    private snackBar: MatSnackBar,
     private route: ActivatedRoute
   ) {
     this.skillChip = new ChipInput<Skill>();
@@ -66,7 +68,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       { id: 9, name: 'Data Structures', category: 'Algorithms' },
       { id: 10, name: 'Networking', category: 'Computer Networks' },
     ]);
-    this.memberChip.items$ = this.organizationService.getMembers();
+    this.memberChip.items$ = this.organizationService.getProjectMembers(this.projectId);
 
     this.skillChip.items$.subscribe(skills => {
       this.skillChip.all = skills;
@@ -143,7 +145,9 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
         },
         error: err => {
           this.loadingService.hide();
-          console.error(`Failed to create task`);
+          this.snackBar.open('Failed to create task', 'Dismiss', {
+            duration: 3000,
+          });
           console.error(err);
         },
       });
