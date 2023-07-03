@@ -53,6 +53,11 @@ export class OrganizationContractService {
     return from(this.contract.removeProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
   }
 
+  public removeTaskMember(taskId: number, profileId: number): Observable<ethers.ContractReceipt> {
+    this.assertTargetSet();
+    return from(this.contract.removeTaskMember(taskId, profileId)).pipe(switchMap(this.wait));
+  }
+
   public promoteToManager(memberAccount: string): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
     return from(this.contract.addToWhitelist(memberAccount)).pipe(switchMap(this.wait));
@@ -204,8 +209,14 @@ export class OrganizationContractService {
     this.assertTargetSet();
     return from(this.contract.getTaskLoggedTimeOfProfile(taskId, profileId)).pipe(
       map(bigNumber => bigNumber.toNumber()),
+      //if an user did not logged time, it throws an error instead of returning zero
       catchError(() => of(0))
     );
+  }
+
+  public updateTaskTime(taskId: number, profileId: number, hours: number): Observable<ethers.ContractReceipt> {
+    this.assertTargetSet();
+    return from(this.contract.updateTaskTime(taskId, profileId, hours)).pipe(switchMap(this.wait));
   }
 
   public getTaskMembers(taskId: number): Observable<number[]> {
@@ -258,9 +269,21 @@ export class OrganizationContractService {
     );
   }
 
-  public createTask(projectId: number, taskStruct: DataTypes.CreateTaskStruct): Observable<ethers.ContractTransaction> {
+  public createTask(projectId: number, taskStruct: DataTypes.CreateTaskStruct): Observable<number> {
+    const hexValue = ethers.utils.hexValue(projectId);
+    console.log(projectId);
     this.assertTargetSet();
-    return from(this.contract.createTask(projectId, taskStruct));
+    return from(this.contract.createTask(ethers.BigNumber.from(hexValue), taskStruct)).pipe(
+      switchMap(async tx => {
+        const receipt = await tx.wait();
+        console.log(receipt);
+        const event = receipt.events?.[0];
+        if (!event) {
+          throw new Error('Event not found in transaction receipt');
+        }
+        return event.args?.['taskCreated'].toNumber();
+      })
+    );
   }
 
   public updateTask(taskId: BigNumber, task: DataTypes.UpdateTaskStruct): Observable<ethers.ContractReceipt> {
@@ -278,9 +301,9 @@ export class OrganizationContractService {
     return from(this.contract.addProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
   }
 
-  public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractTransaction> {
+  public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract.addTaskMember(taskId, profileId));
+    return from(this.contract.addTaskMember(taskId, profileId)).pipe(switchMap(this.wait));
   }
 
   private wait(tx: ethers.ContractTransaction): Observable<ethers.ContractReceipt> {

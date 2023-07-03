@@ -71,6 +71,10 @@ export class OrganizationService {
     return this.contractService.addProjectMember(projectId, profileId);
   }
 
+  public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractReceipt> {
+    return this.contractService.addTaskMember(taskId, profileId);
+  }
+
   public createTask(
     projectId: number,
     taskMetadata: TaskMetadata,
@@ -84,21 +88,18 @@ export class OrganizationService {
           metadataURI: metadataUri,
           skills: skills.map(skill => skill.id),
         };
+        console.log(createTaskStruct);
         return createTaskStruct;
       }),
       switchMap(createTaskStruct => this.contractService.createTask(projectId, createTaskStruct)),
-      switchMap(tx => from(tx.wait())),
-      switchMap(receipt => {
-        const taskEvent = receipt.events?.filter(event => event.event === 'TaskCreated')[0];
-        taskId = taskEvent ? Number(taskEvent) : 0;
+      switchMap(taskId => {
         const requests = [];
         for (const member of members) {
-          requests.push(this.contractService.addTaskMember(taskId, +member.id));
+          requests.push(this.addTaskMember(taskId, +member.id));
         }
         return forkJoin(requests);
       }),
       concatMap(data => data),
-      switchMap(this.wait),
       map(() => taskId)
     );
   }
@@ -229,8 +230,24 @@ export class OrganizationService {
     );
   }
 
+  public getProjectMembersNotInTask(projectId: number, taskId: number): Observable<Profile[]> {
+    return forkJoin([
+      this.contractService.getProjectMembers(projectId),
+      this.contractService.getTaskMembers(taskId),
+    ]).pipe(
+      map(([projectMembers, taskMembers]) => projectMembers.filter(id => !taskMembers.includes(id))),
+      concatMap(data => data),
+      switchMap(id => this.profileService.getProfile(id)),
+      toArray()
+    );
+  }
+
   public removeProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
     return this.contractService.removeProjectMember(projectId, profileId);
+  }
+
+  public removeTaskMember(taskId: number, profileId: number): Observable<ethers.ContractReceipt> {
+    return this.contractService.removeTaskMember(taskId, profileId);
   }
 
   public getTask(projectId: number, taskId: number): Observable<Task> {
@@ -267,6 +284,17 @@ export class OrganizationService {
       }),
       concatMap(data => data)
     );
+  }
+
+  public updateTaskTime(
+    organizationAddress: string,
+    taskId: number,
+    hours: number
+  ): Observable<ethers.ContractReceipt> {
+    return this.my3secHub.logTime(organizationAddress, taskId, hours);
+    /*  return this.my3secHub
+      .getDefaultProfile(this.metamaskService.userAddress)
+      .pipe(switchMap(({ id }) => this.contractService.updateTaskTime(taskId, id.toNumber(), hours))); */
   }
 
   public setTarget(targetAddress: string): void {

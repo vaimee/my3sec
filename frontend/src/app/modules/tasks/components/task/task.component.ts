@@ -1,6 +1,7 @@
 import { Observable, of } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -12,6 +13,11 @@ import { OrganizationService } from '@shared/services/organization.service';
 
 import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
+
+import { ShowMembersInput, ShowMembersOutput } from '../../interfaces';
+import { LogHoursDialogComponent } from '../log-hours-dialog/log-hours-dialog.component';
+import { ShowMembersComponent } from '../show-members/show-members.component';
+import { LogHoursInput } from './../../interfaces/log-hours.interface';
 
 @Component({
   selector: 'app-task',
@@ -36,6 +42,7 @@ export class TaskComponent implements OnInit {
     private router: Router,
     private my3secHub: My3secHubContractService,
     private organizationService: OrganizationService,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private loadingService: LoadingService
@@ -62,6 +69,7 @@ export class TaskComponent implements OnInit {
     this.router.navigate(['/profiles', id]);
   }
 
+  //TODO:how can i check if an user withdraw experience already?
   public getReward() {
     this.loadingService.show();
     this.my3secHub.withdrawExperience(this.organizationAddress, this.taskId).subscribe({
@@ -95,6 +103,50 @@ export class TaskComponent implements OnInit {
 
   public get Status() {
     return Status;
+  }
+
+  public openLogHoursDialog(): void {
+    const logHoursInput: LogHoursInput = { id: this.taskId, address: this.organizationAddress };
+
+    const dialogRef = this.dialog.open(LogHoursDialogComponent, {
+      width: '700px',
+      data: logHoursInput,
+    });
+
+    dialogRef.afterClosed().subscribe(changed => {
+      if (!changed) return;
+      this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
+    });
+  }
+
+  public openAddMemberDialog(): void {
+    const showMembersData: ShowMembersInput = {
+      address: this.organizationAddress,
+      projectId: this.projectId,
+      taskId: this.taskId,
+    };
+
+    const dialogRef = this.dialog.open(ShowMembersComponent, {
+      width: '700px',
+      data: showMembersData,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((showMembersOutput: ShowMembersOutput) => {
+      if (showMembersOutput.profileId) return this.router.navigate(['/profiles', showMembersOutput.profileId]);
+      if (!showMembersOutput.changed) return;
+      this.task$ = this.organizationService.getTask(this.projectId, this.taskId);
+      this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
+      return;
+    });
+  }
+
+  public remove(profileId: string) {
+    this.loadingService.show();
+    return this.organizationService.removeTaskMember(this.taskId, Number(profileId)).subscribe({
+      next: () => this.handleObservable('member removed'),
+      error: err => this.handleObservable('failed to remove member', err),
+    });
   }
 
   private handleObservable(message: string, err?: Error) {

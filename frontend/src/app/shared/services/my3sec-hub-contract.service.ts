@@ -93,6 +93,10 @@ export class My3secHubContractService {
     return from(this.contract.getOrganization(index));
   }
 
+  public logTime(organizationAddress: string, taskId: number, time: number): Observable<ethers.ContractReceipt> {
+    return from(this.contract.logTime(organizationAddress, taskId, time)).pipe(switchMap(this.wait));
+  }
+
   public getOrganizationCount(): Observable<BigNumber> {
     return from(this.contract.getOrganizationCount());
   }
