@@ -16,6 +16,6 @@ export class TaskListComponent {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   goTo(id: number): void {
-    this.router.navigate([`${id}`], { relativeTo: this.route });
+    this.router.navigate([`tasks/${id}`], { relativeTo: this.route });
   }
 }

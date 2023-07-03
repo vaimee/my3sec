@@ -3,10 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { managerGuard } from '@auth/guards/manager.guard';
 
-import { CreateTaskComponent } from './create/create-task.component';
-import { LogHoursComponent } from './log-hours/log-hours.component';
-import { TaskListComponent } from './task-list/task-list.component';
-import { TaskComponent } from './task/task.component';
+import { CreateTaskComponent } from './components/create/create-task.component';
+import { LogHoursComponent } from './components/log-hours/log-hours.component';
+import { TaskComponent } from './components/task/task.component';
 import { TasksComponent } from './tasks.component';
 
 const routes: Routes = [
@@ -14,7 +13,6 @@ const routes: Routes = [
     path: '',
     component: TasksComponent,
     children: [
-      { path: '', component: TaskListComponent },
       { path: 'log-hours', component: LogHoursComponent },
       { path: 'new', component: CreateTaskComponent, canActivate: [managerGuard] },
       {

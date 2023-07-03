@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@shared/shared.module';
 
-import { TaskListComponent } from './task-list/task-list.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 import { TasksRoutingModule, routedComponents } from './tasks-routing.module';
 
 @NgModule({

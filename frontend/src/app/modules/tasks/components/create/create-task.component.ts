@@ -14,7 +14,7 @@ import { SkillService } from '@shared/services/skill.service';
 
 import { Skill } from '@profiles/interfaces';
 
-import { ChipInput } from '../models';
+import { ChipInput } from '../../models';
 
 @Component({
   selector: 'app-create-task',
@@ -161,8 +161,13 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       ? this.skillChip.selectedItems.indexOf(remove as Skill)
       : this.memberChip.selectedItems.indexOf(remove as Profile);
     if (index >= 0) {
-      this.skillChip.selectedItems.splice(index, 1);
-      this.skillInput.setValue('');
+      if (isSkill) {
+        this.skillChip.selectedItems.splice(index, 1);
+        this.skillInput.setValue('');
+      } else {
+        this.memberChip.selectedItems.splice(index, 1);
+        this.memberInput.setValue('');
+      }
     }
   }
 
