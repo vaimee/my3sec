@@ -324,9 +324,8 @@ export class OrganizationService {
     return this.contractService.approvePendingMember(profileId);
   }
 
-  //different name from the contract function, but more intuitive
-  public removeMember(profileId: number): Observable<ethers.ContractReceipt> {
-    return this.contractService.leave(profileId);
+  public leave(organizationAddress: string): Observable<ethers.ContractReceipt> {
+    return this.my3secHub.leaveOrganization(organizationAddress);
   }
 
   public promoteToManager(profileAddress: string): Observable<ethers.ContractReceipt> {
@@ -361,8 +360,23 @@ export class OrganizationService {
       .pipe(switchMap(({ id }) => this.contractService.isMember(id.toNumber())));
   }
 
+  public isCurrentUserTaskMember(taskId: number): Observable<boolean> {
+    return this.my3secHub
+      .getDefaultProfile(this.metamaskService.userAddress)
+      .pipe(switchMap(({ id }) => this.contractService.isTaskMember(taskId, id.toNumber())));
+  }
+
   public getTaskLoggedTime(taskId: number): Observable<number> {
     return this.contractService.getTaskLoggedTime(taskId);
+  }
+
+  public getTaskLoggedTimeOfProfiles(taskId: number, task$: Observable<Task>): Observable<number[]> {
+    return task$.pipe(
+      switchMap(task$ => task$.members$),
+      concatMap(member => member),
+      switchMap(member => this.contractService.getTaskLoggedTimeOfProfile(taskId, +member.id)),
+      toArray()
+    );
   }
 
   public getTaskLoggedTimeOfProfile(taskId: number, profileId: number): Observable<number> {

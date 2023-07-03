@@ -2,103 +2,110 @@
   <div class="bg-color">
     <div class="flex-grow-1 p-4 ps-0 margin-left">
       <div class="row">
-        <div class="col-md-8">
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="row w-100">
-              <div class="col-md-7">
-                <div class="d-flex align-items-center">
-                  <h2>{{ taskData.name }}</h2>
+        <ng-container *ngIf="skills$ | async as skills">
+          <div class="col-md-8">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="row w-100">
+                <div class="col-md-7">
+                  <div class="d-flex align-items-center">
+                    <h2>{{ taskData.name }}</h2>
+                  </div>
+                  <app-show-status [status]="taskData.status"></app-show-status>
                 </div>
-                <app-show-status [status]="taskData.status"></app-show-status>
-              </div>
-              <div class="col-md-5">
-                <div *ngIf="showCloseTask; else checkReward">
-                  <ng-container *ngIf="taskData.skills$ | async as skills">
+                <div class="col-md-5">
+                  <ng-container *ngIf="isManager$ | async as isManager">
                     <a
-                      href="javascript:void(0)"
+                      *ngIf="taskData.status === Status.NOT_STARTED"
                       class="btn btn-outline-dark m-1"
-                      (click)="updateTask(true, taskData, skills)">
+                      (click)="updateTask(Status.IN_PROGRESS, taskData, skills)">
+                      <div class="d-flex align-items-center justify-content-evenly m-1">
+                        <mat-icon>check_circle</mat-icon>
+                        <span class="margin-left">START TASK</span>
+                      </div>
+                    </a>
+                    <a
+                      *ngIf="taskData.status === Status.IN_PROGRESS"
+                      class="btn btn-outline-dark m-1"
+                      (click)="updateTask(Status.COMPLETED, taskData, skills)">
                       <div class="d-flex align-items-center justify-content-evenly m-1">
                         <mat-icon>check_circle</mat-icon>
                         <span class="margin-left">CLOSE TASK</span>
                       </div>
                     </a>
                     <a
-                      href="javascript:void(0)"
+                      *ngIf="taskData.status === Status.IN_PROGRESS || taskData.status === Status.NOT_STARTED"
                       class="btn btn-outline-dark m-1"
-                      (click)="updateTask(false, taskData, skills)">
+                      (click)="updateTask(Status.CANCELED, taskData, skills)">
                       <div class="d-flex align-items-center justify-content-evenly m-1">
                         <mat-icon>cancel</mat-icon>
                         <span class="margin-left">CANCEL TASK</span>
                       </div>
                     </a>
                   </ng-container>
-                </div>
-                <ng-template #checkReward>
-                  <div *ngIf="showReward">
-                    <a href="javascript:void(0)" class="btn btn-outline-dark" (click)="getReward(taskData.id)">
+                  <ng-container *ngIf="isMember$ | async as isMember">
+                    <a *ngIf="taskData.status === Status.COMPLETED" class="btn btn-outline-dark" (click)="getReward()">
                       <div class="d-flex align-items-center justify-content-evenly m-1">
                         <mat-icon>emoji_events</mat-icon>
                         <span class="margin-left">GET REWARD</span>
                       </div>
                     </a>
-                  </div>
-                </ng-template>
+
+                    <a *ngIf="taskData.status === Status.IN_PROGRESS" class="btn btn-outline-dark">
+                      <div class="d-flex align-items-center justify-content-evenly m-1">
+                        <mat-icon>hourglass_top</mat-icon>
+                        <span class="margin-left">LOG HOURS</span>
+                      </div>
+                    </a>
+                  </ng-container>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="p-4 bg-white mt-2 mb-2">
-            <markdown>{{ taskData.description }}</markdown>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="p-4 bg-white mt-2 mb-2 h-100">
-                <h3>Responsible</h3>
-                <!-- <div *ngIf="this.reviewer$ | async as reviewer" class="d-flex align-items-center flex-column">
-                  <img class="mb-0" src="{{ reviewer.profileImage }}" class="circle-image" />
-                  <h4 class="mb-0">{{ reviewer.firstName }} {{ reviewer.surname }}</h4>
-                </div> -->
-              </div>
+            <div class="p-4 bg-white mt-2 mb-2">
+              <markdown>{{ taskData.description }}</markdown>
             </div>
-            <div class="col-md-8">
-              <div class="p-4 bg-white mt-2 mb-2 h-100">
-                <h3>Members</h3>
-                <div *ngIf="taskData.members$ | async as members">
+            <div class="p-4 bg-white mt-2 mb-2 margin-top">
+              <h3>Members</h3>
+              <div *ngIf="taskData.members$ | async as members">
+                <ng-container *ngIf="this.profilesLoggedTime$ | async as profilesLoggedTime">
                   <mat-list>
-                    <mat-list-item class="clickable" *ngFor="let member of members" (click)="goTo(member.id)">
+                    <mat-list-item *ngFor="let member of members" (click)="goTo(member.id)">
                       <img
+                        class="clickable"
                         matListItemAvatar
                         src="{{ member.profileImage }}"
                         alt="{{ member.firstName }} {{ member.surname }} profile image" />
 
-                      <div matListItemTitle>{{ member.firstName }} {{ member.surname }}</div>
-                      <div matListItemLine>1 h</div>
+                      <div matListItemTitle class="clickable">{{ member.firstName }} {{ member.surname }}</div>
+                      <div matListItemLine class="clickable">{{ profilesLoggedTime }}h</div>
                     </mat-list-item>
                   </mat-list>
-                </div>
+                </ng-container>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-md-4">
-          <div class="p-4 bg-white">
-            <h2 class="d-flex justify-content-between align-items-center mb-3">Skills</h2>
-            <mat-list *ngIf="taskData.skills$ | async as skills">
-              <mat-list-item *ngFor="let skill of skills">
-                <div matListItemTitle>{{ skill.name }}</div>
-                <div matListItemLine>{{ skill.category }}</div>
-              </mat-list-item>
-            </mat-list>
-          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-white">
+              <h2 class="d-flex justify-content-between align-items-center mb-3">Skills</h2>
+              <mat-list>
+                <mat-list-item *ngFor="let skill of skills">
+                  <div matListItemTitle>{{ skill.name }}</div>
+                  <div matListItemLine>{{ skill.category }}</div>
+                </mat-list-item>
+              </mat-list>
+            </div>
 
-          <div class="p-4 bg-white margin-top">
-            <h2 class="d-flex justify-content-between align-items-center mb-3">Deadline</h2>
-            <mat-card class="calendar-card">
-              <mat-calendar class="custom-calendar" [selected]="taskData.end"></mat-calendar>
-            </mat-card>
+            <div class="p-4 bg-white margin-top">
+              <h2 class="d-flex justify-content-between align-items-center mb-3">Deadline</h2>
+              <h5 class="d-flex justify-content-center align-items-center mb-1">
+                {{ getDaysToDeadline(taskData.end) }} days left
+              </h5>
+              <mat-card class="calendar-card">
+                <mat-calendar class="custom-calendar" [selected]="taskData.end"></mat-calendar>
+              </mat-card>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>

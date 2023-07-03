@@ -1,5 +1,5 @@
 import { BigNumber, ethers, providers } from 'ethers';
-import { Observable, concatMap, forkJoin, from, map, mergeMap, reduce, switchMap, toArray } from 'rxjs';
+import { Observable, catchError, concatMap, forkJoin, from, map, mergeMap, of, reduce, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -201,10 +201,10 @@ export class OrganizationContractService {
   }
 
   public getTaskLoggedTimeOfProfile(taskId: number, profileId: number): Observable<number> {
-    console.log(`task: ${taskId}, profile: ${profileId}`);
     this.assertTargetSet();
     return from(this.contract.getTaskLoggedTimeOfProfile(taskId, profileId)).pipe(
-      map(bigNumber => bigNumber.toNumber())
+      map(bigNumber => bigNumber.toNumber()),
+      catchError(() => of(0))
     );
   }
 
@@ -227,6 +227,11 @@ export class OrganizationContractService {
   public isMember(profileId: number): Observable<boolean> {
     this.assertTargetSet();
     return from(this.contract.isMember(profileId));
+  }
+
+  public isTaskMember(taskId: number, profileId: number): Observable<boolean> {
+    this.assertTargetSet();
+    return from(this.contract.isTaskMember(taskId, profileId));
   }
 
   public isPendingMember(profileId: number): Observable<boolean> {
@@ -258,9 +263,9 @@ export class OrganizationContractService {
     return from(this.contract.createTask(projectId, taskStruct));
   }
 
-  public updateTask(taskId: BigNumber, task: DataTypes.UpdateTaskStruct): Observable<unknown> {
+  public updateTask(taskId: BigNumber, task: DataTypes.UpdateTaskStruct): Observable<ethers.ContractReceipt> {
     this.assertTargetSet();
-    return from(this.contract.updateTask(taskId, task));
+    return from(this.contract.updateTask(taskId, task)).pipe(switchMap(this.wait));
   }
 
   public createProject(projectStruct: DataTypes.CreateProjectStruct): Observable<ethers.ContractTransaction> {
