@@ -11,7 +11,7 @@
           (click)="goTo(member.id)" />
         <div matListItemTitle class="container">
           <span class="clickable" (click)="goTo(member.id)"> {{ member.firstName }} {{ member.surname }}</span>
-          <div class="container-buttons" *ngIf="memberType !== 'manager'">
+          <div class="container-buttons" *ngIf="memberType !== 'manager' && isManager">
             <a
               href="javascript:void(0)"
               class="btn btn-outline-dark"
