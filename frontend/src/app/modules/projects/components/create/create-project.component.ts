@@ -89,7 +89,6 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
   public onSubmit() {
     this.submitted = true;
     this.createProjectForm.markAllAsTouched();
-    console.log(this.createProjectForm.value);
 
     if (!this.createProjectForm.valid) return;
 
