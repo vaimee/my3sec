@@ -65,6 +65,10 @@ export class My3secHubContractService {
     return from(this.contract.joinOrganization(organizationAddress)).pipe(switchMap(this.wait));
   }
 
+  public leaveOrganization(organizationAddress: string): Observable<ethers.ContractReceipt> {
+    return from(this.contract.leaveOrganization(organizationAddress)).pipe(switchMap(this.wait));
+  }
+
   public giveEnergyTo(profileId: number, amount: number): Observable<unknown> {
     return from(this.contract.giveEnergyTo(profileId, amount));
   }

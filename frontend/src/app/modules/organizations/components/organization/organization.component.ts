@@ -42,6 +42,10 @@ export class OrganizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setUp();
+  }
+
+  setUp() {
     this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress);
     this.projects$ = this.organizationService.getProjects();
     this.isMember$ = this.organizationService.isCurrentUserMember();
@@ -53,19 +57,8 @@ export class OrganizationComponent implements OnInit {
   public joinOrganization() {
     this.loadingService.show();
     this.organizationService.join(this.organizationAddress).subscribe({
-      next: () => {
-        this.loadingService.hide();
-        this.snackBar.open('Added to the pending members list', 'Dismiss', {
-          duration: 3000,
-        });
-      },
-      error: err => {
-        this.loadingService.hide();
-        console.error(err);
-        this.snackBar.open('Failed to add to the organization', 'Dismiss', {
-          duration: 3000,
-        });
-      },
+      next: () => this.handleObservable('Added to the pending members list'),
+      error: err => this.handleObservable('Failed to add to the organization', err),
     });
   }
 
@@ -106,7 +99,31 @@ export class OrganizationComponent implements OnInit {
     });
   }
 
+  public leave(isManager: boolean, managersCount: number) {
+    if (isManager && managersCount <= 1) {
+      this.openSnack('Cannot remove the last manager from organization');
+      return;
+    }
+    this.organizationService.leave(this.organizationAddress).subscribe({
+      next: () => this.handleObservable('you left the organization'),
+      error: err => this.handleObservable('failed to leave member', err),
+    });
+  }
   public goToCreateProject() {
     this.router.navigate(['projects', 'new'], { relativeTo: this.route });
+  }
+
+  private handleObservable(message: string, err?: Error) {
+    if (err) console.error(err);
+    //TODO: refactor to only refresh the target observable
+    this.setUp();
+    this.loadingService.hide();
+    this.openSnack(message);
+  }
+
+  private openSnack(message: string) {
+    this.snackBar.open(message, 'Dismiss', {
+      duration: 3000,
+    });
   }
 }

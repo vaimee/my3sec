@@ -43,7 +43,14 @@
               openMemberDialog('pendingMember', organization.pendingMembers, memberCheck.isManager)
             "></app-people-detail>
         </ng-container>
-        <a href="javascript:void(0)" class="btn btn-outline-dark" (click)="goToCreateProject()">CREATE PROJECT</a>
+        <a class="btn btn-outline-dark" (click)="goToCreateProject()">CREATE PROJECT</a>
+      </ng-container>
+      <ng-container *ngIf="memberCheck.isMember || memberCheck.isManager">
+        <a
+          class="btn btn-outline-danger"
+          (click)="leave(memberCheck.isManager || false, organization.managers.length)"
+          >LEAVE</a
+        >
       </ng-container>
     </ng-container>
   </div>
