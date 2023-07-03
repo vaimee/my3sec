@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -16,7 +16,7 @@ import { ProjectComponent } from '../project/project.component';
   templateUrl: './show-members.component.html',
   styleUrls: ['./show-members.component.css'],
 })
-export class ShowMembersComponent {
+export class ShowMembersComponent implements OnInit{
   organizationAddress: string;
   projectId: number;
   members$!: Observable<Profile[]>;
