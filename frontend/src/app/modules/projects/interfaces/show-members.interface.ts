@@ -1,8 +1,7 @@
-import { MemberType } from '@organizations/types';
-
 export interface ShowMembersInput {
   address: string;
-  memberType: MemberType;
+  projectId: number;
+  isAddMember: boolean;
   isManager: boolean;
 }
 

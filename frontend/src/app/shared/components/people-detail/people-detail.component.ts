@@ -11,7 +11,12 @@ export class PeopleDetailComponent implements OnInit {
   @Input() label = 'members';
   @Input() people!: ProfileMetadata[];
   @Input() showAddPeopleIcon = false;
+  @Input() showLabel = true;
+  @Input() iconSize = 45;
+
   @Output() add: EventEmitter<void> = new EventEmitter();
+  @Output() openDialog: EventEmitter<void> = new EventEmitter();
+
   peopleToShow!: ProfileMetadata[];
 
   ngOnInit(): void {
@@ -19,7 +24,11 @@ export class PeopleDetailComponent implements OnInit {
     else this.peopleToShow = this.people;
   }
 
-  public addPerson() {
+  public emitOpenDialog() {
+    this.openDialog.emit();
+  }
+
+  public emitAdd() {
     this.add.emit();
   }
 }

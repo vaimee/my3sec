@@ -1,0 +1,37 @@
+<ng-container *ngIf="members$ | async as members">
+  <div mat-dialog-content class="dialog-container">
+    <ng-container *ngIf="members.length > 0; else noMembers">
+      <mat-list>
+        <mat-list-item *ngFor="let member of members">
+          <img
+            class="avatar clickable"
+            matListItemAvatar
+            src="{{ member.profileImage }}"
+            alt="{{ member.firstName }} {{ member.surname }} profile image"
+            (click)="goTo(member.id)" />
+          <div matListItemTitle class="container">
+            <span class="clickable" (click)="goTo(member.id)"> {{ member.firstName }} {{ member.surname }}</span>
+            <div class="container-buttons" *ngIf="isManager">
+              <a *ngIf="isAddMember" href="javascript:void(0)" class="btn btn-outline-dark" (click)="add(member.id)"
+                >ADD</a
+              >
+              <a
+                *ngIf="!isAddMember"
+                href="javascript:void(0)"
+                class="btn btn-outline-danger"
+                (click)="remove(member.id)"
+                >REMOVE</a
+              >
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+    <ng-template #noMembers>
+      <span> No members to show</span>
+    </ng-template>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="close()">Close</button>
+  </div>
+</ng-container>

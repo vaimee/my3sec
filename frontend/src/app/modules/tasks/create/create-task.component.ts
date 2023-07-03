@@ -65,35 +65,14 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       { id: 8, name: 'Git', category: 'Version Control' },
       { id: 9, name: 'Data Structures', category: 'Algorithms' },
       { id: 10, name: 'Networking', category: 'Computer Networks' },
-    ]); //this.skillService.getAllSkills();
+    ]);
     this.memberChip.items$ = this.organizationService.getMembers();
 
     this.skillChip.items$.subscribe(skills => {
       this.skillChip.all = skills;
     });
     this.memberChip.items$.subscribe(members => {
-      this.memberChip.all = [
-        {
-          id: '5',
-          firstName: 'Ivan',
-          surname: 'Zyrianoff',
-          organization: 'ABC Company',
-          role: 'Developer',
-          profileImage: '../../../assets/images/ivan.jpg',
-          walletAddress: '0x1234567890abcdef',
-          regulationCheckbox: true,
-        },
-        {
-          id: '4',
-          firstName: 'Lorenzo',
-          surname: 'Gigli',
-          organization: 'ABC Company',
-          role: 'Developer',
-          profileImage: '../../../assets/images/gigli.jpg',
-          walletAddress: '0x1234567890abcdef',
-          regulationCheckbox: true,
-        },
-      ];
+      this.memberChip.all = members;
     });
   }
 
@@ -101,7 +80,6 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     this.createTaskForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required, Validators.minLength(2)]),
       description: new FormControl('', [Validators.required, Validators.minLength(10)]),
-      headline: new FormControl('', [Validators.required, Validators.minLength(10)]),
       start: new FormControl(null, [Validators.required]),
       end: new FormControl(null, [Validators.required]),
       skillsName: new FormControl(null, [Validators.required]),
@@ -154,7 +132,14 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       .subscribe({
         next: taskId => {
           this.loadingService.hide();
-          this.router.navigate(['tasks', taskId], { relativeTo: this.route });
+          this.router.navigate([
+            'organizations',
+            this.organizationAddress,
+            'projects',
+            this.projectId,
+            'tasks',
+            taskId,
+          ]);
         },
         error: err => {
           this.loadingService.hide();

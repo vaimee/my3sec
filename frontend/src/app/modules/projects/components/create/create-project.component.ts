@@ -1,5 +1,5 @@
 import { ChipInput } from 'app/modules/tasks/models';
-import { Observable, map, startWith } from 'rxjs';
+import { map, startWith } from 'rxjs';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -100,7 +100,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
     this.organizationService.createProject(formValue, this.memberChip.selectedItems).subscribe({
       next: projectId => {
         this.loadingService.hide();
-        this.router.navigate(['projects', projectId], { relativeTo: this.route });
+        this.router.navigate(['organizations', this.organizationAddress, 'projects', projectId]);
       },
       error: err => {
         this.loadingService.hide();

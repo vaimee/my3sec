@@ -1,13 +1,20 @@
 <div class="people-detail">
   <div class="profile-list">
     <ng-container *ngIf="showAddPeopleIcon">
-      <button mat-fab color="primary" (click)="addPerson()">
+      <button mat-fab class="clickable" color="primary" (click)="emitAdd()">
         <mat-icon>person_add</mat-icon>
       </button>
     </ng-container>
     <ng-container *ngFor="let person of people">
-      <img class="round-image" src="{{ person.profileImage }}" />
+      <img
+        class="round-image clickable"
+        [src]="person.profileImage"
+        [style.width.px]="iconSize"
+        [style.height.px]="iconSize"
+        (click)="emitOpenDialog()" />
     </ng-container>
   </div>
-  <h4>{{ label | titlecase }}</h4>
+  <ng-container *ngIf="showLabel">
+    <h4 class="clickable" (click)="emitOpenDialog()">{{ label | titlecase }}</h4>
+  </ng-container>
 </div>

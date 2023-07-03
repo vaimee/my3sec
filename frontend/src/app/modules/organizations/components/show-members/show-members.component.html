@@ -1,30 +1,32 @@
-<h1 mat-dialog-title class="title-style">{{ getDialogTitle() }}</h1>
-<div mat-dialog-content class="dialog-container">
-  <mat-list>
-    <mat-list-item *ngFor="let member of members">
-      <img
-        class="avatar clickable"
-        matListItemAvatar
-        src="{{ member.profileImage }}"
-        alt="{{ member.firstName }} {{ member.surname }} profile image"
-        (click)="goTo(member.id)" />
-      <div matListItemTitle class="container">
-        <span class="clickable"> {{ member.firstName }} {{ member.surname }}</span>
-        <div class="container-buttons">
-          <a
-            href="javascript:void(0)"
-            class="btn btn-outline-dark"
-            (click)="
-              memberType === 'member' ? promoteToManager(member.walletAddress) : approvePendingMember(member.id)
-            ">
-            {{ this.memberType === 'member' ? 'PROMOTE' : 'ACCEPT' }}</a
-          >
-          <a href="javascript:void(0)" class="btn btn-outline-danger" (click)="remove(member.id)">REMOVE</a>
+<ng-container *ngIf="members$ | async as members">
+  <h1 mat-dialog-title class="title-style">{{ this.title }}</h1>
+  <div mat-dialog-content class="dialog-container">
+    <mat-list>
+      <mat-list-item *ngFor="let member of members">
+        <img
+          class="avatar clickable"
+          matListItemAvatar
+          src="{{ member.profileImage }}"
+          alt="{{ member.firstName }} {{ member.surname }} profile image"
+          (click)="goTo(member.id)" />
+        <div matListItemTitle class="container">
+          <span class="clickable" (click)="goTo(member.id)"> {{ member.firstName }} {{ member.surname }}</span>
+          <div class="container-buttons" *ngIf="memberType !== 'manager' && isManager">
+            <a
+              href="javascript:void(0)"
+              class="btn btn-outline-dark"
+              (click)="
+                memberType === 'member' ? promoteToManager(member.walletAddress) : approvePendingMember(member.id)
+              ">
+              {{ this.memberType === 'member' ? 'PROMOTE' : 'ACCEPT' }}</a
+            >
+            <a href="javascript:void(0)" class="btn btn-outline-danger" (click)="remove(member.id)">REMOVE</a>
+          </div>
         </div>
-      </div>
-    </mat-list-item>
-  </mat-list>
-</div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Close</button>
-</div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="close()">Close</button>
+  </div>
+</ng-container>

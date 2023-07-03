@@ -1,3 +1,5 @@
+import { MarkdownModule } from 'ngx-markdown';
+
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -77,8 +79,8 @@ const materialModules = [
     ShowStatusComponent,
     PeopleDetailComponent,
   ],
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, materialModules],
-  exports: [LoadingComponent, ShowStatusComponent, PeopleDetailComponent, materialModules],
+  imports: [MarkdownModule.forRoot(), CommonModule, RouterModule, ReactiveFormsModule, materialModules],
+  exports: [MarkdownModule, LoadingComponent, ShowStatusComponent, PeopleDetailComponent, materialModules],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     {

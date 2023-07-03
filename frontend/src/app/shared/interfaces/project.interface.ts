@@ -11,8 +11,8 @@ export interface ProjectMetadata {
   description: string;
   headline: string;
   icon?: string;
-  startDate: string;
-  endDate: string;
+  start: string;
+  end: string;
 }
 
 export interface TaskMetadata {
@@ -44,7 +44,6 @@ export interface Task extends Omit<TaskMetadata, 'start' | 'end'>, Omit<DataType
   end: Date;
   currentMonth: number;
   durationInMonths: number;
-  skills: Observable<Skill[]>;
-  reviewer?: number;
-  members?: number[];
+  skills$: Observable<Skill[]>;
+  members$: Observable<Profile[]>;
 }

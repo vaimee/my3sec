@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { managerGuard } from '@auth/guards/manager.guard';
+
 import { CreateTaskComponent } from './create/create-task.component';
 import { LogHoursComponent } from './log-hours/log-hours.component';
 import { TaskListComponent } from './task-list/task-list.component';
@@ -14,9 +16,9 @@ const routes: Routes = [
     children: [
       { path: '', component: TaskListComponent },
       { path: 'log-hours', component: LogHoursComponent },
-      { path: 'new', component: CreateTaskComponent },
+      { path: 'new', component: CreateTaskComponent, canActivate: [managerGuard] },
       {
-        path: ':id',
+        path: ':taskId',
         component: TaskComponent,
       },
     ],

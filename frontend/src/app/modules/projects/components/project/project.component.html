@@ -6,15 +6,61 @@
       </ng-container>
       <div class="header-project name">
         <h2>{{ project.name }}</h2>
-        <span>{{ project.status }}</span>
+        <app-show-status [status]="project.status"></app-show-status>
       </div>
-      <p>{{ project.description }}</p>
+      <p>{{ project.headline }}</p>
     </div>
     <ng-container *ngIf="project.members | async as members">
-      <app-people-detail [people]="members"></app-people-detail>
+      <ng-container *ngIf="{ value: isManager$ | async } as isManager">
+        <app-people-detail
+          [people]="members"
+          [showAddPeopleIcon]="showAddMember(isManager.value || false, project.status)"
+          (openDialog)="openMemberDialog(isManager.value || false, false)"
+          (add)="openMemberDialog(isManager.value || false, true, members)"></app-people-detail>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="isManager$ | async as isManager">
+      <a
+        *ngIf="project.status === Status.NOT_STARTED"
+        href="javascript:void(0)"
+        class="btn btn-outline-dark m-1"
+        (click)="updateProject(Status.IN_PROGRESS)">
+        <div class="d-flex align-items-center justify-content-evenly m-1">
+          <mat-icon>check_circle</mat-icon>
+          <span class="margin-left">START PROJECT</span>
+        </div>
+      </a>
+      <a
+        *ngIf="project.status === Status.IN_PROGRESS"
+        href="javascript:void(0)"
+        class="btn btn-outline-dark m-1"
+        (click)="updateProject(Status.COMPLETED)">
+        <div class="d-flex align-items-center justify-content-evenly m-1">
+          <mat-icon>check_circle</mat-icon>
+          <span class="margin-left">CLOSE PROJECT</span>
+        </div>
+      </a>
+      <a
+        *ngIf="project.status === Status.IN_PROGRESS || project.status === Status.NOT_STARTED"
+        href="javascript:void(0)"
+        class="btn btn-outline-dark m-1"
+        (click)="updateProject(Status.CANCELED)">
+        <div class="d-flex align-items-center justify-content-evenly m-1">
+          <mat-icon>cancel</mat-icon>
+          <span class="margin-left">CANCEL PROJECT</span>
+        </div>
+      </a>
+      <a
+        *ngIf="project.status === Status.IN_PROGRESS"
+        href="javascript:void(0)"
+        class="btn btn-outline-dark m-1"
+        (click)="goToCreateTask()">
+        <div class="d-flex align-items-center justify-content-evenly m-1">CREATE TASK</div>
+      </a>
     </ng-container>
   </div>
   <ng-container>
-    <app-task-list [tasks]="project.tasks"></app-task-list>
+    <markdown>{{ project.description }}</markdown>
+    <app-task-list [tasks$]="project.tasks"></app-task-list>
   </ng-container>
 </ng-container>

@@ -37,3 +37,7 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.margin-left {
+  margin-left: 16px;
+}
