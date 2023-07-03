@@ -89,11 +89,6 @@ export class ShowMembersComponent implements OnInit {
 
   public remove(profileId: string) {
     this.loadingService.show();
-    if (this.memberType === 'member')
-      return this.organizationService.removeMember(Number(profileId)).subscribe({
-        next: () => this.handleObservable('member removed'),
-        error: err => this.handleObservable('failed to remove member', err),
-      });
     if (this.memberType === 'pendingMember')
       return this.organizationService.rejectPendingMember(Number(profileId)).subscribe({
         next: () => this.handleObservable('pending member removed'),
