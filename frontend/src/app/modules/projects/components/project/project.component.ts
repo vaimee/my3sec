@@ -47,10 +47,6 @@ export class ProjectComponent implements OnInit {
     this.organizationService.setTarget(this.organizationAddress);
     this.project$ = this.organizationService.getProject(this.projectId);
     this.isManager$ = this.organizationService.isCurrentUserManager();
-
-    this.organizationService.getProjectMembers(this.projectId).subscribe(data => {
-      console.log(`project members: ${data}`);
-    });
   }
 
   public goToCreateTask() {
