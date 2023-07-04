@@ -49,7 +49,7 @@ export class ShowMembersComponent implements OnInit {
 
   public add(profileId: string) {
     this.loadingService.show();
-    return this.organizationService.addTaskMember(this.projectId, Number(profileId)).subscribe({
+    return this.organizationService.addTaskMember(this.taskId, Number(profileId)).subscribe({
       next: () => this.handleObservable('member added'),
       error: err => this.handleObservable('failed to add member', err),
     });
