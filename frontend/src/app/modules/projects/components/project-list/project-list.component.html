@@ -1,7 +1,39 @@
 <ng-container *ngIf="projects$ | async as projects">
-  <div class="profileProjectTable mt-4 bg-white p-4">
-    <h2 class="d-flex justify-content-between align-items-center mb-3">Projects</h2>
-    <div class="table-responsive">
+  <div class="mt-4 bg-white p-4">
+    <h2 class="mb-3">Projects</h2>
+    <div class="d-flex flex-column">
+      <ng-container *ngIf="projects.length > 0; else noProjects">
+        <div class="d-flex flex-column  border border-1 border-light-subtle mt-1 mb-1 p-2 rounded-1" *ngFor="let project of projects">
+          <div class="d-inline-flex">
+            <h5>{{ project.name | titlecase }}</h5>
+            <app-show-status [status]="project.status"></app-show-status>
+          </div>
+          <div class="d-inline-flex mb-2 mt-n1 text-secondary">
+            <small>{{ project.headline }}</small>
+          </div>
+          <div class="d-inline-flex column-gap-2">
+            <p class="d-inline-flex" *ngIf="project.members | async as members">
+              <mat-icon>group</mat-icon>
+              <ng-container *ngIf="members.length > 0; else noMembers">
+                {{ members.length }}
+              </ng-container>
+              <ng-template #noMembers>no members</ng-template>
+            </p>
+            <p class="d-inline-flex" *ngIf="project.members | async as members">
+              <mat-icon>task</mat-icon>
+              <ng-container *ngIf="project.tasks | async as tasks">
+                {{ tasks.length }}
+              </ng-container>
+              <ng-template #noMembers>no members</ng-template>
+            </p>
+            <p class="d-inline-flex">
+              <mat-icon>calendar_month</mat-icon>
+              {{ project.currentMonth }}/{{ project.durationInMonths }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+      <!--
       <table *ngIf="projects.length > 0; else noProjects" class="table">
         <tbody>
           <tr
@@ -52,7 +84,7 @@
             </td>
           </tr>
         </tbody>
-      </table>
+      </table>-->
       <ng-template #noProjects>
         <div class="no-projects">
           <img src="../../../assets/icons/no-projects.svg" alt="" />

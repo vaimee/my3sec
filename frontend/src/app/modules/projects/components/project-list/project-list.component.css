@@ -1,7 +1,3 @@
-.profileProjectTable table tr td {
-  padding: 0;
-}
-
 .profileProjectTable table tr td:nth-child(1) {
   background-color: #000;
   height: 56px;
