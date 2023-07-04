@@ -109,7 +109,7 @@ export class TaskComponent implements OnInit {
     const logHoursInput: LogHoursInput = { id: this.taskId, address: this.organizationAddress };
 
     const dialogRef = this.dialog.open(LogHoursDialogComponent, {
-      width: '700px',
+      width: '350px',
       data: logHoursInput,
     });
 

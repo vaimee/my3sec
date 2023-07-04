@@ -1,7 +1,11 @@
 <h1 mat-dialog-title>Log Hours</h1>
 <div mat-dialog-content>
-  <form action="#" class="form form-label-right" [formGroup]="logHoursForm" (ngSubmit)="onSubmit()">
-    <mat-form-field class="example-form-field d-block" appearance="outline">
+  <form
+    action="#"
+    class="form form-label-right d-flex justify-content-center mt-5 mb-5"
+    [formGroup]="logHoursForm"
+    (ngSubmit)="onSubmit()">
+    <mat-form-field class="d-block max-width" appearance="outline">
       <mat-label>Hours</mat-label>
       <input
         matInput
@@ -9,9 +13,8 @@
         name="hours"
         autocomplete="off"
         formControlName="hours"
-        min="0.5"
-        max="5"
-        step="0.5" />
+        min="1"
+        step="1" />
       <mat-error *ngIf="formError('hours', 'required')">Hours is required</mat-error>
     </mat-form-field>
   </form>

@@ -39,19 +39,27 @@
   margin: 10px;
 }
 
-.container {
+.container-item {
   display: flex;
   align-items: center;
   justify-self: center;
 }
 
-.container span {
+.container-item span {
   font-size: 1.2rem;
   font-weight: 500;
 }
-.container-energy {
+.container-buttons {
   display: flex;
   align-items: center;
   justify-self: center;
   margin-left: 16px;
+}
+
+.avatar {
+  object-fit: cover;
+}
+
+.margin-right {
+  margin-right: 1.5rem;
 }

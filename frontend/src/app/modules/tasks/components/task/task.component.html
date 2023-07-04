@@ -72,32 +72,40 @@
               <div class="p-4 bg-white mt-2 mb-2">
                 <markdown>{{ taskData.description }}</markdown>
               </div>
-              <div class="p-4 bg-white mt-2 mb-2 margin-top d-flex justify-content-between">
-                <h3>Members</h3>
-                <a class="btn btn-outline-dark" *ngIf="isManager.value" (click)="openAddMemberDialog()">
-                  <div class="d-flex align-items-center justify-content-evenly m-1">
-                    <mat-icon>person_add</mat-icon>
-                    <span class="margin-left">ADD MEMBER</span>
-                  </div>
-                </a>
+              <div class="p-4 bg-white mt-2 mb-2 margin-top">
+                <h3 class="d-flex justify-content-between">
+                  Members
+                  <a class="btn btn-outline-dark" *ngIf="isManager.value" (click)="openAddMemberDialog()">
+                    <div class="d-flex align-items-center justify-content-evenly m-1">
+                      <mat-icon>person_add</mat-icon>
+                      <span class="margin-left">ADD MEMBER</span>
+                    </div>
+                  </a>
+                </h3>
 
                 <div *ngIf="taskData.members$ | async as members">
                   <ng-container *ngIf="this.profilesLoggedTime$ | async as profilesLoggedTime">
                     <mat-list>
-                      <mat-list-item *ngFor="let member of members" (click)="goTo(member.id)">
+                      <mat-list-item *ngFor="let member of members">
                         <img
-                          class="clickable"
+                          class="avatar clickable"
                           matListItemAvatar
+                          (click)="goTo(member.id)"
                           src="{{ member.profileImage }}"
                           alt="{{ member.firstName }} {{ member.surname }} profile image" />
 
-                        <div matListItemTitle class="clickable container">
-                          <span>{{ member.firstName }} {{ member.surname }}</span>
-                          <div class="container-button" *ngIf="isManager.value">
-                            <a class="btn btn-outline-danger" (click)="remove(member.id)">REMOVE</a>
-                          </div>
+                        <div matListItemTitle class="clickable" (click)="goTo(member.id)">{{ member.firstName }} {{ member.surname }}</div>
+                        <div matListItemLine class="d-flex align-items-center mt-1">
+                          <span class="margin-right clickable" (click)="goTo(member.id)"> {{ profilesLoggedTime }}h </span>
+                          <ng-container *ngIf="isManager.value">
+                            <a class="btn btn-sm btn-outline-danger py-0" (click)="remove(member.id)"
+                              ><div class="d-flex align-items-center justify-content-evenly">
+                                <mat-icon>close</mat-icon>
+                                <span>REMOVE</span>
+                              </div>
+                            </a>
+                          </ng-container>
                         </div>
-                        <div matListItemLine class="clickable">{{ profilesLoggedTime }}h</div>
                       </mat-list-item>
                     </mat-list>
                   </ng-container>
