@@ -1,10 +1,11 @@
 import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
-import { Observable, forkJoin, from, mergeMap, switchMap } from 'rxjs';
+import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
+import { Observable, forkJoin, from, map, mergeMap, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
+import { Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 @Injectable({
@@ -30,12 +31,10 @@ export class My3secHubContractService {
   }
 
   public createProfile(metadataURI: string): Observable<number> {
-    const args = { metadataURI };
-
-    return from(this.contract.createProfile(args)).pipe(
-      switchMap(async tx => {
-        const receipt = await tx.wait();
-        const event = receipt.events?.[0];
+    return from(this.contract.createProfile({ metadataURI })).pipe(
+      switchMap(this.wait),
+      map(receipt => {
+        const event = this.findEvent(receipt, 'ProfileCreated');
         if (!event) {
           throw new Error('Event not found in transaction receipt');
         }
@@ -46,8 +45,8 @@ export class My3secHubContractService {
 
   public createOrganization(metadataURI: string): Observable<string> {
     return from(this.contract.createOrganization(metadataURI)).pipe(
-      switchMap(async tx => {
-        const receipt = await tx.wait();
+      switchMap(this.wait),
+      switchMap(receipt => {
         const event = receipt.events?.[0];
         if (!event) {
           throw new Error('Event not found in transaction receipt');
@@ -69,12 +68,12 @@ export class My3secHubContractService {
     return from(this.contract.leaveOrganization(organizationAddress)).pipe(switchMap(this.wait));
   }
 
-  public giveEnergyTo(profileId: number, amount: number): Observable<unknown> {
-    return from(this.contract.giveEnergyTo(profileId, amount));
+  public giveEnergyTo(profileId: number, amount: number): Observable<ethers.ContractReceipt> {
+    return from(this.contract.giveEnergyTo(profileId, amount)).pipe(switchMap(this.wait));
   }
 
-  public removeEnergyFrom(profileId: number, amount: number): Observable<unknown> {
-    return from(this.contract.removeEnergyFrom(profileId, amount));
+  public removeEnergyFrom(profileId: number, amount: number): Observable<ethers.ContractReceipt> {
+    return from(this.contract.removeEnergyFrom(profileId, amount)).pipe(switchMap(this.wait));
   }
 
   public getOrganizationsAddress(): Observable<string[]> {
@@ -109,12 +108,42 @@ export class My3secHubContractService {
     return from(tx.wait());
   }
 
-  // and wait
-  public giveEnergyBlocking(profileId: number, amount: number) {
-    return from(this.contract.giveEnergyTo(profileId, amount)).pipe(switchMap(this.wait));
-  }
+  private findEvent(receipt: ethers.ContractReceipt, name: string, emitterAddress?: string) {
+    const contractInterface = Events__factory.createInterface();
 
-  public removeEnergyBlocking(profileId: number, amount: number) {
-    return from(this.contract.removeEnergyFrom(profileId, amount)).pipe(switchMap(this.wait));
+    const events = receipt.logs;
+
+    if (events != undefined) {
+      // match name from list of events in eventContract, when found, compute the sigHash
+      let sigHash: string | undefined;
+      for (const contractEvent of Object.keys(contractInterface.events)) {
+        if (contractEvent.startsWith(name) && contractEvent.charAt(name.length) == '(') {
+          sigHash = keccak256(toUtf8Bytes(contractEvent));
+          break;
+        }
+      }
+      // Throw if the sigHash was not found
+      if (!sigHash) {
+        throw Error(
+          `Event "${name}" not found in provided contract (default: Events library). \nAre you sure you're using the right contract?`
+        );
+      }
+
+      for (const emittedEvent of events) {
+        // If we find one with the correct sighash, check if it is the one we're looking for
+        if (emittedEvent.topics[0] == sigHash) {
+          // If an emitter address is passed, validate that this is indeed the correct emitter, if not, continue
+          if (emitterAddress) {
+            if (emittedEvent.address != emitterAddress) continue;
+          }
+          const event = contractInterface.parseLog(emittedEvent);
+          return event;
+        }
+      }
+      // Throw if the event args were not expected or the event was not found in the logs
+      throw Error(`Event "${name}" not found emitted by "${emitterAddress}" in given transaction log`);
+    } else {
+      throw Error('No events were emitted');
+    }
   }
 }
