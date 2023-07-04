@@ -28,7 +28,7 @@ export class LogHoursComponent implements OnInit, OnDestroy {
       description:
         'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       organization: '0x7DA72c46E862BC5D08f74d7Db2fb85466ACE2997',
-      hours: 10,
+      hours$: of(10),
       status: Status.IN_PROGRESS,
       metadataURI: '',
       skills$: of([

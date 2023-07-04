@@ -167,25 +167,9 @@ export class OrganizationService {
     return this.contractService.getProjects().pipe(
       concatMap(projects => projects),
       mergeMap(project => {
-        return this.ipfsService.retrieveJSON<ProjectMetadata>(project.metadataURI).pipe(
-          map(data => {
-            const startDate = new Date(data.start);
-            const endDate = new Date(data.end);
-            return {
-              ...data,
-              id: project.id.toNumber(),
-              status: project.status,
-              organization: this.contractService.address,
-              tasks: this.getTasks(project.id.toNumber()),
-              members: this.getProjectMembers(project.id.toNumber()),
-              hours: 0, // TODO: calculate hours
-              startDate,
-              endDate,
-              currentMonth: this.calculateCurrentMonth(startDate),
-              durationInMonths: this.calculateDurationInMonths(startDate, endDate),
-            };
-          })
-        );
+        return this.ipfsService
+          .retrieveJSON<ProjectMetadata>(project.metadataURI)
+          .pipe(map(metadata => this.getProjectFromMetadata(metadata, project)));
       }),
       toArray()
     );
@@ -467,19 +451,20 @@ export class OrganizationService {
     const start = new Date(taskMetadata.start);
     const end = new Date(taskMetadata.end);
     const skills = task.skills.map(skill => this.skillService.getSkill(skill.toNumber()));
+    const id = task.id.toNumber();
     return {
       ...taskMetadata,
-      id: task.id.toNumber(),
+      id: id,
       status: task.status,
       organization: this.contractService.address,
-      hours: 0, // TODO: calculate hours
+      hours$: this.getTaskLoggedTime(id),
       start,
       end,
       currentMonth: this.calculateCurrentMonth(start),
       durationInMonths: this.calculateDurationInMonths(start, end),
       skills$: forkJoin(skills),
       metadataURI: task.metadataURI,
-      members$: this.getTaskMembers(task.id.toNumber()),
+      members$: this.getTaskMembers(id),
     };
   }
 

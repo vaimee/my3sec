@@ -38,7 +38,7 @@ export interface Project extends Omit<ProjectMetadata, 'startDate' | 'endDate'> 
 export interface Task extends Omit<TaskMetadata, 'start' | 'end'>, Omit<DataTypes.TaskViewStruct, 'skills' | 'id'> {
   id: number;
   status: Status;
-  hours: number;
+  hours$: Observable<number>;
   organization: string;
   start: Date;
   end: Date;
