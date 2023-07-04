@@ -274,8 +274,8 @@ export class OrganizationContractService {
     const hexValue = ethers.utils.hexValue(projectId);
     this.assertTargetSet();
     return from(this.contract.createTask(ethers.BigNumber.from(hexValue), taskStruct)).pipe(
-      switchMap(async tx => {
-        const receipt = await tx.wait();
+      switchMap(this.wait),
+      map(receipt => {
         this.assertTargetSet();
         const event = this.findEvent(receipt, 'TaskCreated');
         if (!event) {
@@ -291,9 +291,20 @@ export class OrganizationContractService {
     return from(this.contract.updateTask(taskId, task)).pipe(switchMap(this.wait));
   }
 
-  public createProject(projectStruct: DataTypes.CreateProjectStruct): Observable<ethers.ContractTransaction> {
+  public createProject(projectStruct: DataTypes.CreateProjectStruct): Observable<number> {
     this.assertTargetSet();
-    return from(this.contract.createProject(projectStruct));
+    return from(this.contract.createProject(projectStruct)).pipe(
+      switchMap(this.wait),
+      map(receipt => {
+        this.assertTargetSet();
+        const event = this.findEvent(receipt, 'ProjectCreated');
+        console.log(event);
+        if (!event) {
+          throw new Error('Event not found in transaction receipt');
+        }
+        return event.args?.['projectId'].toNumber();
+      })
+    );
   }
 
   public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {

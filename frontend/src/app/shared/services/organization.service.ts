@@ -52,13 +52,11 @@ export class OrganizationService {
     let projectId: number;
     return this.ipfsService.storeJSON(project).pipe(
       switchMap(metadataURI => this.contractService.createProject({ metadataURI })),
-      switchMap(tx => from(tx.wait())),
-      switchMap(receipt => {
-        const projectEvent = receipt.events?.filter(event => event.event === 'ProjectCreated')[0];
-        projectId = projectEvent ? Number(projectEvent) : 0;
+      switchMap(id => {
+        projectId = id;
         const requests = [];
         for (const member of members) {
-          requests.push(this.addProjectMember(projectId, +member.id));
+          requests.push(this.addProjectMember(id, +member.id));
         }
         return forkJoin(requests);
       }),
