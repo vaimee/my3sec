@@ -47,14 +47,23 @@ export class EndorseDialogComponent implements OnInit {
   endorse(currentEndorsing: number): void {
     const valueToEndorse = this.targetEnergyToEndorse - currentEndorsing;
     if (valueToEndorse === 0) return;
-    this.loadingService.show();
     const energyTransaction$ =
       valueToEndorse > 0
-        ? this.my3secHubContractService.giveEnergyBlocking(this.data.endorsingId, valueToEndorse)
-        : this.my3secHubContractService.removeEnergyBlocking(this.data.endorsingId, -valueToEndorse);
-    energyTransaction$.subscribe(() => {
-      this.loadingService.hide();
-      this.dialogRef.close(true);
+        ? this.my3secHubContractService.giveEnergyTo(this.data.endorsingId, valueToEndorse)
+        : this.my3secHubContractService.removeEnergyFrom(this.data.endorsingId, -valueToEndorse);
+    /* WiP: This only works with two loadingService.show() */
+    this.loadingService.show();
+    this.loadingService.show();
+
+    energyTransaction$.subscribe({
+      next: () => this.handleObservable(),
+      error: err => this.handleObservable(err),
     });
+  }
+
+  private handleObservable(err?: Error) {
+    if (err) console.error(err);
+    this.loadingService.hide();
+    this.dialogRef.close(true);
   }
 }
