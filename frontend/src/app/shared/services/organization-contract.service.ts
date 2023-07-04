@@ -259,7 +259,7 @@ export class OrganizationContractService {
     return from(this.contract.getTaskCount(projectId)).pipe(
       mergeMap(count => {
         const total = count.toNumber();
-        const requests = [];
+        const requests: Observable<DataTypes.TaskViewStructOutput>[] = [];
         this.assertTargetSet();
         for (let i = 0; i < total; i++) {
           requests.push(this.getTask(projectId, i));
