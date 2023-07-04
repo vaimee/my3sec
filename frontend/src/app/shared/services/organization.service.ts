@@ -88,14 +88,14 @@ export class OrganizationService {
           metadataURI: metadataUri,
           skills: skills.map(skill => skill.id),
         };
-        console.log(createTaskStruct);
         return createTaskStruct;
       }),
       switchMap(createTaskStruct => this.contractService.createTask(projectId, createTaskStruct)),
-      switchMap(taskId => {
+      switchMap(id => {
+        taskId = id;
         const requests = [];
         for (const member of members) {
-          requests.push(this.addTaskMember(taskId, +member.id));
+          requests.push(this.addTaskMember(id, +member.id));
         }
         return forkJoin(requests);
       }),

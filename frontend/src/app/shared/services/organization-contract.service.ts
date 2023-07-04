@@ -1,9 +1,10 @@
 import { BigNumber, ethers, providers } from 'ethers';
+import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { Observable, catchError, concatMap, forkJoin, from, map, mergeMap, of, reduce, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { Organization__factory } from '@vaimee/my3sec-contracts/dist';
+import { Events__factory, Organization__factory } from '@vaimee/my3sec-contracts/dist';
 import { DataTypes, Organization } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 @Injectable({
@@ -271,17 +272,16 @@ export class OrganizationContractService {
 
   public createTask(projectId: number, taskStruct: DataTypes.CreateTaskStruct): Observable<number> {
     const hexValue = ethers.utils.hexValue(projectId);
-    console.log(projectId);
     this.assertTargetSet();
     return from(this.contract.createTask(ethers.BigNumber.from(hexValue), taskStruct)).pipe(
       switchMap(async tx => {
         const receipt = await tx.wait();
-        console.log(receipt);
-        const event = receipt.events?.[0];
+        this.assertTargetSet();
+        const event = this.findEvent(receipt, 'TaskCreated');
         if (!event) {
           throw new Error('Event not found in transaction receipt');
         }
-        return event.args?.['taskCreated'].toNumber();
+        return event.args?.['taskId'].toNumber();
       })
     );
   }
@@ -312,5 +312,45 @@ export class OrganizationContractService {
 
   private assertTargetSet(): asserts this is { contract: Organization } {
     if (this.contract === undefined) throw new Error('Target address not set');
+  }
+
+  private findEvent(receipt: ethers.ContractReceipt, name: string, emitterAddress?: string) {
+    this.assertTargetSet();
+    const contractInterface = Events__factory.createInterface();
+
+    const events = receipt.logs;
+
+    if (events != undefined) {
+      // match name from list of events in eventContract, when found, compute the sigHash
+      let sigHash: string | undefined;
+      for (const contractEvent of Object.keys(contractInterface.events)) {
+        if (contractEvent.startsWith(name) && contractEvent.charAt(name.length) == '(') {
+          sigHash = keccak256(toUtf8Bytes(contractEvent));
+          break;
+        }
+      }
+      // Throw if the sigHash was not found
+      if (!sigHash) {
+        throw Error(
+          `Event "${name}" not found in provided contract (default: Events library). \nAre you sure you're using the right contract?`
+        );
+      }
+
+      for (const emittedEvent of events) {
+        // If we find one with the correct sighash, check if it is the one we're looking for
+        if (emittedEvent.topics[0] == sigHash) {
+          // If an emitter address is passed, validate that this is indeed the correct emitter, if not, continue
+          if (emitterAddress) {
+            if (emittedEvent.address != emitterAddress) continue;
+          }
+          const event = contractInterface.parseLog(emittedEvent);
+          return event;
+        }
+      }
+      // Throw if the event args were not expected or the event was not found in the logs
+      throw Error(`Event "${name}" not found emitted by "${emitterAddress}" in given transaction log`);
+    } else {
+      throw Error('No events were emitted');
+    }
   }
 }
