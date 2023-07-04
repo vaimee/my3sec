@@ -37,23 +37,21 @@ export class IpfsService {
   }
 
   public retrieveJSON<T>(cid: string): Observable<T> {
-    return this.http.get<T>(`${this.httpGateway}/${cid}`).pipe(
-      map(response => {
-        return response;
-      })
-    );
+    return this.http.get<T>(`${this.httpGateway}/${cid}`);
   }
 
   public retrieveSkill(id: number, uri: string): Observable<Skill> {
-    return this.http.get<skillOntology>(`${uri}`).pipe(map(response => this.parseSkill(id, response)));
+    return this.http
+      .get<skillOntology>(`${this.httpGateway}/${uri}`)
+      .pipe(map(response => this.parseSkill(id, response)));
   }
 
   private parseSkill(id: number, incomingSkill: skillOntology): Skill {
     const skill: Skill = {
       id: id,
-      name: incomingSkill.name as string,
+      name: incomingSkill.title as string,
       description: incomingSkill.description.en.literal as string,
-      category: incomingSkill.links.broaderSkill[0].title,
+      category: incomingSkill.links.broaderHierarchyConcept[0].title,
     };
     return skill;
   }
