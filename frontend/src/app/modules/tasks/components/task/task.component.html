@@ -15,7 +15,7 @@
                     <app-show-status [status]="taskData.status"></app-show-status>
                   </div>
                   <div class="col-md-5">
-                    <ng-container *ngIf="isManager">
+                    <ng-container *ngIf="isManager.value">
                       <a
                         *ngIf="taskData.status === Status.NOT_STARTED"
                         class="btn btn-outline-dark m-1"
@@ -49,21 +49,22 @@
                         *ngIf="taskData.status === Status.COMPLETED"
                         class="btn btn-outline-dark"
                         (click)="getReward()">
-                        <div class="d-flex align-items-center justify-content-evenly m-1">
+                        <div class="d-flex align-items-center m-1">
                           <mat-icon>emoji_events</mat-icon>
                           <span class="margin-left">GET REWARD</span>
                         </div>
                       </a>
-
-                      <a
-                        *ngIf="taskData.status === Status.IN_PROGRESS"
-                        class="btn btn-outline-dark"
-                        (click)="openLogHoursDialog()">
-                        <div class="d-flex align-items-center justify-content-evenly m-1">
-                          <mat-icon>hourglass_top</mat-icon>
-                          <span class="margin-left">LOG HOURS</span>
-                        </div>
-                      </a>
+                      <div class="d-flex justify-content-end m-1">
+                        <a
+                          *ngIf="taskData.status === Status.IN_PROGRESS"
+                          class="btn btn-outline-dark"
+                          (click)="openLogHoursDialog()">
+                          <div class="d-flex align-items-center justify-content-evenly m-1">
+                            <mat-icon>hourglass_top</mat-icon>
+                            <span class="margin-left">LOG HOURS</span>
+                          </div>
+                        </a>
+                      </div>
                     </ng-container>
                   </div>
                 </div>
@@ -71,8 +72,15 @@
               <div class="p-4 bg-white mt-2 mb-2">
                 <markdown>{{ taskData.description }}</markdown>
               </div>
-              <div class="p-4 bg-white mt-2 mb-2 margin-top">
+              <div class="p-4 bg-white mt-2 mb-2 margin-top d-flex justify-content-between">
                 <h3>Members</h3>
+                <a class="btn btn-outline-dark" *ngIf="isManager.value" (click)="openAddMemberDialog()">
+                  <div class="d-flex align-items-center justify-content-evenly m-1">
+                    <mat-icon>person_add</mat-icon>
+                    <span class="margin-left">ADD MEMBER</span>
+                  </div>
+                </a>
+
                 <div *ngIf="taskData.members$ | async as members">
                   <ng-container *ngIf="this.profilesLoggedTime$ | async as profilesLoggedTime">
                     <mat-list>
@@ -85,7 +93,7 @@
 
                         <div matListItemTitle class="clickable container">
                           <span>{{ member.firstName }} {{ member.surname }}</span>
-                          <div class="container-button" *ngIf="isManager">
+                          <div class="container-button" *ngIf="isManager.value">
                             <a class="btn btn-outline-danger" (click)="remove(member.id)">REMOVE</a>
                           </div>
                         </div>

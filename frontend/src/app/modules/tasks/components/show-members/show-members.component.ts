@@ -21,8 +21,6 @@ export class ShowMembersComponent implements OnInit {
   projectId: number;
   taskId: number;
   members$!: Observable<Profile[]>;
-  isAddMember!: boolean;
-  isManager!: boolean;
   changed = false;
 
   constructor(
