@@ -60,6 +60,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       surname: ['', Validators.compose([Validators.required])],
       organization: ['', Validators.compose([Validators.required])],
       role: ['', Validators.compose([Validators.required])],
+      bio: ['', Validators.compose([Validators.maxLength(150)])],
       profileImage: [null, Validators.compose([Validators.required])],
       regulationCheckbox: [false, Validators.requiredTrue],
     });
