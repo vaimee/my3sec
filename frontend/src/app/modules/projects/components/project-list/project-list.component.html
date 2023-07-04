@@ -1,6 +1,6 @@
 <ng-container *ngIf="projects$ | async as projects">
   <div class="profileProjectTable mt-4 bg-white p-4">
-    <h2 class="d-flex justify-content-between align-items-center mb-3">Project</h2>
+    <h2 class="d-flex justify-content-between align-items-center mb-3">Projects</h2>
     <div class="table-responsive">
       <table *ngIf="projects.length > 0; else noProjects" class="table">
         <tbody>
@@ -54,7 +54,10 @@
         </tbody>
       </table>
       <ng-template #noProjects>
-        <div class="table-responsive">No projects found</div>
+        <div class="no-projects">
+          <img src="../../../assets/icons/no-projects.svg" alt="" />
+          <p class="m-4">No projects found</p>
+        </div>
       </ng-template>
     </div>
   </div>

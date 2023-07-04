@@ -56,6 +56,21 @@
   left: 55px;
 }
 
+.no-projects {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.no-projects>img {
+  max-width: 200px;
+}
+
+.no-projects p {
+  color: rgb(85, 85, 85);
+}
+
 @media screen and (max-device-width: 640px) {
   .profileProjectTable table tr td {
     width: 200px;
