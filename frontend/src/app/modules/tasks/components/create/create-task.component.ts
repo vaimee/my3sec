@@ -56,18 +56,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadForm();
     this.organizationService.setTarget(this.organizationAddress);
-    this.skillChip.items$ = of([
-      { id: 1, name: 'JavaScript', category: 'Frontend Development' },
-      { id: 2, name: 'Python', category: 'Backend Development' },
-      { id: 3, name: 'Java', category: 'Backend Development' },
-      { id: 4, name: 'C++', category: 'Programming Languages' },
-      { id: 5, name: 'HTML', category: 'Frontend Development' },
-      { id: 6, name: 'CSS', category: 'Frontend Development' },
-      { id: 7, name: 'SQL', category: 'Databases' },
-      { id: 8, name: 'Git', category: 'Version Control' },
-      { id: 9, name: 'Data Structures', category: 'Algorithms' },
-      { id: 10, name: 'Networking', category: 'Computer Networks' },
-    ]);
+    this.skillChip.items$ = this.skillService.getSkills();
     this.memberChip.items$ = this.organizationService.getProjectMembers(this.projectId);
 
     this.skillChip.items$.subscribe(skills => {
