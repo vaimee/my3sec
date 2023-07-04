@@ -79,13 +79,17 @@ export class OrganizationContractService {
     return from(this.contract.getProject(projectId));
   }
 
+  public isProjectMember(projectId: number, profileId: number): Observable<boolean> {
+    this.assertTargetSet();
+    return from(this.contract.isProjectMember(projectId, profileId));
+  }
+
   public getProjects(): Observable<DataTypes.ProjectViewStructOutput[]> {
     return from(this.getProjectCount()).pipe(
       mergeMap(total => {
         const requests = [];
-        this.assertTargetSet();
         for (let i = 0; i < total; i++) {
-          requests.push(this.contract.getProject(i));
+          requests.push(this.getProject(i));
         }
         return forkJoin(requests);
       })

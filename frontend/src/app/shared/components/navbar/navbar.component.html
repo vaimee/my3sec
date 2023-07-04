@@ -56,7 +56,7 @@
             </button>
           </mat-menu>
         </li>
-        <li class="nav-item d-flex align-items-center" (click)="redirectToProfile()">
+        <li class="nav-item d-flex align-items-center clickable" (click)="redirectToProfile()">
           <a class="nav-link">{{ (profile$ | async)?.firstName }}</a>
           <img class="round-image profile-icon" src="{{ (profile$ | async)?.profileImage }}" />
         </li>

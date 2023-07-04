@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Observable, concatMap, filter, forkJoin, from, map, mergeMap, switchMap, toArray } from 'rxjs';
+import { Observable, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, tap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -175,15 +175,19 @@ export class OrganizationService {
 
   public getProjectsByMember(memberId: number): Observable<Project[]> {
     return this.getProjects().pipe(
-      switchMap(projects => {
-        const requests = [];
-        for (const project of projects) {
-          requests.push(
-            project.members.pipe(filter(members => !members.find(member => member.id === memberId.toString())))
-          );
-        }
-        return forkJoin(requests).pipe(map(data => (data.length > 0 ? projects : [])));
-      })
+      concatMap(projects => projects),
+      mergeMap(project => {
+        return this.contractService.isProjectMember(project.id, memberId).pipe(
+          map(isMember => {
+            if (isMember) {
+              return project;
+            }
+            return undefined;
+          })
+        );
+      }),
+      toArray(),
+      map(projects => projects.filter(project => project !== undefined) as Project[])
     );
   }
 
