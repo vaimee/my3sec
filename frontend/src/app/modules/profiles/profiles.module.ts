@@ -9,6 +9,7 @@ import { ProjectsModule } from '@projects/projects.module';
 import { CertificatesComponent } from './components/certificates/certificates.component';
 import { EndorseDialogComponent } from './components/endorse-dialog/endorse-dialog.component';
 import { EndorsersListComponent } from './components/endorsers-list/endorsers-list.component';
+import { LogHoursComponent } from './components/log-hours/log-hours.component';
 import { ProfileBodyComponent } from './components/profile-body/profile-body.component';
 import { SkillsComponent } from './components/skills/skills.component';
 import { ProfilesRoutingModule } from './profiles-routing.module';
@@ -20,6 +21,7 @@ import { ProfilesRoutingModule } from './profiles-routing.module';
     CertificatesComponent,
     EndorseDialogComponent,
     EndorsersListComponent,
+    LogHoursComponent,
   ],
   imports: [CommonModule, ProfilesRoutingModule, ProjectsModule, SharedModule, ReactiveFormsModule],
 })
