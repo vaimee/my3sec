@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ProfileService } from '@shared/services/profile.service';
 import { SkillService } from '@shared/services/skill.service';
 
 import { ProfileSkill } from '@profiles/interfaces';
@@ -16,12 +15,11 @@ export class SkillsComponent implements OnInit {
   @Input() profileId!: number;
   skills$!: Observable<ProfileSkill[]>;
 
-  constructor(private profileService: ProfileService, private skillsService: SkillService) {}
+  constructor(private skillsService: SkillService) {}
   ngOnInit(): void {
-    this.skills$ = this.profileService.getSkills(this.profileId);
-    this.skillsService.getAllSkills().subscribe(skills => {
-      console.log('here');
-      for (let skill of skills) {
+    this.skills$ = this.skillsService.getProfileSkills(this.profileId);
+    this.skillsService.getSkills().subscribe(skills => {
+      for (const skill of skills) {
         console.log(skill);
       }
     });
