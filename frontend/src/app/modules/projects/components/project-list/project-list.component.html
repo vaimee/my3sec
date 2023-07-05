@@ -3,7 +3,7 @@
     <h2 class="mb-3">Projects</h2>
     <div class="d-flex flex-column">
       <ng-container *ngIf="projects.length > 0; else noProjects">
-        <div class="d-flex flex-column  border border-1 border-light-subtle mt-1 mb-1 p-2 rounded-1" *ngFor="let project of projects">
+        <div class="d-flex flex-column  border border-1 border-light-subtle mt-1 mb-1 p-2 rounded-1 clickable" *ngFor="let project of projects" (click)="goTo(project.id)">
           <div class="d-inline-flex">
             <h5>{{ project.name | titlecase }}</h5>
             <app-show-status [status]="project.status"></app-show-status>
