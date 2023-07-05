@@ -42,18 +42,16 @@
               <mat-icon>groups</mat-icon>
               <span>New Organization</span>
             </button>
-            <button mat-menu-item>
-              <mat-icon>workspaces</mat-icon>
-              <span>New Project</span>
-            </button>
-            <button mat-menu-item>
-              <mat-icon>add_task</mat-icon>
-              <span>New Task</span>
-            </button>
             <button mat-menu-item (click)="redirectToLogHours()">
               <mat-icon>hourglass_top</mat-icon>
               <span>Log Hours</span>
             </button>
+            <ng-container *ngFor="let item of menuItems">
+              <button mat-menu-item (click)="handleItemClick(item)">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+              </button>
+            </ng-container>
           </mat-menu>
         </li>
         <li class="nav-item d-flex align-items-center clickable" (click)="redirectToProfile()">
