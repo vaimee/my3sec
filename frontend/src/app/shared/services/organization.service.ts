@@ -278,9 +278,6 @@ export class OrganizationService {
     hours: number
   ): Observable<ethers.ContractReceipt> {
     return this.my3secHub.logTime(organizationAddress, taskId, hours);
-    /*  return this.my3secHub
-      .getDefaultProfile(this.metamaskService.userAddress)
-      .pipe(switchMap(({ id }) => this.contractService.updateTaskTime(taskId, id.toNumber(), hours))); */
   }
 
   public setTarget(targetAddress: string): void {
@@ -452,7 +449,9 @@ export class OrganizationService {
   getTaskFromMetadata(taskMetadata: TaskMetadata, task: DataTypes.TaskViewStructOutput): Task {
     const start = new Date(taskMetadata.start);
     const end = new Date(taskMetadata.end);
-    const skills = task.skills.map(skill => this.skillService.getSkill(skill.toNumber()));
+    const skills = task.skills.map(skill => {
+      return this.skillService.getSkill(skill.toNumber());
+    });
     const id = task.id.toNumber();
     return {
       ...taskMetadata,
@@ -468,9 +467,5 @@ export class OrganizationService {
       metadataURI: task.metadataURI,
       members$: this.getTaskMembers(id),
     };
-  }
-
-  private async wait(tx: ethers.ContractTransaction): Promise<ethers.ContractReceipt> {
-    return await tx.wait();
   }
 }

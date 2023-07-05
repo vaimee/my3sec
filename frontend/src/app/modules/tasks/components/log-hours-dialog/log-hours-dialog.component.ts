@@ -45,7 +45,6 @@ export class LogHoursDialogComponent implements OnInit {
       next: () => this.handleObservable('Hours logged!'),
       error: err => this.handleObservable('Failed log hours', err),
     });
-    console.log('submit');
   }
 
   public formError = (controlName: string, errorName: string) => {

@@ -302,7 +302,6 @@ export class OrganizationContractService {
       map(receipt => {
         this.assertTargetSet();
         const event = this.findEvent(receipt, 'ProjectCreated');
-        console.log(event);
         if (!event) {
           throw new Error('Event not found in transaction receipt');
         }
