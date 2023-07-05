@@ -26,7 +26,7 @@ export class ProjectListComponent implements OnInit {
     }
   }
 
-  public goTo(projectId: number) {
-    this.router.navigate(['organizations', this.organizationAddress, 'projects', projectId]);
+  public goTo(project: Project) {
+    this.router.navigate(['organizations', project.organization, 'projects', project.id]);
   }
 }
