@@ -45,7 +45,7 @@
           <mat-divider class="mt-3 mb-3"></mat-divider>
           
           <h4>Members</h4>
-          <ng-container *ngIf="organization.pendingMembers.length > 0; else noMembers">
+          <ng-container *ngIf="organization.members.length > 0; else noMembers">
           <app-people-detail [class.clickable]="organization.members.length > 0" [people]="organization.members"
             [showLabel]="false" (openDialog)="openMemberDialog('member', organization.members, userRole === 'manager')"></app-people-detail>
           </ng-container>
