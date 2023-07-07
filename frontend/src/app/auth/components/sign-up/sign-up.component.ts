@@ -44,12 +44,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
         return true;
       }),
       catchError(error => {
-        console.error(error);
-        console.log('error when reading profile - redirect to signup');
-        return of(false);
-      }),
-      finalize(() => {
         this.loadingService.hide();
+        console.log('error when reading profile - redirect to signup', error);
+        return of(false);
       })
     );
   }
@@ -58,8 +55,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     this.signUpForm = this.formBuilder.group({
       firstName: ['', Validators.compose([Validators.required])],
       surname: ['', Validators.compose([Validators.required])],
-      organization: ['', Validators.compose([Validators.required])],
-      role: ['', Validators.compose([Validators.required])],
       bio: ['', Validators.compose([Validators.maxLength(150)])],
       profileImage: [null, Validators.compose([Validators.required])],
       regulationCheckbox: [false, Validators.requiredTrue],
@@ -82,6 +77,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
     const formValue = { ...this.signUpForm.value };
     formValue.profileImage = this.base64Image;
     this.loadingService.show();
+    this.loadingService.show();
+
     this.ipfsService
       .storeJSON(formValue)
       .pipe(switchMap(uri => this.my3secHubContractService.createProfile(uri)))
@@ -92,6 +89,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
           this.router.navigate(['/profiles']);
         },
         error: err => {
+          this.loadingService.hide();
           console.error(`Failed to create profile: ${err}`);
         },
       });
