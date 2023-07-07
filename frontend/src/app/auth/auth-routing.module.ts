@@ -5,14 +5,12 @@ import { MetamaskLoginComponent } from './components/metamask-login/metamask-log
 import { MetamaskNotInstalledComponent } from './components/metamask-not-installed/metamask-not-installed.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { WrongChainComponent } from './components/wrong-chain/wrong-chain.component';
-import { metamaskLoginGuard } from './guards/metamask-login.guard';
-import { metamaskNotInstalledGuard } from './guards/metamask-not-installed.guard';
-import { rightChainGuard } from './guards/right-chain.guard';
+import { metamaskLoginGuard, metamaskNotInstalledGuard, rightChainGuard } from './guards';
 
 const routes: Routes = [
   { path: 'metamask-not-installed', component: MetamaskNotInstalledComponent },
   {
-    canActivate: [metamaskNotInstalledGuard],
+    canActivate: [() => metamaskNotInstalledGuard],
     path: 'login',
     component: MetamaskLoginComponent,
   },

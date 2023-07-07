@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
-import { metamaskLoginGuard } from '@auth/guards/metamask-login.guard';
-import { metamaskNotInstalledGuard } from '@auth/guards/metamask-not-installed.guard';
-import { my3secLoginGuard } from '@auth/guards/my3sec-login.guard';
-import { rightChainGuard } from '@auth/guards/right-chain.guard';
+import { metamaskCheck, my3secLoginGuard } from '@auth/guards';
 
 import { LayoutComponent } from '@shared/components/layout/layout.component';
 import { PageNotFoundComponent } from '@shared/components/page-not-found/page-not-found.component';
@@ -28,15 +25,19 @@ const routes: Routes = [
         loadChildren: () => import('./modules/organizations/organizations.module').then(m => m.OrganizationsModule),
       },
     ],
-    canActivate: [metamaskNotInstalledGuard, metamaskLoginGuard, rightChainGuard, my3secLoginGuard],
+    canActivate: [metamaskCheck, my3secLoginGuard],
   },
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
   },
   {
-    path: '**',
+    path: 'page-not-found',
     component: PageNotFoundComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '/page-not-found',
   },
 ];
 
