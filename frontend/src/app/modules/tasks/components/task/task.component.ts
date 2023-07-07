@@ -29,14 +29,11 @@ export class TaskComponent implements OnInit {
   profilesLoggedTime$!: Observable<number[]>;
   isManager$!: Observable<boolean>;
   isMember$!: Observable<boolean>;
-
   showReward = true;
   showCloseTask = false;
   organizationAddress: string;
   projectId: number;
   taskId: number;
-
-  skills$!: Observable<Skill[]>;
 
   constructor(
     private router: Router,
@@ -60,8 +57,8 @@ export class TaskComponent implements OnInit {
     this.organizationService.setTarget(this.organizationAddress);
     this.isManager$ = this.organizationService.isCurrentUserManager();
     this.isMember$ = this.organizationService.isCurrentUserTaskMember(this.taskId);
-    this.skills$ = of([]);
     this.task$ = this.organizationService.getTask(this.projectId, this.taskId);
+    this.pageNotFoundCheck(this.task$);
     this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
   }
 
@@ -146,6 +143,14 @@ export class TaskComponent implements OnInit {
     return this.organizationService.removeTaskMember(this.taskId, Number(profileId)).subscribe({
       next: () => this.handleObservable('member removed'),
       error: err => this.handleObservable('failed to remove member', err),
+    });
+  }
+
+  private pageNotFoundCheck<T>(observable$: Observable<T>) {
+    observable$.subscribe({
+      error: () => {
+        this.router.navigate(['page-not-found']);
+      },
     });
   }
 

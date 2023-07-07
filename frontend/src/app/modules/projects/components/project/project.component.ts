@@ -46,6 +46,7 @@ export class ProjectComponent implements OnInit {
   public setUp() {
     this.organizationService.setTarget(this.organizationAddress);
     this.project$ = this.organizationService.getProject(this.projectId);
+    this.pageNotFoundCheck(this.project$);
     this.isManager$ = this.organizationService.isCurrentUserManager();
   }
 
@@ -90,6 +91,14 @@ export class ProjectComponent implements OnInit {
       if (showMembersOutput.profileId) return this.router.navigate(['/profiles', showMembersOutput.profileId]);
       if (showMembersOutput.changed) this.setUp();
       return;
+    });
+  }
+
+  private pageNotFoundCheck<T>(observable$: Observable<T>) {
+    observable$.subscribe({
+      error: () => {
+        this.router.navigate(['page-not-found']);
+      },
     });
   }
 

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -45,8 +45,10 @@ export class OrganizationComponent implements OnInit {
     this.setUp();
   }
 
-  setUp() {
+  public setUp() {
     this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress);
+    this.pageNotFoundCheck(this.organization$);
+
     this.projects$ = this.organizationService.getProjects();
     this.isMember$ = this.organizationService.isCurrentUserMember();
     this.isPendingMember$ = this.organizationService.isCurrentUserPendingMember();
@@ -111,6 +113,14 @@ export class OrganizationComponent implements OnInit {
   }
   public goToCreateProject() {
     this.router.navigate(['projects', 'new'], { relativeTo: this.route });
+  }
+
+  private pageNotFoundCheck<T>(observable$: Observable<T>) {
+    observable$.subscribe({
+      error: () => {
+        this.router.navigate(['page-not-found']);
+      },
+    });
   }
 
   private handleObservable(message: string, err?: Error) {
