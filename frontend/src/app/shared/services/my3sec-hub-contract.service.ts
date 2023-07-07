@@ -1,7 +1,7 @@
 import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
-import { Observable, forkJoin, from, map, mergeMap, switchMap } from 'rxjs';
+import { Observable, catchError, forkJoin, from, map, mergeMap, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -46,7 +46,7 @@ export class My3secHubContractService {
   public createOrganization(metadataURI: string): Observable<string> {
     return from(this.contract.createOrganization(metadataURI)).pipe(
       switchMap(this.wait),
-      switchMap(receipt => {
+      map(receipt => {
         const event = receipt.events?.[0];
         if (!event) {
           throw new Error('Event not found in transaction receipt');
@@ -93,7 +93,7 @@ export class My3secHubContractService {
   }
 
   public logTime(organizationAddress: string, taskId: number, time: number): Observable<ethers.ContractReceipt> {
-    return from(this.contract.logTime(organizationAddress, taskId, time)).pipe(switchMap(this.wait));
+    return from(this.contract.logTime(organizationAddress, taskId, time * 60 * 60)).pipe(switchMap(this.wait));
   }
 
   public getOrganizationCount(): Observable<BigNumber> {
