@@ -1,4 +1,4 @@
-import { Observable, finalize, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -65,7 +65,7 @@ export class ProfileBodyComponent implements OnInit {
           return { id: id, profile: profile };
         }),
         switchMap(data => {
-          if (!this.useDefaultProfile) return this.my3secHubContractService.getProfile(data.id);
+          if (!this.useDefaultProfile) this.pageNotFoundCheck(this.my3secHubContractService.getProfile(data.id));
           return of(data.profile);
         }),
         switchMap((profile: DataTypes.ProfileViewStructOutput) => {
@@ -121,6 +121,14 @@ export class ProfileBodyComponent implements OnInit {
     dialogRef.afterClosed().subscribe(changed => {
       if (!changed) return;
       this.loadProfileDetail();
+    });
+  }
+
+  private pageNotFoundCheck<T>(observable$: Observable<T>) {
+    observable$.subscribe({
+      error: () => {
+        this.router.navigate(['page-not-found']);
+      },
     });
   }
 
