@@ -2,8 +2,7 @@
   <div class="bg-color">
     <div class="flex-grow-1 p-4 ps-0 margin-left">
       <div class="row">
-        <!-- this skill is going to be remove once the skills from contract start working -->
-        <ng-container *ngIf="skills$ | async as skills">
+        <ng-container *ngIf="taskData.skills$ | async as skills">
           <ng-container *ngIf="{ value: isManager$ | async } as isManager">
             <div class="col-md-8">
               <div class="d-flex align-items-center justify-content-between">
