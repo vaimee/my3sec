@@ -84,6 +84,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/profiles/log-hours']);
   }
 
+  redirectToExplore() {
+    this.router.navigate(['/explore']);
+  }
+
   handleItemClick(item: MenuItem): void {
     this.menuItemClicked.emit(item);
     this.navBarService.fireMenuClickedEvent(item);

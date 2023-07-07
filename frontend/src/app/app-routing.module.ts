@@ -24,6 +24,10 @@ const routes: Routes = [
         path: 'organizations',
         loadChildren: () => import('./modules/organizations/organizations.module').then(m => m.OrganizationsModule),
       },
+      {
+        path: 'explore',
+        loadChildren: () => import('./modules/explore/explore.module').then(m => m.ExploreModule),
+      },
     ],
     canActivate: [metamaskCheck, my3secLoginGuard],
   },
