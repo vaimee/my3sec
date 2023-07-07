@@ -87,6 +87,7 @@ export class OrganizationContractService {
   public getProjects(): Observable<DataTypes.ProjectViewStructOutput[]> {
     return from(this.getProjectCount()).pipe(
       mergeMap(total => {
+        if (total === 0) return of([]);
         const requests = [];
         for (let i = 0; i < total; i++) {
           requests.push(this.getProject(i));
