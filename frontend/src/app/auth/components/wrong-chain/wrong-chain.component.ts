@@ -46,6 +46,6 @@ export class WrongChainComponent implements OnInit {
 
   private checkRedirectCondition(): void {
     if (!this.metamaskService.isVivianiChain) return;
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/profiles']);
   }
 }
