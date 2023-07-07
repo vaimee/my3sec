@@ -14,6 +14,7 @@
   grid-area: Header;
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .projects {
@@ -37,4 +38,26 @@
 
 .ml-auto{
   margin-left: auto;
+}
+
+@media screen and (max-device-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header > button {
+    width: 100%;
+  }
+
+  .round-image {
+    width: 50%;
+  }
 }
