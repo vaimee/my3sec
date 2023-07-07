@@ -65,7 +65,13 @@ export class ProfileBodyComponent implements OnInit {
           return { id: id, profile: profile };
         }),
         switchMap(data => {
-          if (!this.useDefaultProfile) this.pageNotFoundCheck(this.my3secHubContractService.getProfile(data.id));
+          if (!this.useDefaultProfile)
+            return this.my3secHubContractService.getProfile(data.id).pipe(
+              catchError(err => {
+                this.router.navigate(['/page-not-found']);
+                throw Error('error when getting the profile', err);
+              })
+            );
           return of(data.profile);
         }),
         switchMap((profile: DataTypes.ProfileViewStructOutput) => {
@@ -121,14 +127,6 @@ export class ProfileBodyComponent implements OnInit {
     dialogRef.afterClosed().subscribe(changed => {
       if (!changed) return;
       this.loadProfileDetail();
-    });
-  }
-
-  private pageNotFoundCheck<T>(observable$: Observable<T>) {
-    observable$.subscribe({
-      error: () => {
-        this.router.navigate(['page-not-found']);
-      },
     });
   }
 
