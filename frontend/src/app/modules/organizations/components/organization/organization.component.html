@@ -1,59 +1,74 @@
 <ng-container *ngIf="organization$ | async as organization">
-  <div class="header">
-    <div class="header-company">
-      <img class="round-image" src="{{ organization.icon }}" alt="..." />
-      <div class="header-company name">
+  <div class="container">
+    <div class="header mt-5">
+      <img class="round-image organization-icon" src="{{ organization.icon }}" alt="organization icon" />
+      <div class="d-flex flex-column justify-content-center m-4">
         <h2>{{ organization.name }}</h2>
         <span class="address">{{ organization.address }}</span>
+        <p class="mb-1">{{ organization.headline }}</p>
+        <span class="d-inline-flex">
+          <mat-icon>group</mat-icon>
+          <ng-container *ngIf="organization.members.length > 0; else noMembers">
+            {{ organization.members.length }}
+          </ng-container>
+          <ng-template #noMembers>no members</ng-template>
+        </span>
       </div>
-      <p>{{ organization.headline }}</p>
+      <ng-container [ngSwitch]="(userRole$ | async)">
+          <button  *ngSwitchCase="'outsider'" mat-flat-button class="mt-1 mb-2 ml-auto" color="primary" (click)="joinOrganization()">
+            Join
+          </button>
+          <button *ngSwitchCase="'member'" mat-flat-button class="mt-1 mb-2 ml-auto" color="primary" (click)="leave(false, organization.managers.length)">
+            Leave
+          </button>
+          <button *ngSwitchCase="'manager'" mat-flat-button class="mt-1 mb-2 ml-auto" color="primary"
+            (click)="leave(true, organization.managers.length)">
+            Leave
+          </button>
+          <button *ngSwitchCase="'manager&member'" mat-flat-button class="mt-1 mb-2 ml-auto" color="primary" (click)="leave(false, organization.managers.length)">
+            Leave
+          </button>
+          <button *ngSwitchCase="'pendingMember'" mat-flat-button class="mt-1 mb-2 ml-auto" disabled>
+            Waiting for approval
+          </button>
+      </ng-container>
     </div>
+    <div class="readme border border-1 border-dark-subtle mt-1 mb-1 p-2 rounded-1">
+      <h6>Readme</h6>
+      <markdown>{{ organization.description }}</markdown>
+    </div>
+    <div class="infos d-inline-flex flex-column mt-4">
+      <ng-container *ngIf="(userRole$ | async) as userRole">
+          <h4>Managers</h4>
+          <app-people-detail [class.clickable]="organization.managers.length > 0" [people]="organization.managers"
+            [showLabel]="false" (openDialog)="openMemberDialog('manager', organization.managers, userRole === 'manager')"></app-people-detail>
+          <mat-divider class="mt-3 mb-3"></mat-divider>
+          
+          <h4>Members</h4>
+          <ng-container *ngIf="organization.pendingMembers.length > 0; else noMembers">
+          <app-people-detail [class.clickable]="organization.members.length > 0" [people]="organization.members"
+            [showLabel]="false" (openDialog)="openMemberDialog('member', organization.members, userRole === 'manager')"></app-people-detail>
+          </ng-container>
+          <ng-template #noMembers>
+            <small>No members</small>
+          </ng-template>
 
-    <ng-container
-      *ngIf="{
-        isMember: (isMember$ | async),
-        isPendingMember: (isPendingMember$ | async),
-        isManager: (isManager$ | async)
-      } as memberCheck">
-      <app-people-detail
-        [class.clickable]="organization.managers.length > 0"
-        [label]="'managers'"
-        [people]="organization.managers"
-        (openDialog)="openMemberDialog('manager', organization.managers, memberCheck.isManager)"></app-people-detail>
-      <ng-container *ngIf="organization.members.length > 0 || (!memberCheck.isManager && !memberCheck.isPendingMember)">
-        <app-people-detail
-          [people]="organization.members"
-          [showAddPeopleIcon]="
-            this.showAddMemberIcon(
-              memberCheck.isMember,
-              memberCheck.isManager,
-              organization.pendingMembers,
-              userId$ | async
-            )
-          "
-          (add)="joinOrganization()"
-          (openDialog)="openMemberDialog('member', organization.members, memberCheck.isManager)"></app-people-detail>
+          <ng-container *ngIf="userRole === 'manager'">
+            <mat-divider class="mt-3 mb-3"></mat-divider>
+            <h4>Pending members</h4>
+            <ng-container *ngIf="organization.pendingMembers.length > 0; else noPendingMembers">
+              <app-people-detail [label]="'pending members'" [people]="organization.pendingMembers" (openDialog)="
+                                openMemberDialog('pendingMember', organization.pendingMembers, userRole === 'manager')
+                              "></app-people-detail>
+            </ng-container>
+            <ng-template #noPendingMembers>
+              <small>No pending members</small>
+            </ng-template>
+          </ng-container>
       </ng-container>
-      <ng-container *ngIf="memberCheck.isManager">
-        <ng-container *ngIf="organization.pendingMembers.length > 0">
-          <app-people-detail
-            [label]="'pending members'"
-            [people]="organization.pendingMembers"
-            (openDialog)="
-              openMemberDialog('pendingMember', organization.pendingMembers, memberCheck.isManager)
-            "></app-people-detail>
-        </ng-container>
-        <a class="btn btn-outline-dark" (click)="goToCreateProject()">CREATE PROJECT</a>
-      </ng-container>
-      <ng-container *ngIf="memberCheck.isMember || memberCheck.isManager">
-        <a
-          class="btn btn-outline-danger"
-          (click)="leave(memberCheck.isManager || false, organization.managers.length)"
-          >LEAVE</a
-        >
-      </ng-container>
-    </ng-container>
+    </div>
+    <div class="projects">
+      <app-project-list [projects$]="projects$"></app-project-list>
+    </div>
   </div>
-  <markdown>{{ organization.description }}</markdown>
-  <app-project-list [projects$]="projects$"></app-project-list>
 </ng-container>
