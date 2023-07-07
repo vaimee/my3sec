@@ -73,6 +73,6 @@ export class NavbarComponent implements OnInit {
   }
 
   redirectToLogHours() {
-    this.router.navigate(['/tasks/log-hours']);
+    this.router.navigate(['/profiles/log-hours']);
   }
 }

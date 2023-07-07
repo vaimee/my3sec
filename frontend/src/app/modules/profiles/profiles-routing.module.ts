@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { LogHoursComponent } from './components/log-hours/log-hours.component';
 import { ProfileBodyComponent } from './components/profile-body/profile-body.component';
 
 const routes: Routes = [
@@ -10,6 +11,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   { path: 'me', component: ProfileBodyComponent, data: { useDefaultProfile: true } },
+  { path: 'log-hours', component: LogHoursComponent },
   { path: ':userId', component: ProfileBodyComponent, data: { useDefaultProfile: false } },
 ];
 
@@ -18,3 +20,5 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class ProfilesRoutingModule {}
+
+export const routedComponents = [ProfileBodyComponent, LogHoursComponent];
