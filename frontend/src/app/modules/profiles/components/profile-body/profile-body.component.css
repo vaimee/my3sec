@@ -2,13 +2,11 @@
   display: grid;
   padding: 10px;
   grid-template-columns: 0.5fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
   gap: 0px 30px;
   grid-auto-flow: row;
   grid-template-areas:
     'bio CV'
-    'bio CV'
-    'bio CV';
 }
 
 .bio {
