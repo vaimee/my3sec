@@ -51,8 +51,7 @@ export class OrganizationService {
 
   public createProject(project: ProjectMetadata, members: Profile[]): Observable<number> {
     let projectId: number;
-    return this.ipfsService.storeJSON(project).pipe(
-      switchMap(metadataURI => this.contractService.createProject({ metadataURI })),
+    return this.createProjectWithoutMembers(project).pipe(
       switchMap(id => {
         projectId = id;
         const requests: Observable<ethers.ContractReceipt>[] = [];
@@ -64,6 +63,12 @@ export class OrganizationService {
       concatMap(data => data),
       map(() => projectId)
     );
+  }
+
+  public createProjectWithoutMembers(project: ProjectMetadata): Observable<number> {
+    return this.ipfsService
+      .storeJSON(project)
+      .pipe(switchMap(metadataURI => this.contractService.createProject({ metadataURI })));
   }
 
   public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
@@ -81,15 +86,7 @@ export class OrganizationService {
     members: Profile[]
   ): Observable<number> {
     let taskId: number;
-    return this.ipfsService.storeJSON(taskMetadata).pipe(
-      map(metadataUri => {
-        const createTaskStruct: DataTypes.CreateTaskStruct = {
-          metadataURI: metadataUri,
-          skills: skills.map(skill => skill.id),
-        };
-        return createTaskStruct;
-      }),
-      switchMap(createTaskStruct => this.contractService.createTask(projectId, createTaskStruct)),
+    return this.createTaskWithoutMembers(projectId, taskMetadata, skills).pipe(
       switchMap(id => {
         taskId = id;
         const requests: Observable<ethers.ContractReceipt>[] = [];
@@ -100,6 +97,19 @@ export class OrganizationService {
       }),
       concatMap(data => data),
       map(() => taskId)
+    );
+  }
+
+  public createTaskWithoutMembers(projectId: number, taskMetadata: TaskMetadata, skills: Skill[]): Observable<number> {
+    return this.ipfsService.storeJSON(taskMetadata).pipe(
+      map(metadataUri => {
+        const createTaskStruct: DataTypes.CreateTaskStruct = {
+          metadataURI: metadataUri,
+          skills: skills.map(skill => skill.id),
+        };
+        return createTaskStruct;
+      }),
+      switchMap(createTaskStruct => this.contractService.createTask(projectId, createTaskStruct))
     );
   }
 

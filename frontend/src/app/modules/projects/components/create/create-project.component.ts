@@ -61,7 +61,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
       projectIcon: null,
       start: new FormControl(null, [Validators.required]),
       end: new FormControl(null, [Validators.required]),
-      membersName: new FormControl(null, [Validators.required]),
+      membersName: new FormControl(null),
       memberInput: [null],
     });
 
@@ -93,10 +93,17 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
     if (!this.createProjectForm.valid) return;
 
     const formValue: ProjectMetadata = { ...this.createProjectForm.value };
-    if (this.base64Image !== '') formValue.icon = this.base64Image;
+    if (this.base64Image !== '') {
+      formValue.icon = this.base64Image;
+    }
     this.loadingService.show();
 
-    this.organizationService.createProject(formValue, this.memberChip.selectedItems).subscribe({
+    const createProject$ =
+      this.memberChip.selectedItems.length === 0
+        ? this.organizationService.createProjectWithoutMembers(formValue)
+        : this.organizationService.createProject(formValue, this.memberChip.selectedItems);
+
+    createProject$.subscribe({
       next: projectId => {
         this.loadingService.hide();
         this.router.navigate(['organizations', this.organizationAddress, 'projects', projectId]);
