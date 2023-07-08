@@ -1,5 +1,16 @@
-import { ethers } from 'ethers';
-import { Observable, concatMap, filter, forkJoin, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  concatMap,
+  count,
+  filter,
+  forkJoin,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+  toArray,
+} from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -96,7 +107,20 @@ export class ProfileService {
     if (matchingId.length > 0) return matchingId[0];
     return 0;
   }
-
+  public getProfileCount(maxItems = 100): Observable<number> {
+    const profileIds = [];
+    for (let i = 1; i <= maxItems; i++) profileIds.push(of(i));
+    return forkJoin(profileIds).pipe(
+      concatMap(num => num),
+      mergeMap(id => {
+        return this.getProfile(id).pipe(catchError(() => of(false)));
+      }),
+      filter((data: Profile | boolean) => {
+        return data !== false;
+      }),
+      count()
+    );
+  }
   public getProfile(profileId: number): Observable<Profile> {
     return this.my3secHub.getProfile(profileId).pipe(
       switchMap(({ id, metadataURI }) => {
@@ -106,6 +130,18 @@ export class ProfileService {
             return { id: id.toString(), walletAddress, ...data };
           })
         );
+      })
+    );
+  }
+
+  public getProfiles(): Observable<Profile[]> {
+    return this.getProfileCount().pipe(
+      mergeMap(total => {
+        const requests = [];
+        for (let i = 1; i <= total; i++) {
+          requests.push(this.getProfile(i));
+        }
+        return forkJoin(requests);
       })
     );
   }
