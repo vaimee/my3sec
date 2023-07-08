@@ -14,7 +14,7 @@
         <div class="display-label">Endorse</div>
       </div>
       <div class="slider-container">
-        <mat-slider thumbLabel discrete [step]="1" [min]="0" [max]="data.maxEnergy" class="dark-slider">
+        <mat-slider thumbLabel discrete [step]="1" [min]="0" [max]="maxEnergy" class="dark-slider">
           <input matSliderThumb [value]="targetEnergyToEndorse" (valueChange)="change($event)" />
         </mat-slider>
       </div>

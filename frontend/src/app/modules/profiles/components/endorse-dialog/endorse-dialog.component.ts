@@ -19,6 +19,7 @@ import { ProfileBodyComponent } from '../profile-body/profile-body.component';
 export class EndorseDialogComponent implements OnInit {
   currentEndorsing$!: Observable<number>;
   targetEnergyToEndorse = 0;
+  maxEnergy: number;
 
   constructor(
     public dialogRef: MatDialogRef<ProfileBodyComponent>,
@@ -26,12 +27,15 @@ export class EndorseDialogComponent implements OnInit {
     private my3secHubContractService: My3secHubContractService,
     private profileService: ProfileService,
     private loadingService: LoadingService
-  ) {}
+  ) {
+    this.maxEnergy = data.maxEnergy;
+  }
 
   ngOnInit(): void {
     this.currentEndorsing$ = this.profileService.getEnergyEndorsedTo(this.data.endorserId, this.data.endorsingId);
     this.currentEndorsing$.subscribe(value => {
       this.targetEnergyToEndorse = value;
+      this.maxEnergy += value;
     });
   }
 
