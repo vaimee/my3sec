@@ -72,7 +72,6 @@ export class NavbarComponent implements OnInit {
   }
 
   redirectToProfile() {
-    console.log('redirect to profile home');
     this.router.navigate(['/profiles/me']);
   }
 
