@@ -140,9 +140,7 @@ export class OrganizationContractService {
           requests.push(this.contract.getWhitelistMember(i));
         }
         return forkJoin(requests);
-      }),
-      concatMap(data => data),
-      toArray()
+      })
     );
   }
 

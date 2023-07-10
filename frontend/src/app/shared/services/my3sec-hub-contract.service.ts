@@ -1,7 +1,7 @@
 import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
-import { Observable, catchError, forkJoin, from, map, mergeMap, switchMap } from 'rxjs';
+import { Observable, forkJoin, from, map, mergeMap, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 

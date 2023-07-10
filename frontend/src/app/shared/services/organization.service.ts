@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
-import { isAddress } from 'ethers/lib/utils';
-import { Observable, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, tap, toArray } from 'rxjs';
+import { Observable, concat, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -115,8 +114,13 @@ export class OrganizationService {
 
   public getOrganizations(): Observable<Organization[]> {
     return this.my3secHub.getOrganizationsAddress().pipe(
-      concatMap(data => data),
-      mergeMap(address => this.getOrganizationByAddress(address)),
+      concatMap(addresses => {
+        const requests = [];
+        for (const address of addresses) {
+          requests.push(this.getOrganizationByAddress(address));
+        }
+        return concat(requests).pipe(concatMap(data => data));
+      }),
       toArray()
     );
   }
