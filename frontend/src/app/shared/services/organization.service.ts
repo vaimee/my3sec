@@ -144,6 +144,7 @@ export class OrganizationService {
   public getProjectsOfProfile(profileId: number): Observable<Project[]> {
     return this.my3secHub.getOrganizationsAddress().pipe(
       switchMap(ids => {
+        if (ids.length === 0) return of([[]]);
         const orgProjects = [];
         for (const id of ids) {
           this.setTarget(id);

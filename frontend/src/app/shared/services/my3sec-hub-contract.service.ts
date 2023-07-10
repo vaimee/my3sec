@@ -1,7 +1,7 @@
 import { environment } from 'environments/environment';
 import { BigNumber, ethers, providers } from 'ethers';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
-import { Observable, forkJoin, from, map, mergeMap, switchMap } from 'rxjs';
+import { Observable, forkJoin, from, map, mergeMap, of, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -79,6 +79,7 @@ export class My3secHubContractService {
   public getOrganizationsAddress(): Observable<string[]> {
     return from(this.contract.getOrganizationCount()).pipe(
       mergeMap(total => {
+        if (total.toNumber() === 0) return of([]);
         const requests = [];
         for (let i = 0; i < total.toNumber(); i++) {
           requests.push(this.contract.getOrganization(i));
