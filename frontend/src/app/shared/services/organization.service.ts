@@ -1,5 +1,18 @@
 import { ethers } from 'ethers';
-import { Observable, concat, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
+import {
+  Observable,
+  concat,
+  concatMap,
+  filter,
+  forkJoin,
+  from,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+  tap,
+  toArray,
+} from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -350,7 +363,7 @@ export class OrganizationService {
   public getMembers(): Observable<Profile[]> {
     return this.contractService.getMembers().pipe(
       concatMap(data => data),
-      switchMap(id => this.profileService.getProfile(id)),
+      mergeMap(id => this.profileService.getProfile(id)),
       toArray()
     );
   }
