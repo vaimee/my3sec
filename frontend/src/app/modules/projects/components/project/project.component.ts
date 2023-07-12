@@ -1,4 +1,4 @@
-import { Observable, filter, map, tap } from 'rxjs';
+import { Observable, concat, filter, forkJoin, map, tap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -50,12 +50,10 @@ export class ProjectComponent implements OnInit {
     this.project$ = this.organizationService.getProject(this.projectId);
     this.pageNotFoundCheck(this.project$);
     this.isManager$ = this.organizationService.isCurrentUserManager();
-    this.isManager$.pipe(
-      filter(isManager => isManager),
-      map(() => this.project$.pipe(
-        filter(project => project.status === Status.IN_PROGRESS),
-      ))
-    ).subscribe( ()=> {
+  
+    forkJoin([this.project$, this.isManager$]).pipe(
+      filter(([project, isManager]) => project.status === Status.IN_PROGRESS && isManager),
+    ).subscribe(() => {
       this.navBarService.setMenuItems([
         {
           label: 'New Task',
