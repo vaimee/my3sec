@@ -110,13 +110,12 @@ export class ProfileBodyComponent implements OnInit {
     return this.my3secHubContractService.getProfile(id);
   }
 
-  openSliderDialog(profile: Profile, maxEnergy: number): void {
+  openSliderDialog(profile: Profile): void {
     const endorseDialogInterface: EndorseDialogInterface = {
       firstName: profile.firstName,
       surname: profile.surname,
       endorserId: this.loggedProfileId,
       endorsingId: +profile.id,
-      maxEnergy: maxEnergy,
     };
 
     const dialogRef = this.dialog.open(EndorseDialogComponent, {
