@@ -131,7 +131,14 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     createTask$.subscribe({
       next: taskId => {
         this.loadingService.hide();
-        this.router.navigate(['organizations', this.organizationAddress, 'projects', this.projectId, 'tasks', taskId]);
+        this.router.navigate([
+          'organizations',
+          this.organizationAddress,
+          'projects',
+          this.projectId,
+          'tasks',
+          Number(taskId) - 1,
+        ]);
       },
       error: err => {
         this.loadingService.hide();
