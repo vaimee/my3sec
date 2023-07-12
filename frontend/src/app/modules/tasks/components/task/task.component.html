@@ -93,9 +93,14 @@
                           src="{{ member.profileImage }}"
                           alt="{{ member.firstName }} {{ member.surname }} profile image" />
 
-                        <div matListItemTitle class="clickable" (click)="goTo(member.id)">{{ member.firstName }} {{ member.surname }}</div>
+                        <div matListItemTitle class="clickable" (click)="goTo(member.id)">
+                          {{ member.firstName }} {{ member.surname }}
+                        </div>
                         <div matListItemLine class="d-flex align-items-center mt-1">
-                          <span class="margin-right clickable" (click)="goTo(member.id)"> {{ profilesLoggedTime }}h </span>
+                          <span class="margin-right clickable" (click)="goTo(member.id)">
+                            {{ secondsToHours(profilesLoggedTime[0]) }}h
+                            <!-- Check if this thing is working -->
+                          </span>
                           <ng-container *ngIf="isManager.value">
                             <a class="btn btn-sm btn-outline-danger py-0" (click)="remove(member.id)"
                               ><div class="d-flex align-items-center justify-content-evenly">
