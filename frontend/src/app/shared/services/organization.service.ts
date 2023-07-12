@@ -371,8 +371,8 @@ export class OrganizationService {
   public getManagers(): Observable<Profile[]> {
     return this.contractService.getManagers().pipe(
       concatMap(data => data),
-      switchMap(address => this.my3secHub.getDefaultProfile(address)),
-      switchMap(({ id }) => this.profileService.getProfile(id.toNumber())),
+      mergeMap(address => this.my3secHub.getDefaultProfile(address)),
+      mergeMap(({ id }) => this.profileService.getProfile(id.toNumber())),
       toArray()
     );
   }
