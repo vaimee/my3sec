@@ -1,9 +1,9 @@
-import { Observable, map, merge, mergeMap } from 'rxjs';
+import { Observable, Subject, filter, map, merge, mergeMap, pipe, takeUntil } from 'rxjs';
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
@@ -21,7 +21,7 @@ import { SearchBarCategory } from '../../models/search-bar-category.enum';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   @Input() menuItems: MenuItem[] = [];
   @Output() menuItemClicked: EventEmitter<MenuItem> = new EventEmitter<MenuItem>();
 
@@ -34,6 +34,7 @@ export class NavbarComponent implements OnInit {
     category: SearchBarCategory.PROFILE,
   });
   isSubmitted = false;
+  private destroyed$ = new Subject();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -55,6 +56,20 @@ export class NavbarComponent implements OnInit {
     this.navBarService.getMenuItems().subscribe(menuItems => {
       this.menuItems = menuItems;
     });
+
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe(() => {
+        this.navBarService.setMenuItems([]);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(undefined);
+    this.destroyed$.complete();
   }
 
   onSubmit(): void {

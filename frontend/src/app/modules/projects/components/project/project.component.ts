@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, filter, map, tap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import { OrganizationService } from '@shared/services/organization.service';
 import { ShowMembersInput, ShowMembersOutput } from '@projects/interfaces';
 
 import { ShowMembersComponent } from '../show-members/show-members.component';
+import { NavbarService } from '@shared/services/navbar.services';
 
 @Component({
   selector: 'app-project',
@@ -33,7 +34,8 @@ export class ProjectComponent implements OnInit {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private navBarService: NavbarService,
   ) {
     this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
     this.projectId = Number(this.route.snapshot.paramMap.get('id') as string);
@@ -48,6 +50,25 @@ export class ProjectComponent implements OnInit {
     this.project$ = this.organizationService.getProject(this.projectId);
     this.pageNotFoundCheck(this.project$);
     this.isManager$ = this.organizationService.isCurrentUserManager();
+    this.isManager$.pipe(
+      filter(isManager => isManager),
+      map(() => this.project$.pipe(
+        filter(project => project.status === Status.IN_PROGRESS),
+      ))
+    ).subscribe( ()=> {
+      this.navBarService.setMenuItems([
+        {
+          label: 'New Task',
+          icon: 'task',
+        },
+      ]);
+      this.navBarService.getMenuClickedEvent().subscribe(item => {
+        if (item.label === 'New Task') {
+          this.goToCreateTask();
+        }
+      });
+    })
+    
   }
 
   public goToCreateTask() {

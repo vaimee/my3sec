@@ -1,60 +1,59 @@
 <ng-container *ngIf="project$ | async as project">
-  <div class="header">
-    <div class="header-project">
+  <div class="container">
+    <div class="header">
       <ng-container *ngIf="project.icon">
         <img class="round-image" src="{{ project.icon }}" />
       </ng-container>
-      <div class="header-project name">
-        <h2>{{ project.name }}</h2>
-        <app-show-status [status]="project.status"></app-show-status>
+      <div class="w-full">
+        <div class="header-project">
+          <div class="d-flex flex-row align-items-center">
+            <h2>{{ project.name }}</h2>
+            <app-show-status [status]="project.status"></app-show-status>
+          </div>
+          <ng-container *ngIf="project.members | async as members">
+            <ng-container *ngIf="{ value: isManager$ | async } as isManager">
+                <div *ngIf="isManager.value" class="d-flex flex-row gap-2 align-items-center">
+                  <button mat-flat-button *ngIf="project.status === Status.NOT_STARTED"
+                    (click)="updateProject(Status.IN_PROGRESS)">
+                      <mat-icon color="accent">check_circle</mat-icon>
+                      <span>Start</span>
+                  </button>
+                  <button mat-flat-button *ngIf="project.status === Status.IN_PROGRESS" (click)="updateProject(Status.COMPLETED)">
+                    <mat-icon color="accent">done_all</mat-icon>
+                    <span>Close</span>
+                  </button>
+                  <button mat-flat-button color="warn"
+                    *ngIf="project.status === Status.IN_PROGRESS || project.status === Status.NOT_STARTED"
+                    (click)="updateProject(Status.CANCELED)">
+                    <mat-icon>cancel</mat-icon>
+                    <span>Cancel</span>
+                  </button>
+                </div>
+            </ng-container>
+          </ng-container>
+        </div>
+        <p>{{ project.headline }}</p>
       </div>
-      <p>{{ project.headline }}</p>
     </div>
-    <ng-container *ngIf="project.members | async as members">
-      <ng-container *ngIf="{ value: isManager$ | async } as isManager">
-        <app-people-detail
-          [people]="members"
-          [showAddPeopleIcon]="showAddMember(isManager.value || false, project.status)"
-          (openDialog)="openMemberDialog(isManager.value || false, false)"
-          (add)="openMemberDialog(isManager.value || false, true, members)"></app-people-detail>
-
-        <ng-container *ngIf="isManager.value">
-          <a
-            *ngIf="project.status === Status.NOT_STARTED"
-            class="btn btn-outline-dark m-1"
-            (click)="updateProject(Status.IN_PROGRESS)">
-            <div class="d-flex align-items-center justify-content-evenly m-1">
-              <mat-icon>check_circle</mat-icon>
-              <span class="margin-left">START PROJECT</span>
-            </div>
-          </a>
-          <a
-            *ngIf="project.status === Status.IN_PROGRESS"
-            class="btn btn-outline-dark m-1"
-            (click)="updateProject(Status.COMPLETED)">
-            <div class="d-flex align-items-center justify-content-evenly m-1">
-              <mat-icon>check_circle</mat-icon>
-              <span class="margin-left">CLOSE PROJECT</span>
-            </div>
-          </a>
-          <a
-            *ngIf="project.status === Status.IN_PROGRESS || project.status === Status.NOT_STARTED"
-            class="btn btn-outline-dark m-1"
-            (click)="updateProject(Status.CANCELED)">
-            <div class="d-flex align-items-center justify-content-evenly m-1">
-              <mat-icon>cancel</mat-icon>
-              <span class="margin-left">CANCEL PROJECT</span>
-            </div>
-          </a>
-          <a *ngIf="project.status === Status.IN_PROGRESS" class="btn btn-outline-dark m-1" (click)="goToCreateTask()">
-            <div class="d-flex align-items-center justify-content-evenly m-1">CREATE TASK</div>
-          </a>
-        </ng-container>
-      </ng-container>
+    <ng-container>
+      <div *ngIf="{ isManager: isManager$ | async, members: project.members | async } as data" class="infos d-inline-flex flex-column mt-4">
+        <h4>Members</h4>
+        <app-people-detail [people]="data.members ?? []" [showLabel]="false"
+            (openDialog)="openMemberDialog(data.isManager || false, false)"
+            (add)="openMemberDialog(data.isManager || false, true, data.members ?? [])"></app-people-detail> 
+        <button mat-stroked-button 
+          *ngIf="data.isManager && (project.status === Status.IN_PROGRESS || project.status === Status.NOT_STARTED)"
+          (click)="openMemberDialog(data.isManager || false, true, data.members ?? [])">
+          <mat-icon>person_add</mat-icon>
+          <span>Add member</span>
+        </button>
+      </div>
+      <div class="readme border border-1 border-dark-subtle mt-1 mb-1 p-2 rounded-1">
+        <h6>Readme</h6>
+        <markdown>{{ project.description }}</markdown>
+      </div>
+      <app-task-list class="tasks" [tasks$]="project.tasks"></app-task-list>
     </ng-container>
   </div>
-  <ng-container>
-    <markdown>{{ project.description }}</markdown>
-    <app-task-list [tasks$]="project.tasks"></app-task-list>
-  </ng-container>
+  
 </ng-container>
