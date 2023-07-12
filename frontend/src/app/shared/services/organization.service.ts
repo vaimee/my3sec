@@ -313,7 +313,7 @@ export class OrganizationService {
     ]).pipe(
       map(([projectMembers, taskMembers]) => projectMembers.filter(id => !taskMembers.includes(id))),
       concatMap(data => data),
-      switchMap(id => this.profileService.getProfile(id)),
+      mergeMap(id => this.profileService.getProfile(id)),
       toArray()
     );
   }
