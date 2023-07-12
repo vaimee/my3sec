@@ -301,7 +301,7 @@ export class OrganizationService {
     return forkJoin([this.contractService.getMembers(), this.contractService.getProjectMembers(projectId)]).pipe(
       map(([organizationMembers, projectMembers]) => organizationMembers.filter(id => !projectMembers.includes(id))),
       concatMap(data => data),
-      switchMap(id => this.profileService.getProfile(id)),
+      mergeMap(id => this.profileService.getProfile(id)),
       toArray()
     );
   }
