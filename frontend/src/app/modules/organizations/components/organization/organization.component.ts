@@ -108,6 +108,8 @@ export class OrganizationComponent implements OnInit {
       this.openSnack('Cannot remove the last manager from organization');
       return;
     }
+    this.loadingService.show();
+
     this.organizationService.leave(this.organizationAddress).subscribe({
       next: () => this.handleObservable('you left the organization'),
       error: err => this.handleObservable('failed to leave member', err),
