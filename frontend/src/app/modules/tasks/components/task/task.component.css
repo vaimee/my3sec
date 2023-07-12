@@ -14,10 +14,6 @@
   margin-top: 16px;
 }
 
-.bg-color {
-  background-color: #d9d9d9;
-}
-
 .container {
   display: flex;
   justify-content: center;
