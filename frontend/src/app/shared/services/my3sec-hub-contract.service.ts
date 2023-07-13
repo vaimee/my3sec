@@ -5,7 +5,7 @@ import { Observable, forkJoin, from, map, mergeMap, of, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
+import { Events, Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 @Injectable({

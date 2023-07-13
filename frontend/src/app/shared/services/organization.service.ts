@@ -156,16 +156,13 @@ export class OrganizationService {
 
   public getProjectsOfProfile(profileId: number): Observable<Project[]> {
     return this.my3secHub.getOrganizationsAddress().pipe(
-      switchMap(ids => {
-        if (ids.length === 0) return of([[]]);
-        const orgProjects = [];
-        for (const id of ids) {
-          this.setTarget(id);
-          orgProjects.push(this.getProjectsByMember(profileId));
-        }
-        return forkJoin(orgProjects);
+      concatMap(data => data),
+      concatMap(address => {
+        this.setTarget(address);
+        return this.getProjectsByMember(profileId);
       }),
-      concatMap(data => data)
+      toArray(),
+      map(data => data.flat())
     );
   }
 
@@ -195,9 +192,12 @@ export class OrganizationService {
   public getProjects(): Observable<Project[]> {
     return this.contractService.getProjects().pipe(
       concatMap(projects => {
+        console.log('projects', projects);
+
         return projects;
       }),
       mergeMap(project => {
+        console.log(project.id);
         return this.ipfsService
           .retrieveJSON<ProjectMetadata>(project.metadataURI)
           .pipe(map(metadata => this.getProjectFromMetadata(metadata, project)));

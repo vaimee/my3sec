@@ -76,7 +76,11 @@ export class OrganizationContractService {
 
   public getProject(projectId: number): Observable<DataTypes.ProjectViewStructOutput> {
     this.assertTargetSet();
-    return from(this.contract.getProject(projectId));
+    return from(this.contract.getProject(projectId)).pipe(
+      catchError(() => {
+        throw new Error('Mio error' + projectId + ' ' + this.contract!.address);
+      })
+    );
   }
 
   public isProjectMember(projectId: number, profileId: number): Observable<boolean> {
@@ -89,6 +93,8 @@ export class OrganizationContractService {
       mergeMap(total => {
         if (total === 0) return of([]);
         const requests = [];
+        console.log('requesting for', this.contract!.address);
+
         for (let i = 0; i < total; i++) {
           requests.push(this.getProject(i));
         }
