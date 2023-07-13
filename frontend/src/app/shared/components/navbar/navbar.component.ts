@@ -81,8 +81,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }
     const searchForm = this.searchForm.value;
-    console.log('Search value:', searchForm.searchText);
-    console.log('Selected option:', searchForm.category);
     this.isSubmitted = true;
   }
 

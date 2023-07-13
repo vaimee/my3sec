@@ -192,12 +192,9 @@ export class OrganizationService {
   public getProjects(): Observable<Project[]> {
     return this.contractService.getProjects().pipe(
       concatMap(projects => {
-        console.log('projects', projects);
-
         return projects;
       }),
       mergeMap(project => {
-        console.log(project.id);
         return this.ipfsService
           .retrieveJSON<ProjectMetadata>(project.metadataURI)
           .pipe(map(metadata => this.getProjectFromMetadata(metadata, project)));
