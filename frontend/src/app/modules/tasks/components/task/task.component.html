@@ -1,4 +1,89 @@
-<ng-container *ngIf="task$ | async as taskData">
+<div class="container" *ngIf="task$ | async as taskData">
+<div class="header">
+  <div>
+    <div class="d-flex flex-row align-items-center">
+      <h2>{{ taskData.name }}</h2>
+      <app-show-status [status]="taskData.status"></app-show-status>
+    </div>
+    <p>
+      {{ taskData.start | date }} - {{ taskData.end | date }}
+    </p>
+  </div>
+  <ng-container *ngIf="taskData.skills$ | async as skills">
+    <div *ngIf="{ value: isManager$ | async } as isManager" class="d-flex flex-row gap-2 align-items-center">
+      <ng-container *ngIf="isManager.value">
+        <button  *ngIf="taskData.status === Status.NOT_STARTED" mat-flat-button
+          (click)="updateTask(Status.IN_PROGRESS, taskData, skills)">
+            <mat-icon color="accent">check_circle</mat-icon>
+            <span>Start</span>
+        </button>
+        <button mat-flat-button *ngIf="taskData.status === Status.IN_PROGRESS"
+          (click)="updateTask(Status.COMPLETED, taskData, skills)">
+            <mat-icon color="primary">check_circle</mat-icon>
+            <span class="margin-left">Completed</span>
+        </button>
+        <button mat-flat-button  color="warn" *ngIf="taskData.status === Status.IN_PROGRESS || taskData.status === Status.NOT_STARTED"
+          (click)="updateTask(Status.CANCELED, taskData, skills)">
+            <mat-icon>cancel</mat-icon>
+            <span>Cancel</span>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="isMember$ | async as isMember">
+        <button mat-flat-button *ngIf="taskData.status === Status.COMPLETED" (click)="getReward()">
+            <mat-icon>emoji_events</mat-icon>
+            <span class="margin-left">GET REWARD</span>
+        </button>
+        <button mat-flat-button *ngIf="taskData.status === Status.IN_PROGRESS" (click)="openLogHoursDialog()">
+          <mat-icon>hourglass_top</mat-icon>
+          <span class="margin-left">LOG HOURS</span>
+        </button>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+<div class="readme border border-1 border-dark-subtle mt-1 mb-1 p-2 rounded-1">
+  <h6>Readme</h6>
+  <markdown>{{ taskData.description }}</markdown>
+</div>
+<div class="members" *ngIf="{ value: isManager$ | async } as isManager">
+  <div class="d-flex justify-content-between">
+    <h3>Members</h3>
+    <button mat-flat-button *ngIf="isManager.value" (click)="openAddMemberDialog()">
+        <mat-icon>person_add</mat-icon>
+        <span>Add member</span>
+    </button>
+  </div>
+
+  <div *ngIf="taskData.members$ | async as members">
+    <ng-container *ngIf="this.profilesLoggedTime$ | async as profilesLoggedTime">
+      <mat-list>
+        <mat-list-item *ngFor="let member of members">
+          <img class="avatar clickable" matListItemAvatar (click)="goTo(member.id)" src="{{ member.profileImage }}"
+            alt="{{ member.firstName }} {{ member.surname }} profile image" />
+          <div matListItemTitle class="clickable" (click)="goTo(member.id)">
+            {{ member.firstName }} {{ member.surname }}
+          </div>
+          <span matListItemLine class="margin-right clickable" (click)="goTo(member.id)">
+              {{ secondsToHours(profilesLoggedTime[0]) }}h
+          </span>
+          <button *ngIf="isManager.value" mat-icon-button matListItemMeta (click)="remove(member.id)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+  </div>
+</div>
+<div class="skills" *ngIf="taskData.skills$ | async as skills">
+  <h2 class="d-flex justify-content-between align-items-center mb-3">Skills</h2>
+  <mat-list>
+    <mat-list-item *ngFor="let skill of skills">
+      <div matListItemTitle>{{ skill.name }}</div>
+      <div matListItemLine>{{ skill.category }}</div>
+    </mat-list-item>
+  </mat-list>
+</div>
+<!--
   <div>
     <div class="flex-grow-1 p-4 ps-0 margin-left">
       <div class="row">
@@ -99,7 +184,7 @@
                         <div matListItemLine class="d-flex align-items-center mt-1">
                           <span class="margin-right clickable" (click)="goTo(member.id)">
                             {{ secondsToHours(profilesLoggedTime[0]) }}h
-                            <!-- Check if this thing is working -->
+                            
                           </span>
                           <ng-container *ngIf="isManager.value">
                             <a class="btn btn-sm btn-outline-danger py-0" (click)="remove(member.id)"
@@ -143,4 +228,5 @@
       </div>
     </div>
   </div>
-</ng-container>
+-->
+</div>
