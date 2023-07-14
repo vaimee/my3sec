@@ -8,4 +8,5 @@ library Events {
     event TaskCreated(address indexed organization, uint256 indexed projectId, uint256 indexed taskId);
     event TimeLogged(uint256 indexed profileId, uint256 time);
     event SkillCreated(uint256 indexed skillId);
+    event CertificateIssued(address from, uint256 indexed profileId, uint256 indexed certificateId);
 }

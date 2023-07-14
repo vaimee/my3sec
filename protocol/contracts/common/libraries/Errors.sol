@@ -6,6 +6,7 @@ library Errors {
     error IndexOutOfBounds();
     error InitParamsInvalid();
     error NotHub();
+    error NotGovernance();
     error NotWhitelisted();
     error NotProfileOwner();
     error NotRegistered();

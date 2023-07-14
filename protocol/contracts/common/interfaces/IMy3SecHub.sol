@@ -4,7 +4,12 @@ pragma solidity ^0.8.9;
 import {DataTypes} from "../libraries/DataTypes.sol";
 
 interface IMy3SecHub {
+    //=============================================================================
+    // PROFILE
+    //=============================================================================
     function getDefaultProfile(address account) external view returns (DataTypes.ProfileView memory);
+
+    function getProfileAccount(uint256 profileId) external view returns (address);
 
     function getProfile(uint256 profileId) external view returns (DataTypes.ProfileView memory);
 
@@ -15,6 +20,10 @@ interface IMy3SecHub {
     function giveEnergyTo(uint256 profileId, uint256 amount) external;
 
     function removeEnergyFrom(uint256 profileId, uint256 amount) external;
+
+    //=============================================================================
+    // ORGANIZATION
+    //=============================================================================
 
     function getOrganizationCount() external view returns (uint256);
 
@@ -31,6 +40,18 @@ interface IMy3SecHub {
     function logTime(address organizationAddress, uint256 taskId, uint256 time) external;
 
     function withdraw(address organizationAddress, uint256 taskId) external;
+
+    //=============================================================================
+    // CERTIFICATE
+    //=============================================================================
+
+    function issueCertificate(uint256 profileId, string memory uri) external;
+
+    function issueCertificate(address organizationAddress, uint256 profileId, string memory uri) external;
+
+    //=============================================================================
+    // EMITTERS
+    //=============================================================================
 
     function emitProjectCreated(address organizationAddress, uint256 projectId) external;
 

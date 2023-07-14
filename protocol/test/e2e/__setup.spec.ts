@@ -2,6 +2,7 @@ import { Signer } from "ethers";
 import { ethers, upgrades } from "hardhat";
 
 import {
+  CertificateNFT,
   EnergyWallet,
   Events,
   My3SecGovernance,
@@ -38,6 +39,7 @@ export let my3secToken: My3SecToken;
 export let timelock: Timelock;
 export let my3SecGovernance: My3SecGovernance;
 export let skillRegistry: SkillRegistry;
+export let certificateNFT: CertificateNFT;
 export let my3secProfiles: My3SecProfiles;
 export let energyWallet: EnergyWallet;
 export let timeWallet: TimeWallet;
@@ -65,6 +67,7 @@ before(async () => {
   const timelockFactory = await ethers.getContractFactory("Timelock");
   const my3SecGovernanceFactory = await ethers.getContractFactory("My3SecGovernance");
   const skillRegistryFactory = await ethers.getContractFactory("SkillRegistry");
+  const certificateNFTFactory = await ethers.getContractFactory("CertificateNFT");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
   const energyWalletFactory = await ethers.getContractFactory("EnergyWallet");
   const timeWalletFactory = await ethers.getContractFactory("TimeWallet");
@@ -78,15 +81,18 @@ before(async () => {
   timelock = await timelockFactory.deploy([], []);
   my3SecGovernance = await my3SecGovernanceFactory.deploy(my3secToken.address, timelock.address);
   skillRegistry = await skillRegistryFactory.deploy(MOCK_BASE_URI);
+  certificateNFT = await certificateNFTFactory.deploy();
   my3secProfiles = (await upgrades.deployProxy(my3secProfilesFactory, [my3secHub.address])) as My3SecProfiles;
   energyWallet = (await upgrades.deployProxy(energyWalletFactory, [my3secHub.address])) as EnergyWallet;
   timeWallet = (await upgrades.deployProxy(timeWalletFactory, [my3secHub.address])) as TimeWallet;
   skillWallet = (await upgrades.deployProxy(skillWalletFactory, [my3secHub.address])) as SkillWallet;
 
   // Initializations
+  await my3secHub.setGovernanceTimelockContractAddress(timelock.address);
   await my3secHub.setOrganizationFactoryContract(organizationFactory.address);
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setSkillRegistryContract(skillRegistry.address);
+  await my3secHub.setCertificateNFTContract(certificateNFT.address);
   await my3secHub.setEnergyWalletContract(energyWallet.address);
   await my3secHub.setTimeWalletContract(timeWallet.address);
   await my3secHub.setSkillWalletContract(skillWallet.address);
@@ -95,4 +101,6 @@ before(async () => {
   const timelockAdminRole = await timelock.TIMELOCK_ADMIN_ROLE();
   await timelock.grantRole(proposerRole, my3SecGovernance.address);
   await timelock.revokeRole(timelockAdminRole, deployerAddress);
+
+  await certificateNFT.transferOwnership(my3secHub.address);
 });

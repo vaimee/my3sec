@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./common/interfaces/IMy3SecHub.sol";
 import "./common/interfaces/ISkillRegistry.sol";
+import "./common/interfaces/ICertificateNFT.sol";
 import "./common/interfaces/IMy3SecProfiles.sol";
 import "./common/interfaces/IEnergyWallet.sol";
 import "./common/interfaces/ITimeWallet.sol";
@@ -20,8 +21,11 @@ import "./organizations/OrganizationFactory.sol";
 contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
+    address internal _governanceTimelockContractAddress;
+
     OrganizationFactory internal _organizationFactory;
     ISkillRegistry internal _skillRegistry;
+    ICertificateNFT internal _certificateNFT;
     IMy3SecProfiles internal _my3SecProfiles;
     IEnergyWallet internal _energyWallet;
     ITimeWallet internal _timeWallet;
@@ -41,12 +45,20 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
         __Ownable_init();
     }
 
+    function setGovernanceTimelockContractAddress(address contractAddress) external onlyOwner {
+        _governanceTimelockContractAddress = contractAddress;
+    }
+
     function setOrganizationFactoryContract(address contractAddress) external onlyOwner {
         _organizationFactory = OrganizationFactory(contractAddress);
     }
 
     function setSkillRegistryContract(address contractAddress) external onlyOwner {
         _skillRegistry = ISkillRegistry(contractAddress);
+    }
+
+    function setCertificateNFTContract(address contractAddress) external onlyOwner {
+        _certificateNFT = ICertificateNFT(contractAddress);
     }
 
     function setMy3SecProfilesContract(address contractAddress) external onlyOwner {
@@ -73,6 +85,11 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     function getDefaultProfile(address account) external view override returns (DataTypes.ProfileView memory) {
         uint256 profileId = _my3SecProfiles.getDefaultProfileId(account);
         return getProfile(profileId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function getProfileAccount(uint256 profileId) public view override returns (address) {
+        return _my3SecProfiles.ownerOf(profileId);
     }
 
     /// @inheritdoc IMy3SecHub
@@ -210,6 +227,43 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
         }
     }
 
+    function _isOrganizationContract(address organization) internal view returns (bool) {
+        try IOrganization(organization).getMemberCount() returns (uint256) {
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    //=============================================================================
+    // CERTIFICATE
+    //=============================================================================
+
+    /// @inheritdoc IMy3SecHub
+    function issueCertificate(uint256 profileId, string memory uri) external {
+        if (msg.sender != _governanceTimelockContractAddress) revert Errors.NotGovernance();
+        address account = getProfileAccount(profileId);
+        uint256 certificateId = _certificateNFT.safeMint(account, uri);
+        emit Events.CertificateIssued(msg.sender, profileId, certificateId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function issueCertificate(
+        address organizationAddress,
+        uint256 profileId,
+        string memory uri
+    ) external organizationRegistered(organizationAddress) {
+        bool isManager = IOrganization(organizationAddress).isWhitelisted(msg.sender);
+        if (!isManager) revert Errors.NotWhitelisted();
+        address account = getProfileAccount(profileId);
+        uint256 certificateId = _certificateNFT.safeMint(account, uri);
+        emit Events.CertificateIssued(organizationAddress, profileId, certificateId);
+    }
+
+    //=============================================================================
+    // EMITTERS
+    //=============================================================================
+
     /// @inheritdoc IMy3SecHub
     function emitProjectCreated(address organizationAddress, uint256 projectId) external {
         if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
@@ -220,13 +274,5 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     function emitTaskCreated(address organizationAddress, uint256 projectId, uint256 taskId) external {
         if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
         emit Events.TaskCreated(organizationAddress, projectId, taskId);
-    }
-
-    function _isOrganizationContract(address organization) internal view returns (bool) {
-        try IOrganization(organization).getMemberCount() returns (uint256) {
-            return true;
-        } catch {
-            return false;
-        }
     }
 }

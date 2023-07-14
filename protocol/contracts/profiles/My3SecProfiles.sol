@@ -78,7 +78,7 @@ contract My3SecProfiles is
 
     function supportsInterface(
         bytes4 interfaceId
-    ) public view override(ERC721Upgradeable, ERC721EnumerableUpgradeable) returns (bool) {
+    ) public view override(ERC721EnumerableUpgradeable, ERC721Upgradeable, IERC165Upgradeable) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 }

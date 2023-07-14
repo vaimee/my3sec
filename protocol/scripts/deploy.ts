@@ -16,6 +16,7 @@ async function main() {
   const timelockFactory = await ethers.getContractFactory("Timelock");
   const my3SecGovernanceFactory = await ethers.getContractFactory("My3SecGovernance");
   const skillRegistryFactory = await ethers.getContractFactory("SkillRegistry");
+  const certificateNFTFactory = await ethers.getContractFactory("CertificateNFT");
   const my3secProfilesFactory = await ethers.getContractFactory("My3SecProfiles");
   const energyWalletFactory = await ethers.getContractFactory("EnergyWallet");
   const timeWalletFactory = await ethers.getContractFactory("TimeWallet");
@@ -40,6 +41,9 @@ async function main() {
   console.log("\n\t-- Deploying SkillRegistry --");
   const skillRegistry = await skillRegistryFactory.deploy(SKILL_REGISTRY_BASE_URI);
 
+  console.log("\n\t-- Deploying CertificateNFT --");
+  const certificateNFT = await certificateNFTFactory.deploy();
+
   console.log("\n\t-- Deploying My3SecProfiles --");
   const my3secProfiles = await upgrades.deployProxy(my3secProfilesFactory, [my3secHub.address]);
 
@@ -54,8 +58,10 @@ async function main() {
 
   // Initializations
   console.log("\n\t-- Initializing My3SecHub --");
+  await my3secHub.setGovernanceTimelockContractAddress(timelock.address);
   await my3secHub.setOrganizationFactoryContract(organizationFactory.address);
   await my3secHub.setSkillRegistryContract(skillRegistry.address);
+  await my3secHub.setCertificateNFTContract(certificateNFT.address);
   await my3secHub.setMy3SecProfilesContract(my3secProfiles.address);
   await my3secHub.setEnergyWalletContract(energyWallet.address);
   await my3secHub.setTimeWalletContract(timeWallet.address);
@@ -67,6 +73,9 @@ async function main() {
   await timelock.grantRole(proposerRole, my3SecGovernance.address);
   await timelock.revokeRole(timelockAdminRole, deployer.address);
 
+  console.log("\n\t-- Initializing CertificateNFT --");
+  await certificateNFT.transferOwnership(my3secHub.address);
+
   // Save and logs addresses
   const addrs = {
     my3secHub: my3secHub.address,
@@ -75,6 +84,7 @@ async function main() {
     timelock: timelock.address,
     my3SecGovernance: my3SecGovernance.address,
     skillRegistry: skillRegistry.address,
+    certificateNFT: certificateNFT.address,
     my3secProfiles: my3secProfiles.address,
     energyWallet: energyWallet.address,
     timeWallet: timeWallet.address,
