@@ -486,6 +486,7 @@ export class OrganizationService {
   }
 
   private getOrganizationFromMetadata(organization: OrganizationMetadata, address: string): Observable<Organization> {
+    this.setTarget(address);
     return forkJoin({
       projectCount: this.contractService.getProjectCount(),
       members: this.getMembers(),
