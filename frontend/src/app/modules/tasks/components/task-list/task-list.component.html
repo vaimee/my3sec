@@ -7,7 +7,7 @@
           <span matListItemTitle>{{ task.name }}
             <app-show-status [status]="task.status"></app-show-status>
           </span>
-          <span matListItemLine>{{ removeMarkdownSyntax(task.description) }}</span>
+          <span matListItemLine class="wrap-text">{{ removeMarkdownSyntax(task.description) }}</span>
           <p matListItemLine>
             <ng-container *ngIf="{ value: task.hours$ | async } as hours">
               <mat-icon class="line-icon" fontIcon="hourglass_top"></mat-icon> {{ hours.value }}h
