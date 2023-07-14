@@ -75,7 +75,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       end: new FormControl(null, [Validators.required]),
       skillsName: new FormControl(null, [Validators.required]),
       skillInput: [null],
-      membersName: new FormControl(null, [Validators.required]),
+      membersName: new FormControl(null),
       memberInput: [null],
     });
 
@@ -118,28 +118,36 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
 
     this.loadingService.show();
 
-    this.organizationService
-      .createTask(this.projectId, formValue, this.skillChip.selectedItems, this.memberChip.selectedItems)
-      .subscribe({
-        next: taskId => {
-          this.loadingService.hide();
-          this.router.navigate([
-            'organizations',
-            this.organizationAddress,
-            'projects',
+    const createTask$ =
+      this.memberChip.selectedItems.length === 0
+        ? this.organizationService.createTaskWithoutMembers(this.projectId, formValue, this.skillChip.selectedItems)
+        : this.organizationService.createTask(
             this.projectId,
-            'tasks',
-            taskId,
-          ]);
-        },
-        error: err => {
-          this.loadingService.hide();
-          this.snackBar.open('Failed to create task', 'Dismiss', {
-            duration: 3000,
-          });
-          console.error(err);
-        },
-      });
+            formValue,
+            this.skillChip.selectedItems,
+            this.memberChip.selectedItems
+          );
+
+    createTask$.subscribe({
+      next: taskId => {
+        this.loadingService.hide();
+        this.router.navigate([
+          'organizations',
+          this.organizationAddress,
+          'projects',
+          this.projectId,
+          'tasks',
+          Number(taskId) - 1,
+        ]);
+      },
+      error: err => {
+        this.loadingService.hide();
+        this.snackBar.open('Failed to create task', 'Dismiss', {
+          duration: 3000,
+        });
+        console.error(err);
+      },
+    });
   }
 
   public add(event: MatChipInputEvent, isSkill: boolean): void {

@@ -40,13 +40,13 @@
     <div class="infos d-inline-flex flex-column mt-4">
       <ng-container *ngIf="(userRole$ | async) as userRole">
           <h4>Managers</h4>
-          <app-people-detail [class.clickable]="organization.managers.length > 0" [people]="organization.managers"
+          <app-people-detail [people]="organization.managers"
             [showLabel]="false" (openDialog)="openMemberDialog('manager', organization.managers, userRole === 'manager')"></app-people-detail>
           <mat-divider class="mt-3 mb-3"></mat-divider>
           
           <h4>Members</h4>
           <ng-container *ngIf="organization.members.length > 0; else noMembers">
-          <app-people-detail [class.clickable]="organization.members.length > 0" [people]="organization.members"
+          <app-people-detail  [people]="organization.members"
             [showLabel]="false" (openDialog)="openMemberDialog('member', organization.members, userRole === 'manager')"></app-people-detail>
           </ng-container>
           <ng-template #noMembers>

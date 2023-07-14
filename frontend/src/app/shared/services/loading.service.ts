@@ -11,7 +11,7 @@ export class LoadingService {
   loading$: Observable<boolean> = this.loadingSubject.asObservable();
   activeRequests = 0;
   hide(): void {
-    this.activeRequests--;
+    if (this.activeRequests - 1 >= 0) this.activeRequests--;
     if (this.activeRequests === 0) this.loadingSubject.next(false);
   }
 

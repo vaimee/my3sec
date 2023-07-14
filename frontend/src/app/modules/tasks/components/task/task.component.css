@@ -1,24 +1,42 @@
-::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-  border-color: #007bff !important;
-}
-
-::ng-deep .mat-calendar ::ng-deep .mat-calendar-body .mat-calendar-body-selected {
-  background-color: #dc3545 !important;
-  color: white !important;
-}
-
-.margin-left {
-  margin-left: 16px;
-}
-.margin-top {
-  margin-top: 16px;
-}
-
-.bg-color {
-  background-color: #d9d9d9;
-}
-
 .container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 0.3fr auto 1fr;
+  gap: 5px 20px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "Header Header"
+    "Readme Readme"
+    "Members Skills"
+}
+
+.header{
+  grid-area: Header;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.readme {
+  grid-area: Readme;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.members {
+  grid-area: Members;
+  background-color: rgb(250, 250, 250);
+  padding: 10px;
+}
+
+.skills {
+  grid-area: Skills;
+}
+
+.old-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,29 +55,4 @@
   object-fit: cover;
   padding: 5px;
   margin: 10px;
-}
-
-.container-item {
-  display: flex;
-  align-items: center;
-  justify-self: center;
-}
-
-.container-item span {
-  font-size: 1.2rem;
-  font-weight: 500;
-}
-.container-buttons {
-  display: flex;
-  align-items: center;
-  justify-self: center;
-  margin-left: 16px;
-}
-
-.avatar {
-  object-fit: cover;
-}
-
-.margin-right {
-  margin-right: 1.5rem;
 }

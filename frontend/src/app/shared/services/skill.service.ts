@@ -58,7 +58,6 @@ export class SkillService {
     return this.skillRegistry.getSkill(id).pipe(
       switchMap(({ id, metadataURI }) => this.ipfs.retrieveSkill(id.toNumber(), metadataURI.replace('ipfs://', ''))),
       catchError(err => {
-        console.log(err);
         throw Error('error getting skill');
       })
     );

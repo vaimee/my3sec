@@ -18,10 +18,5 @@ export class SkillsComponent implements OnInit {
   constructor(private skillsService: SkillService) {}
   ngOnInit(): void {
     this.skills$ = this.skillsService.getProfileSkills(this.profileId);
-    this.skillsService.getSkills().subscribe(skills => {
-      for (const skill of skills) {
-        console.log(skill);
-      }
-    });
   }
 }

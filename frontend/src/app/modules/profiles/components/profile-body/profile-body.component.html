@@ -1,33 +1,28 @@
 <div *ngIf="this.profileData$ | async as profileData">
   <div class="container">
-    <div >
+    <div>
       <div class="bio">
         <img src="{{ profileData.profileImage }}" alt="Profile Picture" class="circle-image" />
-        <ng-container
-          *ngIf="{
-            value: profileData.energy.freeEnergyOf$ | async
-          } as freeEnergy">
-          <div class="profiletitleBlock">
-            <h1 class="fw-bold">{{ profileData.firstName }} {{ profileData.surname }}</h1>
-            <p class="address">
-              {{ profileData.walletAddress }}
-            </p>
-            <p *ngIf="profileData.bio">
-              {{ profileData.bio }}
-            </p>
-            <button
-              mat-flat-button
-              class="w-full mt-1 mb-2"
-              color="primary"
-              *ngIf="!this.useDefaultProfile; else editProfile"
-              (click)="openSliderDialog(profileData, freeEnergy.value || 0)">
-              Endorse
-            </button>
-            <ng-template #editProfile>
-              <button class="w-full mt-1 mb-2" mat-stroked-button>Edit Profile</button>
-            </ng-template>
-          </div>
-        </ng-container>
+        <div class="profiletitleBlock">
+          <h1 class="fw-bold">{{ profileData.firstName }} {{ profileData.surname }}</h1>
+          <p class="address">
+            {{ profileData.walletAddress }}
+          </p>
+          <p *ngIf="profileData.bio">
+            {{ profileData.bio }}
+          </p>
+          <button
+            mat-flat-button
+            class="w-full mt-1 mb-2"
+            color="primary"
+            *ngIf="!this.useDefaultProfile; else editProfile"
+            (click)="openSliderDialog(profileData)">
+            Endorse
+          </button>
+          <ng-template #editProfile>
+            <button class="w-full mt-1 mb-2" mat-stroked-button>Edit Profile</button>
+          </ng-template>
+        </div>
         <div
           class="profile-energy-panel"
           *ngIf="{

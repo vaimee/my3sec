@@ -1,5 +1,4 @@
-.dark-wrapper {
-    background-color: #ddd;
+.wrapper {
     height: 100vh;
     display: flex;
     align-items: center;

@@ -1,44 +1,51 @@
-<ng-container *ngIf="projects$ | async as projects">
-  <div class="mt-4 bg-white p-4">
+<div class="mt-4 bg-white p-4">
     <h2 class="mb-3">Projects</h2>
-    <div class="d-flex flex-column">
-      <ng-container *ngIf="projects.length > 0; else noProjects">
-        <div class="d-flex flex-column  border border-1 border-light-subtle mt-1 mb-1 p-2 rounded-1 clickable" *ngFor="let project of projects" (click)="goTo(project)">
-          <div class="d-inline-flex">
-            <h5>{{ project.name | titlecase }}</h5>
-            <app-show-status [status]="project.status"></app-show-status>
+    <ng-container *ngIf="projects$ | async as projects; else failedLoading">
+      <div class="d-flex flex-column">
+        <ng-container *ngIf="projects.length > 0; else noProjects">
+          <div class="d-flex flex-column  border border-1 border-light-subtle mt-1 mb-1 p-2 rounded-1 clickable" *ngFor="let project of projects" (click)="goTo(project)">
+            <div class="d-inline-flex">
+              <h5>{{ project.name | titlecase }}</h5>
+              <app-show-status [status]="project.status"></app-show-status>
+            </div>
+            <div class="d-inline-flex mb-2 mt-n1 text-secondary">
+              <small>{{ project.headline }}</small>
+            </div>
+            <div class="d-inline-flex column-gap-2">
+              <p class="d-inline-flex" *ngIf="project.members | async as members">
+                <mat-icon>group</mat-icon>
+                <ng-container *ngIf="members.length > 0; else noMembers">
+                  {{ members.length }}
+                </ng-container>
+                <ng-template #noMembers>no members</ng-template>
+              </p>
+              <p class="d-inline-flex" *ngIf="project.members | async as members">
+                <mat-icon>task</mat-icon>
+                <ng-container *ngIf="project.tasks | async as tasks">
+                  {{ tasks.length }}
+                </ng-container>
+                <ng-template #noMembers>no members</ng-template>
+              </p>
+              <p class="d-inline-flex">
+                <mat-icon>calendar_month</mat-icon>
+                {{ project.currentMonth }}/{{ project.durationInMonths }}
+              </p>
+            </div>
           </div>
-          <div class="d-inline-flex mb-2 mt-n1 text-secondary">
-            <small>{{ project.headline }}</small>
+        </ng-container>
+        <ng-template #noProjects>
+          <div class="no-projects">
+            <img src="../../../assets/icons/no-projects.svg" alt="" />
+            <p class="m-4">No projects found</p>
           </div>
-          <div class="d-inline-flex column-gap-2">
-            <p class="d-inline-flex" *ngIf="project.members | async as members">
-              <mat-icon>group</mat-icon>
-              <ng-container *ngIf="members.length > 0; else noMembers">
-                {{ members.length }}
-              </ng-container>
-              <ng-template #noMembers>no members</ng-template>
-            </p>
-            <p class="d-inline-flex" *ngIf="project.members | async as members">
-              <mat-icon>task</mat-icon>
-              <ng-container *ngIf="project.tasks | async as tasks">
-                {{ tasks.length }}
-              </ng-container>
-              <ng-template #noMembers>no members</ng-template>
-            </p>
-            <p class="d-inline-flex">
-              <mat-icon>calendar_month</mat-icon>
-              {{ project.currentMonth }}/{{ project.durationInMonths }}
-            </p>
-          </div>
-        </div>
-      </ng-container>
-      <ng-template #noProjects>
-        <div class="no-projects">
-          <img src="../../../assets/icons/no-projects.svg" alt="" />
-          <p class="m-4">No projects found</p>
-        </div>
-      </ng-template>
-    </div>
-  </div>
-</ng-container>
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-template #failedLoading>
+      <div class="no-projects">
+        <img src="../../../assets/icons/no-projects.svg" alt="" />
+        <p class="m-4">We are having troubles loading your project list</p>
+      </div>
+    </ng-template>
+</div>
+

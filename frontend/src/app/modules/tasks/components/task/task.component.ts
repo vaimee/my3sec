@@ -146,6 +146,10 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  public secondsToHours(seconds: number) {
+    return Math.round(seconds / 3600);
+  }
+
   private pageNotFoundCheck<T>(observable$: Observable<T>) {
     observable$.subscribe({
       error: () => {
