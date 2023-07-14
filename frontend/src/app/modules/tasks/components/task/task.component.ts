@@ -60,6 +60,7 @@ export class TaskComponent implements OnInit {
     this.task$ = this.organizationService.getTask(this.projectId, this.taskId);
     this.pageNotFoundCheck(this.task$);
     this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
+    this.loadingService.waitForObservables([this.isManager$, this.isMember$, this.task$, this.profilesLoggedTime$]);
   }
 
   public goTo(id: string) {

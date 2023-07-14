@@ -56,7 +56,6 @@ export class ProfileBodyComponent implements OnInit {
   loadProfileDetail() {
     this.route.data.subscribe(data => {
       this.useDefaultProfile = data['useDefaultProfile'];
-      this.loadingService.show();
       this.profileData$ = this.loadDefaultProfile().pipe(
         map((profile: DataTypes.ProfileViewStructOutput) => {
           this.loggedProfileId = profile.id.toNumber();
@@ -92,19 +91,18 @@ export class ProfileBodyComponent implements OnInit {
             projects: [],
           };
           return profileData;
-        }),
-        finalize(() => {
-          this.loadingService.hide();
         })
       );
     });
-
     this.projects$ = this.profileData$.pipe(
       switchMap(profile => this.organizationService.getProjectsOfProfile(parseInt(profile.id)))
     );
+
     this.organizations$ = this.profileData$.pipe(
       switchMap(profile => this.organizationService.getOrganizationsOfProfile(parseInt(profile.id)))
     );
+
+    this.loadingService.waitForObservables([this.profileData$, this.organizations$, this.projects$]);
   }
 
   loadDefaultProfile() {

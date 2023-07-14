@@ -4,6 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Project } from '@shared/interfaces/project.interface';
+import { LoadingService } from '@shared/services/loading.service';
 import { OrganizationService } from '@shared/services/organization.service';
 
 @Component({
@@ -16,7 +17,12 @@ export class ProjectListComponent implements OnInit {
   @Input() showOrganization = false;
   organizationAddress: string;
 
-  constructor(private organizationService: OrganizationService, private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private organizationService: OrganizationService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private loadingService: LoadingService
+  ) {
     this.organizationAddress = this.route.snapshot.paramMap.get('address') as string;
   }
   ngOnInit(): void {
@@ -24,6 +30,7 @@ export class ProjectListComponent implements OnInit {
       this.organizationService.setTarget(this.organizationAddress);
       this.projects$ = this.organizationService.getProjects();
     }
+    this.loadingService.waitForObservables([this.projects$]);
   }
 
   public goTo(project: Project) {

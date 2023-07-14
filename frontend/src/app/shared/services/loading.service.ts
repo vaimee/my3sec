@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -18,5 +18,10 @@ export class LoadingService {
   show(): void {
     if (this.activeRequests === 0) this.loadingSubject.next(true);
     this.activeRequests++;
+  }
+
+  waitForObservables(observables: Observable<unknown>[]): void {
+    this.show();
+    forkJoin(observables).subscribe({ next: () => this.hide(), error: () => this.hide() });
   }
 }
