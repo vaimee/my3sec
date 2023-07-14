@@ -1,4 +1,4 @@
-import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
-import { ProfileMetadata, Project } from '@shared/interfaces';
+import { Organization, ProfileMetadata, Project } from '@shared/interfaces';
 import { EnergyWalletContractService } from '@shared/services/energy-wallet-contract.service';
 import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
@@ -27,6 +27,8 @@ import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 export class ProfileBodyComponent implements OnInit {
   public profileData$!: Observable<Profile>;
   public projects$!: Observable<Project[]>;
+  public organizations$!: Observable<Organization[]>;
+
   public userWalletAddress!: string;
   public id!: number;
   public useDefaultProfile = true;
@@ -99,6 +101,9 @@ export class ProfileBodyComponent implements OnInit {
 
     this.projects$ = this.profileData$.pipe(
       switchMap(profile => this.organizationService.getProjectsOfProfile(parseInt(profile.id)))
+    );
+    this.organizations$ = this.profileData$.pipe(
+      switchMap(profile => this.organizationService.getOrganizationsOfProfile(parseInt(profile.id)))
     );
   }
 

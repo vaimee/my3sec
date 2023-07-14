@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Organization } from '@shared/interfaces';
@@ -12,11 +12,13 @@ import { OrganizationService } from '@shared/services/organization.service';
   styleUrls: ['./organization-list.component.css'],
 })
 export class OrganizationListComponent implements OnInit {
+  @Input() organizationsInput$!: Observable<Organization[]>;
   organizations!: Observable<Organization[]>;
 
   constructor(private router: Router, private organizationService: OrganizationService) {}
   ngOnInit(): void {
-    this.organizations = this.organizationService.getOrganizations();
+    this.organizations =
+      this.organizationsInput$ !== undefined ? this.organizationsInput$ : this.organizationService.getOrganizations();
   }
 
   getOrganizationMembers(organization: Organization): number {
