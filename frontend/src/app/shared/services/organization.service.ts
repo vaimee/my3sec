@@ -138,22 +138,40 @@ export class OrganizationService {
     );
   }
 
+  public isMemberOfOrganization(profileId: number, address: string): Observable<boolean> {
+    this.setTarget(address);
+    return this.contractService.isMember(profileId);
+  }
+
   public getOrganizationsOfProfile(profileId: number): Observable<Organization[]> {
     return this.my3secHub.getOrganizationsAddress().pipe(
-      concatMap(data => data),
-      mergeMap(address => {
-        this.setTarget(address);
-        return this.isMember(profileId).pipe(map(isMember => (isMember ? address : null)));
+      concatMap(addresses => {
+        const requests = [];
+        for (const address of addresses) {
+          requests.push(
+            this.isMemberOfOrganization(profileId, address).pipe(
+              map(isMember => (isMember ? address : null)),
+              filter(addressOrFalse => {
+                if (addressOrFalse === null) return false;
+                return true;
+              }),
+              switchMap(address => this.getOrganizationByAddress(address as string))
+            )
+          );
+        }
+        return concat(requests).pipe(concatMap(data => data));
       }),
-      filter(addressOrFalse => {
-        if (addressOrFalse === null) return false;
-        return true;
-      }),
-      mergeMap(address => this.getOrganizationByAddress(address as string)),
       toArray()
     );
   }
 
+  public getOrganizationsOfCurrentProfile(): Observable<Organization[]> {
+    return this.my3secHub.getDefaultProfile(this.metamaskService.userAddress).pipe(
+      switchMap(({ id }) => {
+        return this.getOrganizationsOfProfile(+id);
+      })
+    );
+  }
   public getProjectsOfProfile(profileId: number): Observable<Project[]> {
     return this.my3secHub.getOrganizationsAddress().pipe(
       concatMap(data => data),
