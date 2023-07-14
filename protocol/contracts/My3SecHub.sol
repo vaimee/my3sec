@@ -141,6 +141,11 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     }
 
     /// @inheritdoc IMy3SecHub
+    function hasWithdrawn(address organizationAddress, uint256 taskId, uint256 profileId) external view returns (bool) {
+        return rewards[organizationAddress][taskId] == profileId;
+    }
+
+    /// @inheritdoc IMy3SecHub
     function createOrganization(string calldata metadataURI) external returns (address) {
         address organizationAddress = _organizationFactory.createOrganization(address(this), metadataURI);
         IOrganization organization = IOrganization(organizationAddress);

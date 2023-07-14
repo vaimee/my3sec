@@ -29,6 +29,8 @@ interface IMy3SecHub {
 
     function getOrganization(uint256 index) external view returns (address);
 
+    function hasWithdrawn(address organizationAddress, uint256 taskId, uint256 profileId) external view returns (bool);
+
     function createOrganization(string calldata metadataURI) external returns (address);
 
     function registerOrganization(address organization) external;
