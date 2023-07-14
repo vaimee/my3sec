@@ -532,7 +532,6 @@ export class OrganizationService {
       organization: this.contractService.address,
       tasks: this.getTasks(projectStruct.id.toNumber()),
       members: this.getProjectMembers(projectStruct.id.toNumber()),
-      hours: 0, // TODO: calculate hours
       startDate,
       endDate,
       currentMonth: this.calculateCurrentMonth(startDate),
