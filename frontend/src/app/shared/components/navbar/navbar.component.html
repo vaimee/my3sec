@@ -51,10 +51,11 @@
               <mat-icon>groups</mat-icon>
               <span>New Organization</span>
             </button>
+           <!--  Temporary disabled Log Hours Component. We have to implement the feature to list tasks of an user.
             <button mat-menu-item (click)="redirectToLogHours()">
               <mat-icon>hourglass_top</mat-icon>
               <span>Log Hours</span>
-            </button>
+            </button> -->
             <ng-container *ngFor="let item of menuItems">
               <button mat-menu-item (click)="handleItemClick(item)">
                 <mat-icon>{{ item.icon }}</mat-icon>
