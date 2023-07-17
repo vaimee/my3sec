@@ -77,7 +77,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     const formValue = { ...this.signUpForm.value };
     formValue.profileImage = this.base64Image;
     this.loadingService.show();
-    this.loadingService.show();
 
     this.ipfsService
       .storeJSON(formValue)
