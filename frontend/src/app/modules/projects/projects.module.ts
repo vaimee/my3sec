@@ -6,8 +6,8 @@ import { SharedModule } from '@shared/shared.module';
 
 import { TasksModule } from '../tasks/tasks.module';
 import { ProjectListComponent } from './components/project-list/project-list.component';
-import { ProjectsRoutingModule, routedComponents } from './projects-routing.module';
 import { ShowMembersComponent } from './components/show-members/show-members.component';
+import { ProjectsRoutingModule, routedComponents } from './projects-routing.module';
 
 @NgModule({
   declarations: [routedComponents, ShowMembersComponent],

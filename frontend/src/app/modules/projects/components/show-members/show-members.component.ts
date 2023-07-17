@@ -16,7 +16,7 @@ import { ProjectComponent } from '../project/project.component';
   templateUrl: './show-members.component.html',
   styleUrls: ['./show-members.component.css'],
 })
-export class ShowMembersComponent implements OnInit{
+export class ShowMembersComponent implements OnInit {
   organizationAddress: string;
   projectId: number;
   members$!: Observable<Profile[]>;

@@ -57,7 +57,7 @@ export class SkillService {
   public getSkill(id: number): Observable<Skill> {
     return this.skillRegistry.getSkill(id).pipe(
       switchMap(({ id, metadataURI }) => this.ipfs.retrieveSkill(id.toNumber(), metadataURI.replace('ipfs://', ''))),
-      catchError(err => {
+      catchError(() => {
         throw Error('error getting skill');
       })
     );

@@ -1,4 +1,4 @@
-import { Observable, Subject, filter, map, merge, mergeMap, pipe, takeUntil } from 'rxjs';
+import { Observable, Subject, filter, takeUntil } from 'rxjs';
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -9,7 +9,6 @@ import { MetamaskService } from '@auth/services/metamask.service';
 
 import { Profile } from '@shared/interfaces';
 import { EnergyWalletContractService } from '@shared/services/energy-wallet-contract.service';
-import { My3secHubContractService } from '@shared/services/my3sec-hub-contract.service';
 import { NavbarService } from '@shared/services/navbar.services';
 import { ProfileService } from '@shared/services/profile.service';
 

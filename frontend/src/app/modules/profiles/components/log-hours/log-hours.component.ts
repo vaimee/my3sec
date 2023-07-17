@@ -1,10 +1,9 @@
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Status } from '@shared/enums';
 import { Project, Task } from '@shared/interfaces/project.interface';
 import { LoadingService } from '@shared/services/loading.service';
 import { OrganizationService } from '@shared/services/organization.service';

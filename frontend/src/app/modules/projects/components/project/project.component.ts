@@ -1,4 +1,4 @@
-import { Observable, concat, filter, forkJoin, map, tap } from 'rxjs';
+import { Observable, filter, forkJoin } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Status } from '@shared/enums';
-import { Profile, ProfileMetadata } from '@shared/interfaces';
+import { Profile } from '@shared/interfaces';
 import { Project } from '@shared/interfaces/project.interface';
 import { LoadingService } from '@shared/services/loading.service';
 import { NavbarService } from '@shared/services/navbar.services';
