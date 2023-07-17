@@ -121,15 +121,19 @@ export class ProfileService {
       count()
     );
   }
+
   public getProfile(profileId: number): Observable<Profile> {
     return this.my3secHub.getProfile(profileId).pipe(
       switchMap(({ id, metadataURI }) => {
-        return this.ipfsService.retrieveJSON<ProfileMetadata>(metadataURI).pipe(
-          map(data => {
-            const walletAddress = this.metamaskService.userAddress;
-            return { id: id.toString(), walletAddress, ...data };
-          })
-        );
+        return this.my3secHub
+          .getProfileAccount(id.toNumber())
+          .pipe(
+            switchMap(walletAddress =>
+              this.ipfsService
+                .retrieveJSON<ProfileMetadata>(metadataURI)
+                .pipe(map(data => ({ id: id.toString(), walletAddress, ...data })))
+            )
+          );
       })
     );
   }
