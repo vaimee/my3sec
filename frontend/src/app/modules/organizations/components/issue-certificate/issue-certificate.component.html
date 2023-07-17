@@ -1,0 +1,92 @@
+<div class="wrapper p-5">
+  <div class="container">
+    <div class="my3sec-modal">
+      <div class="logo-img text-center mb-5">
+        <img src="../../../assets/images/my3sec-logo-cropped.png" />
+      </div>
+      <h2>Issue Certificate</h2>
+      <ng-container *ngIf="memberChip.items$ | async as allMembers">
+        <form action="#" class="form form-label-right" [formGroup]="issueCertificateForm" (ngSubmit)="onSubmit()">
+          <div class="login-input-col-2 login-input-col-1">
+            <mat-form-field class="example-form-field d-block" appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput type="text" name="name" autocomplete="off" formControlName="name" />
+              <mat-error *ngIf="formError('name', 'required')">Certification name is required</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="login-input-col-2 login-input-col-1">
+            <mat-form-field class="example-form-field d-block" appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput type="text" autocomplete="off" formControlName="description"></textarea>
+              <mat-error *ngIf="formError('description', 'required')">Certification description is required</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="login-input-col-2 login-input-col-1">
+            <mat-form-field class="d-block" appearance="outline" [hideRequiredMarker]="true">
+              <mat-label>Members</mat-label>
+              <mat-chip-grid #chipGrid ariac-label="Member Selection" formControlName="membersName">
+                <mat-chip-row *ngFor="let member of memberChip.selectedItems" (removed)="remove(member)">
+                  <img
+                    matChipAvatar
+                    [src]="member.profileImage"
+                    alt="Profile pic of {{ this.getMemberName(member) }}" />
+                  {{ this.getMemberName(member) }}
+                  <button matChipRemove attr.aria-label="remove {{ this.getMemberName(member) }}">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              </mat-chip-grid>
+              <input
+                matInput
+                formControlName="memberInput"
+                placeholder="Add member..."
+                #memberInput
+                [matChipInputAddOnBlur]="false"
+                [matChipInputFor]="chipGrid"
+                [matAutocomplete]="auto"
+                (matChipInputTokenEnd)="add($event)" />
+
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let filteredMember of memberChip.filteredItems$ | async" [value]="filteredMember">
+                  <img
+                    class="round-image max-size"
+                    [src]="filteredMember.profileImage"
+                    alt="Profile pic of {{ this.getMemberName(filteredMember) }}" />
+                  {{ this.getMemberName(filteredMember) }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error>Choose at least a member</mat-error>
+            </mat-form-field>
+          </div>
+          <input
+            class="file-input"
+            type="file"
+            id="certificateIcon"
+            name="avatar"
+            accept="image/*"
+            formControlName="certificateIcon"
+            (change)="onFileSelected($event, fileInputLabel)"
+            #certificateIconInput />
+          <div class="avatar">
+            <div class="avatar-label">
+              <div class="certificate-icon cursor-pointer">
+                <img
+                  src="https://effigy.im/a/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045.png"
+                  (click)="certificateIconInput.click()" />
+              </div>
+              <div class="cursor-pointer" (click)="certificateIconInput.click()" #fileInputLabel>Certificate image</div>
+            </div>
+          </div>
+          <div class="margin-top text-center">
+            <mat-error *ngIf="formError('certificateIcon', 'required') && (certificateIcon?.touched || this.submitted)"
+              >Certification image is required</mat-error
+            >
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-dark text-uppercase" type="submit">Create</button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </div>
+</div>

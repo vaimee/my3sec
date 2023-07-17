@@ -36,6 +36,16 @@ export class My3secHubContractService {
     return from(this.contract.getProfileAccount(profileId));
   }
 
+  public issueCertificate(
+    organizationAddress: string,
+    profileId: number,
+    uri: string
+  ): Observable<ethers.ContractReceipt> {
+    return from(this.contract['issueCertificate(address,uint256,string)'](organizationAddress, profileId, uri)).pipe(
+      switchMap(this.wait)
+    );
+  }
+
   public createProfile(metadataURI: string): Observable<number> {
     return from(this.contract.createProfile({ metadataURI })).pipe(
       switchMap(this.wait),
