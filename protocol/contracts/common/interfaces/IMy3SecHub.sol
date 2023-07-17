@@ -17,6 +17,8 @@ interface IMy3SecHub {
 
     function createProfile(DataTypes.CreateProfile calldata args) external returns (uint256);
 
+    function updateProfile(uint256 profileId, DataTypes.UpdateProfile calldata args) external;
+
     function giveEnergyTo(uint256 profileId, uint256 amount) external;
 
     function removeEnergyFrom(uint256 profileId, uint256 amount) external;
@@ -55,7 +57,23 @@ interface IMy3SecHub {
     // EMITTERS
     //=============================================================================
 
-    function emitProjectCreated(address organizationAddress, uint256 projectId) external;
+    function emitPendingMemberApproved(address organization, uint256 profileId) external;
 
-    function emitTaskCreated(address organizationAddress, uint256 projectId, uint256 taskId) external;
+    function emitPendingMemberRejected(address organization, uint256 profileId) external;
+
+    function emitProjectCreated(address organization, uint256 projectId) external;
+
+    function emitProjectUpdated(address organization, uint256 projectId) external;
+
+    function emitProjectMemberAdded(address organization, uint256 projectId, uint256 profileId) external;
+
+    function emitProjectMemberRemoved(address organization, uint256 projectId, uint256 profileId) external;
+
+    function emitTaskCreated(address organization, uint256 projectId, uint256 taskId) external;
+
+    function emitTaskUpdated(address organization, uint256 taskId) external;
+
+    function emitTaskMemberAdded(address organization, uint256 taskId, uint256 profileId) external;
+
+    function emitTaskMemberRemoved(address organization, uint256 taskId, uint256 profileId) external;
 }

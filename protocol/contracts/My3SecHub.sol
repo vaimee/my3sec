@@ -41,6 +41,11 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
         _;
     }
 
+    modifier onlyRegisteredOrganizationCaller() {
+        if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
+        _;
+    }
+
     function initialize() public initializer {
         __Ownable_init();
     }
@@ -114,15 +119,24 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     }
 
     /// @inheritdoc IMy3SecHub
+    function updateProfile(uint256 profileId, DataTypes.UpdateProfile calldata args) external {
+        bool isProfileOwner = msg.sender == getProfileAccount(profileId);
+        if (!isProfileOwner) revert Errors.NotProfileOwner();
+        _my3SecProfiles.updateProfile(profileId, args.metadataURI);
+    }
+
+    /// @inheritdoc IMy3SecHub
     function giveEnergyTo(uint256 profileId, uint256 amount) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         _energyWallet.giveEnergy(senderProfileId, profileId, amount);
+        emit Events.EnergyGiven(senderProfileId, profileId, amount);
     }
 
     /// @inheritdoc IMy3SecHub
     function removeEnergyFrom(uint256 profileId, uint256 amount) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         _energyWallet.removeEnergy(profileId, senderProfileId, amount);
+        emit Events.EnergyRemoved(profileId, senderProfileId, amount);
     }
 
     //=============================================================================
@@ -185,6 +199,7 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
         organization.join(senderProfileId);
+        emit Events.OrganizationJoined(organizationAddress, senderProfileId);
     }
 
     /// @inheritdoc IMy3SecHub
@@ -192,6 +207,7 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         IOrganization organization = IOrganization(organizationAddress);
         organization.leave(senderProfileId);
+        emit Events.OrganizationLeft(organizationAddress, senderProfileId);
     }
 
     /// @inheritdoc IMy3SecHub
@@ -230,6 +246,7 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
             uint256 time = organization.getTaskLoggedTimeOfProfile(taskId, senderProfileId);
             _skillWallet.recordExperience(senderProfileId, task.skills[i], time / 1 hours);
         }
+        emit Events.ExperienceWithdrawn(organizationAddress, taskId, senderProfileId);
     }
 
     function _isOrganizationContract(address organization) internal view returns (bool) {
@@ -270,14 +287,78 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     //=============================================================================
 
     /// @inheritdoc IMy3SecHub
-    function emitProjectCreated(address organizationAddress, uint256 projectId) external {
-        if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
-        emit Events.ProjectCreated(organizationAddress, projectId);
+    function emitPendingMemberApproved(
+        address organization,
+        uint256 profileId
+    ) external onlyRegisteredOrganizationCaller {
+        emit Events.PendingMemberApproved(organization, profileId);
     }
 
     /// @inheritdoc IMy3SecHub
-    function emitTaskCreated(address organizationAddress, uint256 projectId, uint256 taskId) external {
-        if (!_organizations.contains(msg.sender)) revert Errors.CallerNotOrganization();
-        emit Events.TaskCreated(organizationAddress, projectId, taskId);
+    function emitPendingMemberRejected(
+        address organization,
+        uint256 profileId
+    ) external onlyRegisteredOrganizationCaller {
+        emit Events.PendingMemberRejected(organization, profileId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitProjectCreated(address organization, uint256 projectId) external onlyRegisteredOrganizationCaller {
+        emit Events.ProjectCreated(organization, projectId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitProjectUpdated(address organization, uint256 projectId) external onlyRegisteredOrganizationCaller {
+        emit Events.ProjectUpdated(organization, projectId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitProjectMemberAdded(
+        address organization,
+        uint256 projectId,
+        uint256 profileId
+    ) external onlyRegisteredOrganizationCaller {
+        emit Events.ProjectMemberAdded(organization, projectId, profileId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitProjectMemberRemoved(
+        address organization,
+        uint256 projectId,
+        uint256 profileId
+    ) external onlyRegisteredOrganizationCaller {
+        emit Events.ProjectMemberRemoved(organization, projectId, profileId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitTaskCreated(
+        address organization,
+        uint256 projectId,
+        uint256 taskId
+    ) external onlyRegisteredOrganizationCaller {
+        emit Events.TaskCreated(organization, projectId, taskId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitTaskUpdated(address organization, uint256 taskId) external onlyRegisteredOrganizationCaller {
+        emit Events.TaskUpdated(organization, taskId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitTaskMemberAdded(
+        address organization,
+        uint256 taskId,
+        uint256 profileId
+    ) external onlyRegisteredOrganizationCaller {
+        emit Events.TaskMemberAdded(organization, taskId, profileId);
+    }
+
+    /// @inheritdoc IMy3SecHub
+    function emitTaskMemberRemoved(
+        address organization,
+        uint256 taskId,
+        uint256 profileId
+    ) external onlyRegisteredOrganizationCaller {
+        emit Events.TaskMemberRemoved(organization, taskId, profileId);
     }
 }

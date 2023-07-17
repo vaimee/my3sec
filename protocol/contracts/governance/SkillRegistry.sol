@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "../common/interfaces/ISkillRegistry.sol";
@@ -8,7 +9,7 @@ import "../common/libraries/DataTypes.sol";
 import "../common/libraries/Events.sol";
 import "../common/libraries/Errors.sol";
 
-contract SkillRegistry is ISkillRegistry {
+contract SkillRegistry is ISkillRegistry, Ownable {
     using Strings for uint256;
 
     string[] internal _skills;
@@ -53,19 +54,19 @@ contract SkillRegistry is ISkillRegistry {
     }
 
     /// @inheritdoc ISkillRegistry
-    function setBaseURI(string memory baseURI) external baseURINotEmpty(baseURI) {
+    function setBaseURI(string memory baseURI) external onlyOwner baseURINotEmpty(baseURI) {
         _baseURI = baseURI;
     }
 
     /// @inheritdoc ISkillRegistry
-    function createSkill(DataTypes.CreateSkill calldata args) external {
+    function createSkill(DataTypes.CreateSkill calldata args) external onlyOwner {
         _skills.push(args.metadataURI);
         uint256 id = _skills.length - 1;
         emit Events.SkillCreated(id);
     }
 
     /// @inheritdoc ISkillRegistry
-    function updateSkill(uint256 id, DataTypes.UpdateSkill calldata args) external skillExists(id) {
+    function updateSkill(uint256 id, DataTypes.UpdateSkill calldata args) external onlyOwner skillExists(id) {
         _skills[id] = args.metadataURI;
     }
 }

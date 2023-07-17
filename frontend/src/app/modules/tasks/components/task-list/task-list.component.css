@@ -3,6 +3,5 @@
 }
 
 .wrap-text {
-  width: 100vh;
   overflow-wrap: break-word;
 }
