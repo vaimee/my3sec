@@ -25,7 +25,6 @@ export interface TaskMetadata {
 export interface Project extends Omit<ProjectMetadata, 'startDate' | 'endDate'> {
   id: number;
   status: Status;
-  hours: number;
   tasks: Observable<Task[]>;
   members: Observable<Profile[]>;
   organization: string;

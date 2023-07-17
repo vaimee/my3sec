@@ -1,19 +1,23 @@
 import { Observable } from 'rxjs';
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Task } from '@shared/interfaces/project.interface';
+import { LoadingService } from '@shared/services/loading.service';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
 })
-export class TaskListComponent {
+export class TaskListComponent implements OnInit {
   @Input() tasks$!: Observable<Task[]>;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute, private loadingService: LoadingService) {}
+  ngOnInit(): void {
+    this.loadingService.waitForObservables([this.tasks$]);
+  }
 
   goTo(id: number): void {
     this.router.navigate([`tasks/${id}`], { relativeTo: this.route });

@@ -1,3 +1,7 @@
 .line-icon {
   vertical-align: middle;
 }
+
+.wrap-text {
+  overflow-wrap: break-word;
+}

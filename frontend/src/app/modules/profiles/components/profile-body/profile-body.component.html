@@ -66,6 +66,13 @@
     <div class="cv">
       <app-skills [profileId]="id"></app-skills>
       <app-project-list [projects$]="projects$" [showOrganization]="true"></app-project-list>
+      <ng-container *ngIf="projects$ | async">
+        <div class="mt-4 bg-white p-4">
+          <h2 class="mb-3">Organizations</h2>
+          <h6>as member</h6>
+          <app-organization-list [organizationsInput$]="organizations$"></app-organization-list>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

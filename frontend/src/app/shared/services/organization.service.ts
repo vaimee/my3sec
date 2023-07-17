@@ -299,7 +299,7 @@ export class OrganizationService {
   public getProjectMembers(projectId: number): Observable<Profile[]> {
     return this.contractService.getProjectMembers(projectId).pipe(
       concatMap(data => data),
-      switchMap(id => this.profileService.getProfile(id)),
+      mergeMap(id => this.profileService.getProfile(id)),
       toArray()
     );
   }
@@ -307,7 +307,7 @@ export class OrganizationService {
   public getTaskMembers(taskId: number): Observable<Profile[]> {
     return this.contractService.getTaskMembers(taskId).pipe(
       concatMap(data => data),
-      switchMap(id => this.profileService.getProfile(id)),
+      mergeMap(id => this.profileService.getProfile(id)),
       toArray()
     );
   }
@@ -343,6 +343,16 @@ export class OrganizationService {
 
   public getTask(projectId: number, taskId: number): Observable<Task> {
     return this.contractService.getTask(projectId, taskId).pipe(
+      switchMap(task => {
+        return this.ipfsService
+          .retrieveJSON<TaskMetadata>(task.metadataURI)
+          .pipe(map(metadata => this.getTaskFromMetadata(metadata, task)));
+      })
+    );
+  }
+
+  public getTaskById(taskId: number): Observable<Task> {
+    return this.contractService.getTaskById(taskId).pipe(
       switchMap(task => {
         return this.ipfsService
           .retrieveJSON<TaskMetadata>(task.metadataURI)
@@ -532,7 +542,6 @@ export class OrganizationService {
       organization: this.contractService.address,
       tasks: this.getTasks(projectStruct.id.toNumber()),
       members: this.getProjectMembers(projectStruct.id.toNumber()),
-      hours: 0, // TODO: calculate hours
       startDate,
       endDate,
       currentMonth: this.calculateCurrentMonth(startDate),

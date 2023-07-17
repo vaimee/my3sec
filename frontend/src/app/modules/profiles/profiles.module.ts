@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@shared/shared.module';
 
+import { OrganizationsModule } from '@organizations/organizations.module';
 import { ProjectsModule } from '@projects/projects.module';
 
 import { CertificatesComponent } from './components/certificates/certificates.component';
@@ -22,7 +23,14 @@ import { ProfilesRoutingModule, routedComponents } from './profiles-routing.modu
     EndorsersListComponent,
     ProfileListComponent,
   ],
-  imports: [CommonModule, ProfilesRoutingModule, ProjectsModule, SharedModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ProfilesRoutingModule,
+    ProjectsModule,
+    SharedModule,
+    ReactiveFormsModule,
+    OrganizationsModule,
+  ],
   exports: [ProfileListComponent],
 })
 export class ProfilesModule {}

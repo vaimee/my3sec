@@ -264,6 +264,11 @@ export class OrganizationContractService {
     return from(this.contract['getTask(uint256,uint256)'](projectId, taskId));
   }
 
+  public getTaskById(taskId: number): Observable<DataTypes.TaskViewStructOutput> {
+    this.assertTargetSet();
+    return from(this.contract['getTask(uint256)'](taskId));
+  }
+
   public getTasks(projectId: number): Observable<DataTypes.TaskViewStructOutput[]> {
     this.assertTargetSet();
     return from(this.contract.getTaskCount(projectId)).pipe(

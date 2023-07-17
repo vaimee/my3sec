@@ -50,6 +50,7 @@ export class OrganizationComponent implements OnInit {
 
   public setUp() {
     this.organization$ = this.organizationService.getOrganizationByAddress(this.organizationAddress);
+    this.loadingService.waitForObservables([this.organization$]);
     this.pageNotFoundCheck(this.organization$);
 
     this.projects$ = this.organizationService.getProjects();

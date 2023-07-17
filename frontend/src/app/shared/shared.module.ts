@@ -38,7 +38,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { PeopleDetailComponent } from './components/people-detail/people-detail.component';
 import { ShowStatusComponent } from './components/show-status/show-status.component';
-import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 const materialModules = [
   MatAutocompleteModule,
@@ -81,13 +80,6 @@ const materialModules = [
   ],
   imports: [MarkdownModule.forRoot(), CommonModule, RouterModule, ReactiveFormsModule, materialModules],
   exports: [MarkdownModule, LoadingComponent, ShowStatusComponent, PeopleDetailComponent, materialModules],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoadingInterceptor,
-      multi: true,
-    },
-  ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class SharedModule {}
