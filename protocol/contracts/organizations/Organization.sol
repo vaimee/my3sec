@@ -109,12 +109,14 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         if (!_pendingMembers.contains(profileId)) revert Errors.NotPendingMember();
         _pendingMembers.remove(profileId);
         _members.add(profileId);
+        IMy3SecHub(HUB).emitPendingMemberApproved(address(this), profileId);
     }
 
     /// @inheritdoc IOrganization
     function rejectPendingMember(uint256 profileId) external virtual override onlyWhitelisted {
         if (!_pendingMembers.contains(profileId)) revert Errors.NotPendingMember();
         _pendingMembers.remove(profileId);
+        IMy3SecHub(HUB).emitPendingMemberRejected(address(this), profileId);
     }
 
     //=============================================================================
@@ -174,11 +176,13 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
     ) external projectExists(projectId) onlyWhitelisted {
         _projects[projectId].metadataURI = args.metadataURI;
         _projects[projectId].status = args.status;
+        IMy3SecHub(HUB).emitProjectUpdated(address(this), projectId);
     }
 
     /// @inheritdoc IOrganization
     function addProjectMember(uint256 projectId, uint256 profileId) external projectExists(projectId) onlyWhitelisted {
         _projects[projectId].members.add(profileId);
+        IMy3SecHub(HUB).emitProjectMemberAdded(address(this), projectId, profileId);
     }
 
     /// @inheritdoc IOrganization
@@ -187,6 +191,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         uint256 profileId
     ) external projectExists(projectId) onlyWhitelisted {
         _projects[projectId].members.remove(profileId);
+        IMy3SecHub(HUB).emitProjectMemberRemoved(address(this), projectId, profileId);
     }
 
     //=============================================================================
@@ -290,6 +295,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         _tasks[taskId].metadataURI = args.metadataURI;
         _tasks[taskId].status = args.status;
         _tasks[taskId].skills = args.skills;
+        IMy3SecHub(HUB).emitTaskUpdated(address(this), taskId);
     }
 
     /// @inheritdoc IOrganization
@@ -298,6 +304,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         uint256 profileId
     ) external taskExists(taskId) taskNotCompleted(taskId) onlyWhitelisted {
         _tasks[taskId].members.add(profileId);
+        IMy3SecHub(HUB).emitTaskMemberAdded(address(this), taskId, profileId);
     }
 
     /// @inheritdoc IOrganization
@@ -306,6 +313,7 @@ contract Organization is IOrganization, HubControllable, Whitelistable {
         uint256 profileId
     ) external taskExists(taskId) taskNotCompleted(taskId) onlyWhitelisted {
         _tasks[taskId].members.remove(profileId);
+        IMy3SecHub(HUB).emitTaskMemberRemoved(address(this), taskId, profileId);
     }
 
     /// @inheritdoc IOrganization
