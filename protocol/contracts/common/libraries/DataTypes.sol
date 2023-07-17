@@ -9,6 +9,10 @@ library DataTypes {
         string metadataURI;
     }
 
+    struct UpdateProfile {
+        string metadataURI;
+    }
+
     struct ProfileView {
         uint256 id;
         string metadataURI;

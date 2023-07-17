@@ -48,6 +48,11 @@ contract My3SecProfiles is
         return tokenId;
     }
 
+    /// @inheritdoc IMy3SecProfiles
+    function updateProfile(uint256 profileId, string memory uri) external onlyHub {
+        _setTokenURI(profileId, uri);
+    }
+
     function _setDefaultProfile(address account, uint256 profileId) internal {
         if (profileId > 0 && account != ownerOf(profileId)) revert Errors.NotProfileOwner();
         _defaultProfileByAddress[account] = profileId;
