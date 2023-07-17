@@ -114,6 +114,13 @@ contract My3SecHub is IMy3SecHub, OwnableUpgradeable {
     }
 
     /// @inheritdoc IMy3SecHub
+    function updateProfile(uint256 profileId, DataTypes.UpdateProfile calldata args) external {
+        bool isProfileOwner = msg.sender == getProfileAccount(profileId);
+        if (!isProfileOwner) revert Errors.NotProfileOwner();
+        _my3SecProfiles.updateProfile(profileId, args.metadataURI);
+    }
+
+    /// @inheritdoc IMy3SecHub
     function giveEnergyTo(uint256 profileId, uint256 amount) external override {
         uint256 senderProfileId = _my3SecProfiles.getDefaultProfileId(msg.sender);
         _energyWallet.giveEnergy(senderProfileId, profileId, amount);

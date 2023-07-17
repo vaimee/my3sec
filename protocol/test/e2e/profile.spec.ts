@@ -77,4 +77,37 @@ describe("HUB: Profile creation", () => {
     expect(id).eq(event.args.profileId);
     expect(metadataURI).eq(MOCK_PROFILE_URI);
   });
+
+  describe("HUB: Profile update", () => {
+    it("should update the user profile", async () => {
+      const randomUser = await getRandomSigner();
+
+      const receipt = await waitForTx(my3secHub.connect(randomUser).createProfile({ metadataURI: MOCK_PROFILE_URI }));
+      const event = await findEvent(receipt, "ProfileCreated", eventsLibrary);
+
+      const newMetadataURI = "https://my3sec.vaimee.com/profiles/1";
+
+      await waitForTx(
+        my3secHub.connect(randomUser).updateProfile(event.args.profileId, { metadataURI: newMetadataURI })
+      );
+
+      const { metadataURI } = await my3secHub.getProfile(event.args.profileId);
+
+      expect(metadataURI).eq(newMetadataURI);
+    });
+
+    it("should revert if not the owner", async () => {
+      const randomUser = await getRandomSigner();
+      const randomUser2 = await getRandomSigner();
+
+      const receipt = await waitForTx(my3secHub.connect(randomUser).createProfile({ metadataURI: MOCK_PROFILE_URI }));
+      const event = await findEvent(receipt, "ProfileCreated", eventsLibrary);
+
+      const newMetadataURI = "https://my3sec.vaimee.com/profiles/1";
+
+      await expect(
+        my3secHub.connect(randomUser2).updateProfile(event.args.profileId, { metadataURI: newMetadataURI })
+      ).to.be.revertedWithCustomError(my3secHub, "NotProfileOwner");
+    });
+  });
 });

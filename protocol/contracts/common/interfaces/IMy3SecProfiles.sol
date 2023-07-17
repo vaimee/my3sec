@@ -10,5 +10,7 @@ interface IMy3SecProfiles is IERC721Upgradeable {
 
     function createProfile(address to, string memory uri) external returns (uint256);
 
+    function updateProfile(uint256 profileId, string memory uri) external;
+
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }

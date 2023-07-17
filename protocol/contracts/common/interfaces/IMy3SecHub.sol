@@ -17,6 +17,8 @@ interface IMy3SecHub {
 
     function createProfile(DataTypes.CreateProfile calldata args) external returns (uint256);
 
+    function updateProfile(uint256 profileId, DataTypes.UpdateProfile calldata args) external;
+
     function giveEnergyTo(uint256 profileId, uint256 amount) external;
 
     function removeEnergyFrom(uint256 profileId, uint256 amount) external;
