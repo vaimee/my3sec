@@ -23,8 +23,16 @@ describe("Organization", () => {
     const hubFactory = await ethers.getContractFactory("My3SecHub", deployer);
     hub = await deployMockContract(deployer, hubFactory.interface.format() as string[]);
 
+    await hub.mock.emitPendingMemberApproved.returns();
+    await hub.mock.emitPendingMemberRejected.returns();
     await hub.mock.emitProjectCreated.returns();
+    await hub.mock.emitProjectUpdated.returns();
+    await hub.mock.emitProjectMemberAdded.returns();
+    await hub.mock.emitProjectMemberRemoved.returns();
     await hub.mock.emitTaskCreated.returns();
+    await hub.mock.emitTaskUpdated.returns();
+    await hub.mock.emitTaskMemberAdded.returns();
+    await hub.mock.emitTaskMemberRemoved.returns();
 
     const contractFactory = await ethers.getContractFactory("Organization");
     contract = await contractFactory.deploy(hub.address, FAKE_METADATA_URI);
