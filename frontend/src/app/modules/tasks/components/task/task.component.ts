@@ -57,7 +57,7 @@ export class TaskComponent implements OnInit {
     this.organizationService.setTarget(this.organizationAddress);
     this.isManager$ = this.organizationService.isCurrentUserManager();
     this.isMember$ = this.organizationService.isCurrentUserTaskMember(this.taskId);
-    this.task$ = this.organizationService.getTask(this.projectId, this.taskId);
+    this.task$ = this.organizationService.getTaskById(this.taskId);
     this.pageNotFoundCheck(this.task$);
     this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
     this.loadingService.waitForObservables([this.isManager$, this.isMember$, this.task$, this.profilesLoggedTime$]);

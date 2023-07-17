@@ -351,6 +351,16 @@ export class OrganizationService {
     );
   }
 
+  public getTaskById(taskId: number): Observable<Task> {
+    return this.contractService.getTaskById(taskId).pipe(
+      switchMap(task => {
+        return this.ipfsService
+          .retrieveJSON<TaskMetadata>(task.metadataURI)
+          .pipe(map(metadata => this.getTaskFromMetadata(metadata, task)));
+      })
+    );
+  }
+
   public getTasks(projectId: number): Observable<Task[]> {
     return this.contractService.getTasks(projectId).pipe(
       concatMap(tasks => tasks),
