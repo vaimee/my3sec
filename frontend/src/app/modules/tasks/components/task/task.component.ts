@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,6 +29,7 @@ export class TaskComponent implements OnInit {
   profilesLoggedTime$!: Observable<number[]>;
   isManager$!: Observable<boolean>;
   isMember$!: Observable<boolean>;
+  hasWithdrawnReward$!: Observable<boolean>;
   showReward = true;
   showCloseTask = false;
   organizationAddress: string;
@@ -60,6 +61,7 @@ export class TaskComponent implements OnInit {
     this.task$ = this.organizationService.getTaskById(this.taskId);
     this.pageNotFoundCheck(this.task$);
     this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
+    this.hasWithdrawnReward$ = this.my3secHub.hasCurrentUserWithdrawnExperience(this.organizationAddress, this.taskId);
     this.loadingService.waitForObservables([this.isManager$, this.isMember$, this.task$, this.profilesLoggedTime$]);
   }
 
@@ -67,7 +69,6 @@ export class TaskComponent implements OnInit {
     this.router.navigate(['/profiles', id]);
   }
 
-  //TODO:how can i check if an user withdraw experience already?
   public getReward() {
     this.loadingService.show();
     this.my3secHub.withdrawExperience(this.organizationAddress, this.taskId).subscribe({

@@ -34,10 +34,12 @@
           </button>
         </ng-container>
         <ng-container *ngIf="isMember$ | async as isMember">
-          <button mat-flat-button *ngIf="taskData.status === Status.COMPLETED" (click)="getReward()">
-            <mat-icon>emoji_events</mat-icon>
-            <span class="margin-left">GET REWARD</span>
-          </button>
+          <ng-container *ngIf="hasWithdrawnReward$ | async as hasWithdrawnReward">
+            <button mat-flat-button *ngIf="taskData.status === Status.COMPLETED" (click)="getReward()">
+              <mat-icon>emoji_events</mat-icon>
+              <span class="margin-left">GET REWARD</span>
+            </button>
+          </ng-container>
           <button mat-flat-button *ngIf="taskData.status === Status.IN_PROGRESS" (click)="openLogHoursDialog()">
             <mat-icon>hourglass_top</mat-icon>
             <span class="margin-left">LOG HOURS</span>

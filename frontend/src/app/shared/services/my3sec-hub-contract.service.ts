@@ -5,7 +5,9 @@ import { Observable, forkJoin, from, map, mergeMap, of, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { Events, Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
+import { MetamaskService } from '@auth/services/metamask.service';
+
+import { Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 @Injectable({
@@ -16,7 +18,7 @@ export class My3secHubContractService {
 
   private contract: My3SecHub;
 
-  constructor() {
+  constructor(private metamaskService: MetamaskService) {
     const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
     const signer = provider.getSigner();
     this.contract = My3SecHub__factory.connect(this.contractAddress, signer);
@@ -28,6 +30,10 @@ export class My3secHubContractService {
 
   public getProfile(profileId: number): Observable<DataTypes.ProfileViewStructOutput> {
     return from(this.contract.getProfile(profileId));
+  }
+
+  public getProfileAccount(profileId: number): Observable<string> {
+    return from(this.contract.getProfileAccount(profileId));
   }
 
   public createProfile(metadataURI: string): Observable<number> {
@@ -74,6 +80,16 @@ export class My3secHubContractService {
 
   public removeEnergyFrom(profileId: number, amount: number): Observable<ethers.ContractReceipt> {
     return from(this.contract.removeEnergyFrom(profileId, amount)).pipe(switchMap(this.wait));
+  }
+
+  public hasWithdrawnExperience(organizationAddress: string, taskId: number, profileId: number): Observable<boolean> {
+    return from(this.contract.hasWithdrawn(organizationAddress, taskId, profileId));
+  }
+
+  public hasCurrentUserWithdrawnExperience(organizationAddress: string, taskId: number): Observable<boolean> {
+    return this.getDefaultProfile(this.metamaskService.userAddress).pipe(
+      switchMap(({ id }) => this.hasWithdrawnExperience(organizationAddress, taskId, id.toNumber()))
+    );
   }
 
   public getOrganizationsAddress(): Observable<string[]> {
