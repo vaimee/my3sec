@@ -1,4 +1,4 @@
-import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,7 +27,10 @@ import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 export class ProfileBodyComponent implements OnInit {
   public profileData$!: Observable<Profile>;
   public projects$!: Observable<Project[]>;
-  public organizations$!: Observable<Organization[]>;
+  public organizations: { member$: Observable<Organization[]>; manager$: Observable<Organization[]> } = {
+    member$: of([]),
+    manager$: of([]),
+  };
 
   public userWalletAddress!: string;
   public id!: number;
@@ -98,19 +101,24 @@ export class ProfileBodyComponent implements OnInit {
       switchMap(profile => this.organizationService.getProjectsOfProfile(parseInt(profile.id)))
     );
 
-    this.organizations$ = this.profileData$.pipe(
+    this.organizations.member$ = this.profileData$.pipe(
       switchMap(profile => this.organizationService.getOrganizationsOfProfile(parseInt(profile.id)))
     );
 
-    this.loadingService.waitForObservables([this.profileData$, this.organizations$, this.projects$]);
+    this.organizations.manager$ = this.profileData$.pipe(
+      switchMap(profile => this.organizationService.getOrganizationsManagerOfProfile(parseInt(profile.id)))
+    );
+
+    this.loadingService.waitForObservables([
+      this.profileData$,
+      this.organizations.manager$,
+      this.organizations.member$,
+      this.projects$,
+    ]);
   }
 
   loadDefaultProfile() {
     return this.my3secHubContractService.getDefaultProfile(this.metamaskService.userAddress);
-  }
-
-  loadProfile(id: number) {
-    return this.my3secHubContractService.getProfile(id);
   }
 
   openSliderDialog(profile: Profile): void {

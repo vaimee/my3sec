@@ -69,8 +69,10 @@
       <ng-container *ngIf="projects$ | async">
         <div class="mt-4 bg-white p-4">
           <h2 class="mb-3">Organizations</h2>
+          <h6>as manager</h6>
+          <app-organization-list [organizationsInput$]="organizations.manager$"></app-organization-list>
           <h6>as member</h6>
-          <app-organization-list [organizationsInput$]="organizations$"></app-organization-list>
+          <app-organization-list [organizationsInput$]="organizations.member$"></app-organization-list>
         </div>
       </ng-container>
     </div>

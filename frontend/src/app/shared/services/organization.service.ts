@@ -1,18 +1,5 @@
 import { ethers } from 'ethers';
-import {
-  Observable,
-  concat,
-  concatMap,
-  filter,
-  forkJoin,
-  from,
-  map,
-  mergeMap,
-  of,
-  switchMap,
-  tap,
-  toArray,
-} from 'rxjs';
+import { Observable, concat, concatMap, filter, forkJoin, from, map, mergeMap, of, switchMap, toArray } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -150,6 +137,35 @@ export class OrganizationService {
         for (const address of addresses) {
           requests.push(
             this.isMemberOfOrganization(profileId, address).pipe(
+              map(isMember => (isMember ? address : null)),
+              filter(addressOrFalse => {
+                if (addressOrFalse === null) return false;
+                return true;
+              }),
+              switchMap(address => this.getOrganizationByAddress(address as string))
+            )
+          );
+        }
+        return concat(requests).pipe(concatMap(data => data));
+      }),
+      toArray()
+    );
+  }
+
+  public isManagerOfOrganization(profileId: number, address: string): Observable<boolean> {
+    this.setTarget(address);
+    return this.my3secHub
+      .getProfileAccount(profileId)
+      .pipe(switchMap(address => this.contractService.isManager(address)));
+  }
+
+  public getOrganizationsManagerOfProfile(profileId: number): Observable<Organization[]> {
+    return this.my3secHub.getOrganizationsAddress().pipe(
+      concatMap(addresses => {
+        const requests = [];
+        for (const address of addresses) {
+          requests.push(
+            this.isManagerOfOrganization(profileId, address).pipe(
               map(isMember => (isMember ? address : null)),
               filter(addressOrFalse => {
                 if (addressOrFalse === null) return false;
