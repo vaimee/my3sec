@@ -1,0 +1,6 @@
+<div class="organization-list" *ngIf="(organizations | async) as organizationsList">
+  <ng-container *ngFor="let organization of organizationsList">
+    <img class="round-image clickable" [src]="organization.icon" (click)="goTo(organization.address)" />
+  </ng-container>
+  <p *ngIf="organizationsList.length === 0">No organization</p>
+</div>
