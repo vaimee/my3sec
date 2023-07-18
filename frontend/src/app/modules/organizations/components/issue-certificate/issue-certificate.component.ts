@@ -76,7 +76,6 @@ export class IssueCertificateComponent implements OnInit, OnDestroy {
 
   required(): ValidatorFn {
     return (): ValidationErrors | null => {
-      console.log(this.memberChip.selectedItems.length);
       return this.memberChip.selectedItems.length === 0 ? { emptyMembers: 'members cannot be empty' } : null;
     };
   }
@@ -113,7 +112,15 @@ export class IssueCertificateComponent implements OnInit, OnDestroy {
               err
             ),
         });
+      this.resetForm();
     }
+  }
+
+  private resetForm() {
+    this.issueCertificateForm.reset();
+    Object.keys(this.issueCertificateForm.controls).forEach(key => {
+      this.issueCertificateForm.get(key)?.setErrors(null);
+    });
   }
 
   public formError = (controlName: string, errorName: string) => {
@@ -172,6 +179,8 @@ export class IssueCertificateComponent implements OnInit, OnDestroy {
     if (!selectedMember) return null;
     if (this.memberChip.selectedItems.includes(selectedMember)) return null;
     this.memberChip.selectedItems.push(selectedMember);
+    this.issueCertificateForm.get('membersName')?.setErrors(null);
+
     return selectedMember;
   }
 
