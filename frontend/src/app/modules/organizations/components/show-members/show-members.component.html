@@ -12,16 +12,13 @@
         <div matListItemTitle class="container">
           <span class="clickable" (click)="goTo(member.id)"> {{ member.firstName }} {{ member.surname }}</span>
           <div class="container-buttons" *ngIf="memberType !== 'manager' && isManager">
-            <a
-              class="btn btn-outline-dark"
+            <button mat-stroked-button color="primary"
               (click)="
                 memberType === 'member' ? promoteToManager(member.walletAddress) : approvePendingMember(member.id)
               ">
-              {{ this.memberType === 'member' ? 'PROMOTE' : 'ACCEPT' }}</a
-            >
-            <a *ngIf="memberType === 'pendingMember'" class="btn btn-outline-danger" (click)="remove(member.id)"
-              >REMOVE</a
-            >
+              {{ this.memberType === 'member' ? 'PROMOTE' : 'ACCEPT' }}</button>
+            <button mat-stroked-button color="warn" class="ml-auto" *ngIf="memberType === 'pendingMember'" (click)="remove(member.id)"
+              >REMOVE</button>
           </div>
         </div>
       </mat-list-item>

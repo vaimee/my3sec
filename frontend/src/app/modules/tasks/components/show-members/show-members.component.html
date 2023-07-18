@@ -12,7 +12,7 @@
           <div matListItemTitle class="container">
             <span class="clickable" (click)="goTo(member.id)"> {{ member.firstName }} {{ member.surname }}</span>
             <div class="container-buttons">
-              <a class="btn btn-outline-dark" (click)="add(member.id)">ADD</a>
+              <button mat-stroked-button color="accent" (click)="add(member.id)">Add</button>
             </div>
           </div>
         </mat-list-item>
