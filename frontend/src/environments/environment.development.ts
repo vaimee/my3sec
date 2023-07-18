@@ -14,7 +14,7 @@ export const environment = {
     },
   },
   ipfs: {
-    httpGateway: 'https://ipfs.io/ipfs',
+    httpGateway: 'https://nftstorage.link/ipfs',
     api_key:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGIwMmQ4OEViZmQwOTM5N2M5NUNDNkJFYTUxOTliMDYwZEQyQzZmNjAiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY4Mzg4Nzc0NzQ0NCwibmFtZSI6Im15M3NlYyJ9.7ICKTPfgxcnBSblJQ_4ptfaQm82wLpgY4flozHkCKzs',
   },
