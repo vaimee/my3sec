@@ -1,5 +1,5 @@
-.round-image {
-  border-radius: 50%;
+.project-icon {
+  width: 15%;
 }
 
 .container {
@@ -19,6 +19,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 15px;
 }
 
 .tasks {
@@ -74,7 +75,13 @@
     width: 100%;
   }
 
-  .round-image {
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .project-icon {
     width: 50%;
   }
 }
