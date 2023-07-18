@@ -157,6 +157,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
     if (!selectedMember) return null;
     if (this.memberChip.selectedItems.includes(selectedMember)) return null;
     this.memberChip.selectedItems.push(selectedMember);
+    this.createProjectForm.get('membersName')?.setErrors(null);
     return selectedMember;
   }
 
