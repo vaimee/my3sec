@@ -9,6 +9,9 @@
     "Readme Readme"
     "Members Skills"
 }
+.avatar {
+  object-fit: cover;
+}
 
 .header{
   grid-area: Header;
