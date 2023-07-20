@@ -64,6 +64,16 @@ export class OrganizationContractService {
     return from(this.contract.addToWhitelist(memberAccount)).pipe(switchMap(this.wait));
   }
 
+  public getOwner(): Observable<string> {
+    this.assertTargetSet();
+    return from(this.contract.owner());
+  }
+
+  public isOwner(address: string): Observable<boolean> {
+    this.assertTargetSet();
+    return from(this.getOwner()).pipe(map(ownerAddress => ownerAddress === address));
+  }
+
   public isManager(address: string) {
     this.assertTargetSet();
     return from(this.contract.isWhitelisted(address));

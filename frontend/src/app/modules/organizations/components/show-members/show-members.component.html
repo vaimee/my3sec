@@ -10,17 +10,35 @@
           alt="{{ member.firstName }} {{ member.surname }} profile image"
           (click)="goTo(member.id)" />
         <div matListItemTitle class="container">
-          <span class="clickable" (click)="goTo(member.id)"> {{ member.firstName }} {{ member.surname }}</span>
-          <div class="container-buttons" *ngIf="memberType !== 'manager' && isManager">
-            <button mat-stroked-button color="primary"
-              (click)="
-                memberType === 'member' ? promoteToManager(member.walletAddress) : approvePendingMember(member.id)
-              ">
-              {{ this.memberType === 'member' ? 'PROMOTE' : 'ACCEPT' }}</button>
-            <button mat-stroked-button color="warn" class="ml-auto" *ngIf="memberType === 'pendingMember'" (click)="remove(member.id)"
-              >REMOVE</button>
+          <span class="clickable"  (click)="goTo(member.id)">{{ member.firstName }} {{ member.surname }}</span>
+
+          <div class="container-buttons" *ngIf="memberType !== 'manager' && (isManager || isOwner)">
+            <button
+              mat-stroked-button
+              color="primary"
+              *ngIf="memberType === 'member' && isOwner && !!!(isMemberManager(member.walletAddress) | async)"
+              (click)="promoteToManager(member.walletAddress)">
+              PROMOTE
+            </button>
+
+            <button
+              mat-stroked-button
+              color="primary"
+              *ngIf="memberType === 'pendingMember'"
+              (click)="approvePendingMember(member.id)">
+              ACCEPT
+            </button>
+            <button
+              mat-stroked-button
+              color="warn"
+              class="ml-auto"
+              *ngIf="memberType === 'pendingMember'"
+              (click)="remove(member.id)">
+              REMOVE
+            </button>
           </div>
         </div>
+        <div matListItemLine *ngIf="member.walletAddress === (owner$ | async)">owner</div>
       </mat-list-item>
     </mat-list>
   </div>

@@ -460,6 +460,14 @@ export class OrganizationService {
     return this.contractService.promoteToManager(profileAddress);
   }
 
+  public getOwnerAddress(): Observable<string> {
+    return this.contractService.getOwner();
+  }
+
+  public isOwner(address: string): Observable<boolean> {
+    return this.contractService.isOwner(address);
+  }
+
   public isManager(address: string): Observable<boolean> {
     return this.contractService.isManager(address);
   }
@@ -474,6 +482,10 @@ export class OrganizationService {
 
   public isCurrentUserManager(): Observable<boolean> {
     return this.contractService.isManager(this.metamaskService.userAddress);
+  }
+
+  public isCurrentUserOwner(): Observable<boolean> {
+    return this.contractService.isOwner(this.metamaskService.userAddress);
   }
 
   public isCurrentUserPendingMember(): Observable<boolean> {

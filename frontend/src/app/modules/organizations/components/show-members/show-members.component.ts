@@ -22,10 +22,13 @@ import { ShowMembersOutput } from './../../interfaces/show-members.interface';
 export class ShowMembersComponent implements OnInit {
   organizationAddress: string;
   members$!: Observable<Profile[]>;
+  owner$!: Observable<string>;
   memberType!: MemberType;
   isManager!: boolean;
+  isOwner!: boolean;
   title!: string;
   changed = false;
+  areMembersManager: { [address: string]: Observable<boolean> } = {};
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ShowMembersInput,
@@ -37,12 +40,18 @@ export class ShowMembersComponent implements OnInit {
     this.organizationAddress = data.address;
     this.memberType = data.memberType;
     this.isManager = data.isManager;
+    this.isOwner = data.isOwner;
   }
   ngOnInit(): void {
     this.dialogSetUp();
     this.dialogRef.backdropClick().subscribe(() => {
       this.close();
     });
+  }
+  public isMemberManager(address: string): Observable<boolean> {
+    if (this.areMembersManager[address]) return this.areMembersManager[address];
+    this.areMembersManager[address] = this.organizationService.isManager(address);
+    return this.areMembersManager[address];
   }
 
   private dialogSetUp() {
@@ -54,6 +63,7 @@ export class ShowMembersComponent implements OnInit {
         return;
       case 'manager':
         this.members$ = this.organizationService.getManagers();
+        this.owner$ = this.organizationService.getOwnerAddress();
         this.title = 'Manager';
         return;
       case 'pendingMember':

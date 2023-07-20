@@ -28,8 +28,9 @@ export class OrganizationComponent implements OnInit {
   isMember$!: Observable<boolean>;
   isPendingMember$!: Observable<boolean>;
   isManager$!: Observable<boolean>;
+  isOwner$!: Observable<boolean>;
   userId$!: Observable<number>;
-  userRole$!: Observable<'manager' | 'member' | 'manager&member' | 'pendingMember' | 'outsider'>;
+  userRole$!: Observable<'owner' | 'manager' | 'member' | 'manager&member' | 'pendingMember' | 'outsider'>;
 
   constructor(
     private organizationService: OrganizationService,
@@ -57,6 +58,8 @@ export class OrganizationComponent implements OnInit {
     this.isMember$ = this.organizationService.isCurrentUserMember();
     this.isPendingMember$ = this.organizationService.isCurrentUserPendingMember();
     this.isManager$ = this.organizationService.isCurrentUserManager();
+    this.isOwner$ = this.organizationService.isCurrentUserOwner();
+
     this.userId$ = this.profileService.getUserId();
     this.userRole$ = this.getUserRole();
     this.navBarService.setMenuItems([
@@ -80,14 +83,18 @@ export class OrganizationComponent implements OnInit {
     });
   }
 
-  public openMemberDialog(memberType: MemberType, members: Profile[], isManager: boolean | null): void {
+  public openMemberDialog(
+    memberType: MemberType,
+    members: Profile[],
+    userRole: 'owner' | 'manager' | 'member' | 'manager&member' | 'pendingMember' | 'outsider'
+  ): void {
     if (members.length === 0) return;
-    if (isManager === null) isManager = false;
 
     const showMembersData: ShowMembersInput = {
       address: this.organizationAddress,
       memberType: memberType,
-      isManager: isManager,
+      isManager: userRole === 'manager',
+      isOwner: userRole === 'owner',
     };
 
     const dialogRef = this.dialog.open(ShowMembersComponent, {
@@ -117,10 +124,12 @@ export class OrganizationComponent implements OnInit {
     });
   }
 
-  private getUserRole(): Observable<'manager' | 'member' | 'manager&member' | 'pendingMember' | 'outsider'> {
-    return combineLatest([this.isManager$, this.isMember$, this.isPendingMember$]).pipe(
-      map(([isManager, isMember, isPendingMember]) => {
+  private getUserRole(): Observable<'owner' | 'manager' | 'member' | 'manager&member' | 'pendingMember' | 'outsider'> {
+    return combineLatest([this.isOwner$, this.isManager$, this.isMember$, this.isPendingMember$]).pipe(
+      map(([isOwner, isManager, isMember, isPendingMember]) => {
         switch (true) {
+          case isOwner:
+            return 'owner';
           case isManager:
             return 'manager';
           case isMember:
