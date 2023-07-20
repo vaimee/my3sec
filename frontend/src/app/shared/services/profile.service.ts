@@ -193,7 +193,7 @@ export class ProfileService {
   public getCertificates(profileId: number): Observable<Certificate> {
     return this.my3secHub.getCertificates(profileId).pipe(
       concatMap(certificates => certificates),
-      switchMap(event => {
+      mergeMap(event => {
         return this.certificateContract.getCertificateMetadataURI(event.args.certificateId.toNumber()).pipe(
           switchMap(data => this.ipfsService.retrieveJSON<CertificateMetadata>(data)),
           map(metadata => ({
