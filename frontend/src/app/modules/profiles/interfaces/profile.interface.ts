@@ -1,6 +1,7 @@
 import { ProfileMetadata } from 'app/shared/interfaces';
 
-import { Certificate } from './certificate.interface';
+import { Certificate } from '@shared/interfaces/certificate.interface';
+
 import { ProfileEnergyData } from './profile-energy-data.interface';
 import { Project } from './project.interface';
 import { Skill } from './skill.interface';

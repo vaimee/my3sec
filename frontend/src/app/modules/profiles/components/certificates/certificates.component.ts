@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Certificate } from './../../../../modules/profiles/interfaces';
+import { Certificate } from '@shared/interfaces';
 
 @Component({
   selector: 'app-certificates',

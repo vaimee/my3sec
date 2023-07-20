@@ -108,6 +108,9 @@ export class ProfileBodyComponent implements OnInit {
       distinct()
     );
 
+    this.profileData$
+      .pipe(switchMap(profile => this.my3secHubContractService.getCertificates(parseInt(profile.id))))
+      .subscribe(a => console.log(a));
     this.loadingService.waitForObservables([this.profileData$, this.organizations$, this.projects$]);
   }
 

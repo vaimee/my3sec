@@ -6,16 +6,15 @@
       *ngFor="let certificate of certificates">
       <div class="d-flex align-items-center">
         <div class="flex-shrink-0">
-          <mat-icon class="text-dark">{{ certificate?.icon }}</mat-icon>
+          <mat-icon class="text-dark">{{ certificate?.image }}</mat-icon>
         </div>
         <div class="flex-grow-1 ms-3">
           <h6>{{ certificate?.name }}</h6>
-          <small class="text-Light text-end">{{ certificate?.achievement }} </small>
           <small class="text-Light text-end d-block">{{ certificate?.date | date }} </small>
         </div>
       </div>
       <div class="certificatesItemIcon">
-        <mat-icon class="text-black">{{ certificate?.icon }}</mat-icon>
+        <mat-icon class="text-black">{{ certificate?.image }}</mat-icon>
       </div>
     </mat-card>
   </ng-container>
