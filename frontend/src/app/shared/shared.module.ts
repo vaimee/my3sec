@@ -37,6 +37,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { PeopleDetailComponent } from './components/people-detail/people-detail.component';
 import { ShowStatusComponent } from './components/show-status/show-status.component';
+import { UserRegistrationEditorComponent } from './components/user-registration-editor/user-registration-editor.component';
 
 const materialModules = [
   MatAutocompleteModule,
@@ -76,9 +77,17 @@ const materialModules = [
     NavbarComponent,
     ShowStatusComponent,
     PeopleDetailComponent,
+    UserRegistrationEditorComponent,
   ],
   imports: [MarkdownModule.forRoot(), CommonModule, RouterModule, ReactiveFormsModule, materialModules],
-  exports: [MarkdownModule, LoadingComponent, ShowStatusComponent, PeopleDetailComponent, materialModules],
+  exports: [
+    MarkdownModule,
+    LoadingComponent,
+    ShowStatusComponent,
+    PeopleDetailComponent,
+    UserRegistrationEditorComponent,
+    materialModules,
+  ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class SharedModule {}

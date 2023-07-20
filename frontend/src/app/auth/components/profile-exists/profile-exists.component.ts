@@ -9,6 +9,6 @@ import { Router } from '@angular/router';
 export class ProfileExistsComponent {
   constructor(private router: Router) {}
   goToProfile() {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/']);
   }
 }

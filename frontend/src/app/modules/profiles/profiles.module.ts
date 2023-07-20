@@ -12,6 +12,7 @@ import { EndorseDialogComponent } from './components/endorse-dialog/endorse-dial
 import { EndorsersListComponent } from './components/endorsers-list/endorsers-list.component';
 import { ProfileListComponent } from './components/profile-list/profile-list.component';
 import { SkillsComponent } from './components/skills/skills.component';
+import { UpdateProfileComponent } from './components/update-profile/update-profile.component';
 import { ProfilesRoutingModule, routedComponents } from './profiles-routing.module';
 
 @NgModule({
@@ -22,6 +23,7 @@ import { ProfilesRoutingModule, routedComponents } from './profiles-routing.modu
     EndorseDialogComponent,
     EndorsersListComponent,
     ProfileListComponent,
+    UpdateProfileComponent,
   ],
   imports: [
     CommonModule,

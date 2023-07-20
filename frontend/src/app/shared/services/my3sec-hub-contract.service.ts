@@ -123,6 +123,10 @@ export class My3secHubContractService {
     return from(this.contract.logTime(organizationAddress, taskId, time * 60 * 60)).pipe(switchMap(this.wait));
   }
 
+  public updateProfile(profileId: number, metadataURI: string): Observable<ethers.ContractReceipt> {
+    return from(this.contract.updateProfile(profileId, { metadataURI })).pipe(switchMap(this.wait));
+  }
+
   public getOrganizationCount(): Observable<BigNumber> {
     return from(this.contract.getOrganizationCount());
   }

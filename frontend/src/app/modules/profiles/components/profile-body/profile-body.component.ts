@@ -1,4 +1,4 @@
-import { Observable, catchError, concat, distinct, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, concat, distinct, map, of, switchMap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
-import { Organization, ProfileMetadata, Project } from '@shared/interfaces';
+import { Organization, Profile as ProfileInterface, ProfileMetadata, Project } from '@shared/interfaces';
 import { EnergyWalletContractService } from '@shared/services/energy-wallet-contract.service';
 import { IpfsService } from '@shared/services/ipfs.service';
 import { LoadingService } from '@shared/services/loading.service';
@@ -18,6 +18,8 @@ import { EndorsersListComponent } from '@profiles/components/endorsers-list/endo
 import { EndorseDialogInterface } from '@profiles/interfaces/endorse-dialog-data.interface';
 import { Profile } from '@profiles/interfaces/profile.interface';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
+
+import { UpdateProfileComponent } from '../update-profile/update-profile.component';
 
 @Component({
   selector: 'app-profile-body',
@@ -126,6 +128,22 @@ export class ProfileBodyComponent implements OnInit {
     const dialogRef = this.dialog.open(EndorseDialogComponent, {
       width: '400px',
       data: endorseDialogInterface,
+    });
+
+    dialogRef.afterClosed().subscribe(changed => {
+      if (!changed) return;
+      this.loadProfileDetail();
+    });
+  }
+
+  public openUpdateProfile(profile: Profile): void {
+    const openUpdateProfileInterface: ProfileInterface = {
+      ...profile,
+    };
+
+    const dialogRef = this.dialog.open(UpdateProfileComponent, {
+      width: '640px',
+      data: openUpdateProfileInterface,
     });
 
     dialogRef.afterClosed().subscribe(changed => {

@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import {
   Observable,
   catchError,
@@ -102,11 +103,35 @@ export class ProfileService {
     );
   }
 
+  public doesUserProfileExist(): Observable<boolean> {
+    return this.my3secHub.getDefaultProfile(this.metamaskService.userAddress).pipe(
+      map(value => {
+        if (value === undefined) return false;
+        return true;
+      }),
+      catchError(error => {
+        console.log('error when reading profile - redirect to signup', error);
+        return of(false);
+      })
+    );
+  }
+
+  public createProfile(profileMetadata: ProfileMetadata): Observable<number> {
+    return this.ipfsService.storeJSON(profileMetadata).pipe(switchMap(uri => this.my3secHub.createProfile(uri)));
+  }
+
+  public updateProfile(profileId: number, profileMetadata: ProfileMetadata): Observable<ethers.ContractReceipt> {
+    return this.ipfsService
+      .storeJSON(profileMetadata)
+      .pipe(switchMap(uri => this.my3secHub.updateProfile(profileId, uri)));
+  }
+
   private getEnergyEndorsedToFromArray(endorserId: number, results: [number, number][]) {
     const matchingId = results.filter(item => item[0] === endorserId).map(item => item[1]);
     if (matchingId.length > 0) return matchingId[0];
     return 0;
   }
+
   public getProfileCount(maxItems = 100): Observable<number> {
     const profileIds = [];
     for (let i = 1; i <= maxItems; i++) profileIds.push(of(i));

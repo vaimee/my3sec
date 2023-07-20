@@ -20,7 +20,9 @@
             Endorse
           </button>
           <ng-template #editProfile>
-            <button class="w-full mt-1 mb-2" mat-stroked-button>Edit Profile</button>
+            <button class="w-full mt-1 mb-2" (click)="openUpdateProfile(profileData)" mat-stroked-button>
+              Edit Profile
+            </button>
           </ng-template>
         </div>
         <div
