@@ -7,8 +7,9 @@ import { Injectable } from '@angular/core';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
-import { Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
+import { Events, Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
+import { CertificateIssuedEvent } from '@vaimee/my3sec-contracts/dist/contracts/common/libraries/Events';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +18,13 @@ export class My3secHubContractService {
   private contractAddress = environment.contracts.my3secHub;
 
   private contract: My3SecHub;
+  private events: Events;
 
   constructor(private metamaskService: MetamaskService) {
     const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
     const signer = provider.getSigner();
     this.contract = My3SecHub__factory.connect(this.contractAddress, signer);
+    this.events = Events__factory.connect(this.contractAddress, signer);
   }
 
   public getDefaultProfile(account: string): Observable<DataTypes.ProfileViewStructOutput> {
@@ -44,6 +47,11 @@ export class My3secHubContractService {
     return from(this.contract['issueCertificate(address,uint256,string)'](organizationAddress, profileId, uri)).pipe(
       switchMap(this.wait)
     );
+  }
+
+  public getCertificates(profileId: number): Observable<CertificateIssuedEvent[]> {
+    const filter = this.events.filters.CertificateIssued(null, profileId);
+    return from(this.events.queryFilter(filter));
   }
 
   public createProfile(metadataURI: string): Observable<number> {

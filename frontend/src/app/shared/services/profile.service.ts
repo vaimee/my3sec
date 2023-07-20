@@ -17,10 +17,11 @@ import { Injectable } from '@angular/core';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
-import { Profile, ProfileMetadata } from '@shared/interfaces';
+import { Certificate, CertificateMetadata, Profile, ProfileMetadata } from '@shared/interfaces';
 
 import { EndorserItem } from '@profiles/interfaces';
 
+import { CertificateContractService } from './certificate-contract.service';
 import { EnergyWalletContractService } from './energy-wallet-contract.service';
 import { IpfsService } from './ipfs.service';
 import { My3secHubContractService } from './my3sec-hub-contract.service';
@@ -32,6 +33,7 @@ export class ProfileService {
   constructor(
     private my3secHub: My3secHubContractService,
     private energyWalletContract: EnergyWalletContractService,
+    private certificateContract: CertificateContractService,
     private ipfsService: IpfsService,
     private metamaskService: MetamaskService
   ) {}
@@ -183,6 +185,23 @@ export class ProfileService {
             const walletAddress = this.metamaskService.userAddress;
             return { id: id.toString(), walletAddress, ...data };
           })
+        );
+      })
+    );
+  }
+
+  public getCertificates(profileId: number): Observable<Certificate> {
+    return this.my3secHub.getCertificates(profileId).pipe(
+      concatMap(certificates => certificates),
+      switchMap(event => {
+        return this.certificateContract.getCertificateMetadataURI(event.args.certificateId.toNumber()).pipe(
+          switchMap(data => this.ipfsService.retrieveJSON<CertificateMetadata>(data)),
+          map(metadata => ({
+            ...metadata,
+            id: event.args.certificateId.toNumber(),
+            organizationAddress: event.args.from,
+            profileId: event.args.profileId.toNumber(),
+          }))
         );
       })
     );

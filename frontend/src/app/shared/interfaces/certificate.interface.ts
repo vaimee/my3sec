@@ -3,3 +3,10 @@ export interface CertificateMetadata {
   description: string;
   image: string;
 }
+
+export interface Certificate extends CertificateMetadata {
+  id: number;
+  profileId: number;
+  organizationAddress: string;
+  date?: Date;
+}
