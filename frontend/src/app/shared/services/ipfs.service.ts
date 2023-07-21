@@ -51,8 +51,12 @@ export class IpfsService {
       id: id,
       name: incomingSkill.title as string,
       description: incomingSkill.description.en.literal as string,
-      category: incomingSkill.links.broaderHierarchyConcept[0].title,
+      category: '',
     };
+    if (incomingSkill.links?.broaderHierarchyConcept)
+      skill.category = incomingSkill.links?.broaderHierarchyConcept[0]?.title;
+    else if (incomingSkill.links?.broaderConcept) skill.category = incomingSkill.links?.broaderConcept[0]?.title;
+    else skill.category = 'No broader concept linked';
     return skill;
   }
 }
