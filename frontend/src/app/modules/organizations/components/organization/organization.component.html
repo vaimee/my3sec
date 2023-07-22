@@ -53,7 +53,7 @@
             <small>No members</small>
           </ng-template>
 
-          <ng-container *ngIf="userRole === 'manager'">
+          <ng-container *ngIf="userRole === 'manager' || userRole === 'owner'">
             <mat-divider class="mt-3 mb-3"></mat-divider>
             <h4>Pending members</h4>
             <ng-container *ngIf="organization.pendingMembers.length > 0; else noPendingMembers">

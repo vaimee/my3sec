@@ -485,7 +485,12 @@ export class OrganizationService {
   }
 
   public isCurrentUserOwner(): Observable<boolean> {
-    return this.contractService.isOwner(this.metamaskService.userAddress);
+    // TODO: fixme this.contractService.isOwner(this.metamaskService.userAddress); // didn't work
+    return this.getOwnerAddress().pipe(
+      map(address => {
+        return this.metamaskService.userAddress === address.toLocaleLowerCase();
+      })
+    );
   }
 
   public isCurrentUserPendingMember(): Observable<boolean> {
