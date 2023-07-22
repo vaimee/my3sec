@@ -18,7 +18,7 @@
               color="primary"
               *ngIf="memberType === 'member' && isOwner && !!!(isMemberManager(member.walletAddress) | async)"
               (click)="promoteToManager(member.walletAddress)">
-              PROMOTE
+              Promote
             </button>
 
             <button
@@ -26,7 +26,7 @@
               color="primary"
               *ngIf="memberType === 'pendingMember'"
               (click)="approvePendingMember(member.id)">
-              ACCEPT
+              Accept
             </button>
             <button
               mat-stroked-button
@@ -34,7 +34,7 @@
               class="ml-auto"
               *ngIf="memberType === 'pendingMember'"
               (click)="remove(member.id)">
-              REMOVE
+              Remove
             </button>
           </div>
         </div>
