@@ -515,11 +515,18 @@ export class OrganizationService {
     return this.contractService.getTaskLoggedTime(taskId).pipe(map(seconds => Math.round(seconds / 3600)));
   }
 
-  public getTaskLoggedTimeOfProfiles(taskId: number, task$: Observable<Task>): Observable<number[]> {
+  public getTaskLoggedTimeOfProfiles(
+    taskId: number,
+    task$: Observable<Task>
+  ): Observable<{ id: string; time: number }[]> {
     return task$.pipe(
       switchMap(task$ => task$.members$),
       concatMap(member => member),
-      switchMap(member => this.contractService.getTaskLoggedTimeOfProfile(taskId, +member.id)),
+      mergeMap(member => {
+        return this.contractService
+          .getTaskLoggedTimeOfProfile(taskId, +member.id)
+          .pipe(map(timeLogged => ({ id: member.id, time: timeLogged })));
+      }),
       toArray()
     );
   }

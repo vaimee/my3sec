@@ -78,7 +78,7 @@
               {{ member.firstName }} {{ member.surname }}
             </div>
             <span matListItemLine class="margin-right clickable" (click)="goTo(member.id)">
-              {{ secondsToHours(profilesLoggedTime[0]) }}h
+              {{ getTimeForProfileId(profilesLoggedTime, member.id) }}h
             </span>
             <button *ngIf="isManager.value" mat-icon-button matListItemMeta (click)="remove(member.id)">
               <mat-icon>close</mat-icon>

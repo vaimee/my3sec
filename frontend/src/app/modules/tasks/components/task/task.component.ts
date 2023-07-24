@@ -26,7 +26,7 @@ import { LogHoursInput } from './../../interfaces/log-hours.interface';
 })
 export class TaskComponent implements OnInit {
   task$!: Observable<Task>;
-  profilesLoggedTime$!: Observable<number[]>;
+  profilesLoggedTime$!: Observable<{ id: string; time: number }[]>;
   isManager$!: Observable<boolean>;
   isMember$!: Observable<boolean>;
   hasWithdrawnReward$!: Observable<boolean>;
@@ -63,6 +63,10 @@ export class TaskComponent implements OnInit {
     this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
     this.hasWithdrawnReward$ = this.my3secHub.hasCurrentUserWithdrawnExperience(this.organizationAddress, this.taskId);
     this.loadingService.waitForObservables([this.isManager$, this.isMember$, this.task$, this.profilesLoggedTime$]);
+    this.profilesLoggedTime$.subscribe(data => {
+      console.log('subs');
+      console.log(data);
+    });
   }
 
   public goTo(id: string) {
@@ -150,6 +154,11 @@ export class TaskComponent implements OnInit {
 
   public secondsToHours(seconds: number) {
     return Math.round(seconds / 3600);
+  }
+
+  public getTimeForProfileId(profiles: { id: string; time: number }[], profileId: string): number {
+    const matchingProfile = profiles.find(profile => profile.id === profileId);
+    return matchingProfile ? this.secondsToHours(matchingProfile.time) : 0;
   }
 
   private pageNotFoundCheck<T>(observable$: Observable<T>) {
