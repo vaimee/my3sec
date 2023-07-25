@@ -1,0 +1,25 @@
+{
+  "name": "my3sec-landing",
+  "version": "1.0.0",
+  "description": "The landing page of my3sec project",
+  "main": "index.html",
+  "scripts": {
+    "build": "tailwindcss -i ./assets/css/input.css -o ./dist/output.css",
+    "build:watch": "tailwindcss -i ./assets/css/input.css -o ./dist/output.css --watch",
+    "build:minify": "tailwindcss -i ./assets/css/input.css -o ./dist/output.css --minify",
+    "watch": "browser-sync start --server --watch",
+    "start": "browser-sync start --server"
+  },
+  "keywords": [
+    "remote",
+    "workers",
+    "hour",
+    "tracker"
+  ],
+  "author": "VAIMEE",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.29.3",
+    "tailwindcss": "^3.3.3"
+  }
+}

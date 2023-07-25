@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="137.73697mm"
+   height="32.671658mm"
+   viewBox="0 0 137.73697 32.671658"
+   version="1.1"
+   id="svg72192"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="my3secLogo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview72194"
+     pagecolor="#ffffff"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#353535"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.914906"
+     inkscape:cx="282.54269"
+     inkscape:cy="-65.580508"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="564"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1-6" />
+  <defs
+     id="defs72189">
+    <inkscape:path-effect
+       split_items="false"
+       oposite_fuse="false"
+       fuse_paths="false"
+       discard_orig_path="false"
+       mode="free"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect2738-9"
+       center_point="-16.66682,-223.80732"
+       end_point="-16.66682,-222.76308"
+       start_point="-16.66682,-224.85157"
+       effect="mirror_symmetry"
+       lpesatellites=""
+       split_open="false"
+       link_styles="false" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-33.156783,-139.44258)">
+    <g
+       inkscape:label="Layer 1"
+       id="layer1-6"
+       transform="translate(-152.94557,145.536)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:23.881px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:'Montserrat Light';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.98512"
+         x="224.68542"
+         y="21.179037"
+         id="text2722-5"
+         inkscape:export-filename="my3secLogoFull.png"
+         inkscape:export-xdpi="200"
+         inkscape:export-ydpi="200"><tspan
+           sodipodi:role="line"
+           id="tspan2720-1"
+           x="224.68542"
+           y="21.179037"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';stroke-width:2.98512">MY3SEC</tspan></text>
+      <path
+         sodipodi:type="star"
+         style="fill:#55ddff;fill-opacity:1;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:round"
+         id="path74407"
+         inkscape:flatsided="true"
+         sodipodi:sides="3"
+         sodipodi:cx="129.5215"
+         sodipodi:cy="741.05975"
+         sodipodi:r1="93.444237"
+         sodipodi:r2="46.722115"
+         sodipodi:arg1="0.52359878"
+         sodipodi:arg2="1.5707963"
+         inkscape:rounded="0"
+         inkscape:randomized="0"
+         d="m 210.44658,787.78187 -161.850163,0 80.925083,-140.16635 z"
+         transform="matrix(0.06298155,0.06298155,-0.03631435,0.03631435,214.66727,-20.999854)"
+         inkscape:transform-center-y="-2.0486073"
+         inkscape:transform-center-x="3.761297e-06" />
+      <path
+         sodipodi:type="star"
+         style="fill:#03749c;fill-opacity:1;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:round"
+         id="path74463"
+         inkscape:flatsided="true"
+         sodipodi:sides="3"
+         sodipodi:cx="129.5215"
+         sodipodi:cy="741.05975"
+         sodipodi:r1="93.444237"
+         sodipodi:r2="46.722115"
+         sodipodi:arg1="0.52359878"
+         sodipodi:arg2="1.5707963"
+         inkscape:rounded="0"
+         inkscape:randomized="0"
+         d="m 210.44658,787.78187 -161.850163,0 80.925083,-140.16635 z"
+         transform="matrix(0.05700807,0.05700807,0.03287012,-0.03287012,174.69789,23.271299)"
+         inkscape:transform-center-y="1.8543119"
+         inkscape:transform-center-x="1.3359202e-06" />
+      <path
+         style="fill:none;stroke:#023d67;stroke-width:1.336;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         d="M 186.5747,10.232671 201.3065,24.964472 201.287,-4.4796601 216.0188,10.252141"
+         id="path74465" />
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>My3Sec</title>
+    <meta content=""
+        name="description">
+    <meta content="" name="keywords">
+    <!-- Favicons -->
+    
+    <!-- Main CSS file generated with Tailwindcss -->
+    <link href="./dist/output.css" rel="stylesheet">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Inline font for better performance -->
+    <style>
+       @font-face{font-family:Montserrat;font-style:normal;font-weight:300;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2');unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}@font-face{font-family:Montserrat;font-style:normal;font-weight:300;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}@font-face{font-family:Montserrat;font-style:normal;font-weight:300;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459WZhyzbi.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}@font-face{font-family:Montserrat;font-style:normal;font-weight:300;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459Wdhyzbi.woff2) format('woff2');unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:Montserrat;font-style:normal;font-weight:300;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:Montserrat;font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2');unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}@font-face{font-family:Montserrat;font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}@font-face{font-family:Montserrat;font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459WZhyzbi.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}@font-face{font-family:Montserrat;font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459Wdhyzbi.woff2) format('woff2');unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:Montserrat;font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:Montserrat;font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2');unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}@font-face{font-family:Montserrat;font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}@font-face{font-family:Montserrat;font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459WZhyzbi.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}@font-face{font-family:Montserrat;font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459Wdhyzbi.woff2) format('woff2');unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:Montserrat;font-style:normal;font-weight:800;font-display:swap;src:url(https://fonts.gstatic.com/s/montserrat/v25/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    </style>
+</head>
+<body class="flex flex-col items-center bg-yellow-50">
+    
+<section class="h-screen w-full flex row justify-center">
+    <div class="grid grid-rows-hero max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
+        <div class="mr-auto lg:col-span-11">
+            <a href="#" class="inline-flex items-center justify-center w-20">
+                <img src="./assets/img/my3secLogo.svg" alt="My3Sec logo" draggable="false">
+            </a>
+        </div>
+        <a href="https://github.com/vaimee/my3sec" class="inline-flex place-self-center justify-center w-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-700" fill="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+            </svg>
+        </a>
+        <div class="mr-auto place-self-center lg:col-span-7">
+            <h1
+                class="max-w-xl mb-4 text-5xl tracking-tight leading-none md:text-7xl xl:text-8x">
+                <span class="font-bold">Prove</span> your unique value
+            </h1>
+            <p class="max-w-xl mb-6 font-light text-gray-900 lg:mb-8 md:text-lg lg:text-xl">
+                My3Sec is a fully decentralized system that redefines career growth and project management. 
+                We empower individuals and employers with verified skill-oriented approaches,
+                transforming the way we track progress.
+            </p>
+            <a href="#"
+                class="inline-flex bg-cyan-300 items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                Get started
+                <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </a>
+            <a href="#"
+                class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 ">
+                📹 Watch video
+            </a>
+        </div>
+        <div class="hidden place-self-center lg:mt-0 lg:col-span-5 lg:flex aspect-square">
+            <img src="./assets/img/hero.svg" alt="an abstract painting with different shapes" draggable="false">
+        </div>
+    </div>
+</section>
+<section id="users" class="flex flex-col w-full items-center max-w-screen-xl px-4 mx-auto gap-16" x-data="{tab: 'Freelancers'}">
+    <div
+        class="text-sm font-medium text-center text-gray-500  border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-8"
+        >
+        <ul class="flex flex-wrap">
+            <li class="mr-2">
+                <a href="#users"
+                    class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-30"
+                    :class="{'border-b-2 border-cyan-400 text-gray-900': tab == 'Freelancers'}"
+                    @click="tab = 'Freelancers'">For Freelancers</a>
+            </li>
+            <li class="mr-2">
+                <a href="#users"
+                    class="inline-block p-4  rounded-t-lg  hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    :class="{'border-b-2 border-cyan-400 text-gray-900': tab == 'Companies'}"
+                    aria-current="page"
+                    @click="tab = 'Companies'">For Companies</a>
+            </li>
+            <li class="mr-2">
+                <a href="#users"
+                    class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    :class="{'border-b-2 border-cyan-400 text-gray-900': tab == 'Head-Hunters'}"
+                    @click="tab = 'Head-Hunters'">For Head-Hunters</a>
+            </li>
+        </ul>
+    </div>
+    <div x-show="tab === 'Freelancers'" class="grid grid-cols-2">
+        <p>
+            Are you a freelancer looking to harness the full potential of blockchain technology to propel your career to new
+            heights? Look no further than My3Sec, the cutting-edge platform designed to empower you in the ever-evolving job market.
+            Take advantage of our innovative features that will enable you to create an impressive online portfolio by effortlessly
+            uploading your certifications, showcasing your skills to potential clients without any cost to you. Moreover, with
+            My3Sec's efficient time management tools, you can optimize your schedule and focus on what truly matters – delivering
+            exceptional results to your clients. By investing a small charge fee per month, you can boost your visibility and gain a
+            competitive edge that will set you apart from the crowd.
+        </p>
+        <div class="bg-cyan-700 block w-48 aspect-square place-self-center rotate-45">
+            <img class="-rotate-45" src="./assets/img/freelance.png">
+        </div>
+    </div>
+    <div x-show="tab === 'Companies'" class="grid grid-cols-2 ">
+        <p>
+            In the fast-paced world of business, time is of the essence, and productivity is paramount. My3Sec provides companies
+            with the ultimate solution to save time and streamline team management through the power of blockchain. With our
+            platform, creating projects and assigning tasks to your team becomes a seamless process, ensuring that your projects are
+            executed with unparalleled efficiency. But it doesn't end there! My3Sec offers invaluable insights into your team's
+            in-house skills, allowing you to capitalize on your team's potential and drive success like never before.
+        </p>
+        <div class="bg-cyan-300 block w-48 aspect-square place-self-center rotate-45"></div>
+    </div>
+    <div x-show="tab === 'Head-Hunters'" class="grid grid-cols-2 ">
+        <p>
+            Searching for the perfect candidate can be an arduous and time-consuming task, but with My3Sec, it's an entirely new
+            experience. Leveraging the transformative capabilities of blockchain technology, our platform empowers head-hunters to
+            discover exceptional talent with unparalleled ease and precision. Save precious time in the recruitment process and
+            delight your clients with top-tier candidates that perfectly match their needs. My3Sec opens up a world of
+            possibilities, allowing you to focus on what you do best – connecting talent with opportunity while maximizing client
+            satisfaction.
+        </p>
+        <div class="bg-cyan-700 block w-48 aspect-square place-self-center rotate-45"></div>
+    </div>
+</section>
+<section class="flex flex-col items-center mt-48 max-w-screen-xl w-full">
+    <h2 class="text-4xl mb-6">FAQ</h2>
+    <div class="flex flex-col bg-white divide-gray-700 max-w-4xl w-full border rounded-sm border-gray-500">
+        <details>
+            <summary class="inline-flex border-b py-2 px-6 border-gray-500 flex-row cursor-pointer w-full focus:underline">
+                <svg class="w-3 mr-1 "
+                    version="1.1" viewBox="0 0 330 330" xml:space="preserve">
+                    <path id="XMLID_225_"
+                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                </svg>
+                <h6>How does it work?</h6>
+            </summary>
+            <div class="px-4 pb-4 border-b py-2 border-gray-500">
+                <p>My3Sec is the unique decentralized platform to efficiently manage projects and create skilled talented teams on demand
+                connecting remote workers with the perfect tasks to perform.</p>
+            </div>
+        </details>
+        <details>
+            <summary class="inline-flex border-b py-2 px-6 border-gray-500 flex-row cursor-pointer w-full focus:underline">
+                <svg class="w-3 mr-1 "
+                    version="1.1" viewBox="0 0 330 330" xml:space="preserve">
+                    <path id="XMLID_225_"
+                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                </svg>
+                <h6>Why My3Sec is built on blockchain?</h6>
+            </summary>
+            <div class="px-4 pb-4 border-b py-2 border-gray-500">
+                <p>My3Sec uses blockchain to build a network of trustworthy skilled workers by creating a democratic system of reputation
+                based on proven portfolio of projects. By distributing the power along the participant of the network, the value of each
+                worker capabilities is evaluated according to the time spent working which leads to better perspective of career focused
+                on results.</p>
+            </div>
+        </details>
+        <details>
+            <summary class="inline-flex border-b py-2 px-6 border-gray-500 flex-row cursor-pointer w-full focus:underline">
+                <svg class="w-3 mr-1 "
+                    version="1.1" viewBox="0 0 330 330" xml:space="preserve">
+                    <path id="XMLID_225_"
+                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                </svg>
+                <h6>What type of skills are verified on My3Sec?</h6>
+            </summary>
+            <div class="px-4 pb-4 border-b py-2 border-gray-500">
+                <p>My3Sec focuses mainly on complex technological projects involving digital high tech skills. It primarily targets high
+                skilled software developers and the coding skills engaged during the development of innovative digital products.</p>
+            </div>
+        </details>
+        <details>
+            <summary class="inline-flex border-b py-2 px-6 border-gray-500 flex-row cursor-pointer w-full focus:underline">
+                <svg class="w-3 mr-1 "
+                    version="1.1" viewBox="0 0 330 330" xml:space="preserve">
+                    <path id="XMLID_225_"
+                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                </svg>
+                <h6>How do I manage a project?</h6>
+            </summary>
+            <div class="px-4 pb-4 border-b py-2 border-gray-500">
+                <p>If you are an organization, you can create a new project, describe each tasks in details describing the skills you are
+                looking for and assign them to as many team members as you need. Create your profile as project manager to validate team
+                members, monitor the progress of your project and save time.</p>
+            </div>
+        </details>
+        <details>
+            <summary class="inline-flex border-b py-2 px-6 border-gray-500 flex-row cursor-pointer w-full focus:underline">
+                <svg class="w-3 mr-1 "
+                    version="1.1" viewBox="0 0 330 330" xml:space="preserve">
+                    <path id="XMLID_225_"
+                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                </svg>
+                <h6>How do I create my certified portfolio?</h6>
+            </summary>
+            <div class="px-4 pb-4 border-b py-2 border-gray-500">
+                <p>If you are a remote worker simply log into your profile and you will find the pending tasks assigned to you. Register
+                the hours spent on each task daily and get rewards for finishing your job. Your proven skill will be displayed on your
+                page and anyone in the network will be able to see your career progresses. If you are a freelance, you will be also able
+                to create projects and tasks to prove your skills while working.</p>
+            </div>
+        </details>
+        <details>
+            <summary class="inline-flex border-b py-2 px-6 border-gray-500 flex-row cursor-pointer w-full focus:underline">
+                <svg class="w-3 mr-1 "
+                    version="1.1" viewBox="0 0 330 330" xml:space="preserve">
+                    <path id="XMLID_225_"
+                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                </svg>
+                <h6>How do I find talents?</h6>
+            </summary>
+            <div class="px-4 pb-4 border-b py-2 border-gray-500">
+                <p>If you are looking for talented professionals you can verify the certified portfolio of any member of the network and
+                get in touch with them through the platform.</p>
+            </div>
+        </details>
+        <details>
+            <summary class="inline-flex py-2 px-6 flex-row cursor-pointer w-full focus:underline">
+                <svg class="w-3 mr-1 "
+                    version="1.1" viewBox="0 0 330 330" xml:space="preserve">
+                    <path id="XMLID_225_"
+                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393  c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393  s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                </svg>
+                <h6>How much do I pay?</h6>
+            </summary>
+            <div class="px-4 pb-4 py-2">
+                <p>You pay according to the number of projects and team members you are managing on My3Sec. the more you use it the less
+                you pay! If you are a head-hunter you pay a flat monthly fee according to the usage of the platform.</p>
+            </div>
+        </details>
+    </div>
+</section>
+<footer class="bg-cyan-300 h-10 w-full mt-8 py-3">
+    <p class="w-full text-center text-slate-50">
+        Designed with 💙 by VAIMEE
+    </p>
+</footer>
+</body>
+</html>
