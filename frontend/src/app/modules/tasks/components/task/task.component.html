@@ -34,7 +34,7 @@
           </button>
         </ng-container>
         <ng-container *ngIf="isMember$ | async as isMember">
-          <ng-container *ngIf="hasWithdrawnReward$ | async as hasWithdrawnReward">
+          <ng-container *ngIf="hasNotWithdrawnReward$ | async as hasNotWithdrawnReward">
             <button mat-flat-button *ngIf="taskData.status === Status.COMPLETED" (click)="getReward()">
               <mat-icon>emoji_events</mat-icon>
               <span class="margin-left">GET REWARD</span>

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,7 +29,7 @@ export class TaskComponent implements OnInit {
   profilesLoggedTime$!: Observable<{ id: string; time: number }[]>;
   isManager$!: Observable<boolean>;
   isMember$!: Observable<boolean>;
-  hasWithdrawnReward$!: Observable<boolean>;
+  hasNotWithdrawnReward$!: Observable<boolean>;
   showReward = true;
   showCloseTask = false;
   organizationAddress: string;
@@ -61,12 +61,10 @@ export class TaskComponent implements OnInit {
     this.task$ = this.organizationService.getTaskById(this.taskId);
     this.pageNotFoundCheck(this.task$);
     this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
-    this.hasWithdrawnReward$ = this.my3secHub.hasCurrentUserWithdrawnExperience(this.organizationAddress, this.taskId);
+    this.hasNotWithdrawnReward$ = this.my3secHub
+      .hasCurrentUserWithdrawnExperience(this.organizationAddress, this.taskId)
+      .pipe(map(hasWithdrawnReward => !hasWithdrawnReward));
     this.loadingService.waitForObservables([this.isManager$, this.isMember$, this.task$, this.profilesLoggedTime$]);
-    this.profilesLoggedTime$.subscribe(data => {
-      console.log('subs');
-      console.log(data);
-    });
   }
 
   public goTo(id: string) {
