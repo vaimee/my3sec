@@ -1,4 +1,4 @@
-import { Observable, catchError, concat, distinct, map, of, switchMap } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +17,7 @@ import { EndorseDialogComponent } from '@profiles/components/endorse-dialog/endo
 import { EndorsersListComponent } from '@profiles/components/endorsers-list/endorsers-list.component';
 import { EndorseDialogInterface } from '@profiles/interfaces/endorse-dialog-data.interface';
 import { Profile } from '@profiles/interfaces/profile.interface';
+import { organizations } from '@vaimee/my3sec-contracts/dist/contracts';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
 
 import { UpdateProfileComponent } from '../update-profile/update-profile.component';
@@ -96,24 +97,28 @@ export class ProfileBodyComponent implements OnInit {
         })
       );
     });
+
     this.projects$ = this.profileData$.pipe(
       switchMap(profile => this.organizationService.getProjectsOfProfile(parseInt(profile.id)))
     );
 
     this.organizations$ = this.profileData$.pipe(
       switchMap(profile =>
-        concat(
-          this.organizationService.getOrganizationsOfProfile(parseInt(profile.id)),
-          this.organizationService.getOrganizationsManagerOfProfile(parseInt(profile.id))
+        this.organizationService.getOrganizationsOfProfile(parseInt(profile.id)).pipe(
+          switchMap(organizationsAsMember =>
+            this.organizationService.getOrganizationsManagerOfProfile(parseInt(profile.id)).pipe(
+              map(organizationsAsManager => {
+                const allOrganizations = [...organizationsAsManager, ...organizationsAsMember];
+                return allOrganizations.filter(
+                  (organization, index) =>
+                    index === allOrganizations.findIndex(testedOrg => organization.address === testedOrg.address)
+                );
+              })
+            )
+          )
         )
-      ),
-      distinct()
+      )
     );
-
-    this.profileData$
-      .pipe(switchMap(profile => this.my3secHubContractService.getCertificates(parseInt(profile.id))))
-      .subscribe(a => console.log(a));
-    this.loadingService.waitForObservables([this.profileData$, this.organizations$, this.projects$]);
   }
 
   loadDefaultProfile() {

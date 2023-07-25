@@ -11,102 +11,101 @@ import { DataTypes, Organization } from '@vaimee/my3sec-contracts/dist/contracts
   providedIn: 'root',
 })
 export class OrganizationContractService {
-  protected contract: Organization | undefined;
+  protected signer: ethers.providers.JsonRpcSigner;
 
-  public setTarget(targetAddress: string): void {
+  constructor() {
     const provider = new ethers.providers.Web3Provider(window.ethereum as providers.ExternalProvider, 'any');
-    const signer = provider.getSigner();
-    this.contract = Organization__factory.connect(targetAddress, signer);
+    this.signer = provider.getSigner();
   }
 
-  public get address(): string {
-    this.assertTargetSet();
-    return this.contract.address;
+  public setContract(targetAddress: string): Organization {
+    return Organization__factory.connect(targetAddress, this.signer);
   }
 
-  public getMetadataURI(): Observable<string> {
-    this.assertTargetSet();
-    return from(this.contract.getMetadataURI());
+  public getMetadataURI(address: string): Observable<string> {
+    const contract = this.setContract(address);
+    return from(contract.getMetadataURI());
   }
 
-  public join(profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.join(profileId)).pipe(switchMap(this.wait));
+  public join(profileId: number, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.join(profileId)).pipe(switchMap(this.wait));
   }
 
-  public leave(profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.leave(profileId)).pipe(switchMap(this.wait));
+  public leave(profileId: number, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.leave(profileId)).pipe(switchMap(this.wait));
   }
 
-  public rejectPendingMember(profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.rejectPendingMember(profileId)).pipe(switchMap(this.wait));
+  public rejectPendingMember(profileId: number, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.rejectPendingMember(profileId)).pipe(switchMap(this.wait));
   }
 
-  public approvePendingMember(profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.approvePendingMember(profileId)).pipe(switchMap(this.wait));
+  public approvePendingMember(profileId: number, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.approvePendingMember(profileId)).pipe(switchMap(this.wait));
   }
 
-  public removeProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.removeProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
+  public removeProjectMember(
+    projectId: number,
+    profileId: number,
+    address: string
+  ): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.removeProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
   }
 
-  public removeTaskMember(taskId: number, profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.removeTaskMember(taskId, profileId)).pipe(switchMap(this.wait));
+  public removeTaskMember(taskId: number, profileId: number, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.removeTaskMember(taskId, profileId)).pipe(switchMap(this.wait));
   }
 
-  public promoteToManager(memberAccount: string): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.addToWhitelist(memberAccount)).pipe(switchMap(this.wait));
+  public promoteToManager(memberAccount: string, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.addToWhitelist(memberAccount)).pipe(switchMap(this.wait));
   }
 
-  public getOwner(): Observable<string> {
-    this.assertTargetSet();
-    return from(this.contract.owner());
+  public getOwner(address: string): Observable<string> {
+    const contract = this.setContract(address);
+    return from(contract.owner());
   }
 
-  public isOwner(address: string): Observable<boolean> {
-    this.assertTargetSet();
-    return from(this.getOwner()).pipe(map(ownerAddress => ownerAddress === address));
+  public isOwner(walletAddress: string, address: string): Observable<boolean> {
+    return from(this.getOwner(address)).pipe(map(ownerAddress => ownerAddress === walletAddress));
   }
 
-  public isManager(address: string) {
-    this.assertTargetSet();
-    return from(this.contract.isWhitelisted(address));
+  public isManager(walletAddress: string, address: string) {
+    const contract = this.setContract(address);
+    return from(contract.isWhitelisted(walletAddress));
   }
 
-  public getProjectCount(): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getProjectCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  public getProjectCount(address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getProjectCount()).pipe(map(bigNumber => bigNumber.toNumber()));
   }
 
-  public getProject(projectId: number): Observable<DataTypes.ProjectViewStructOutput> {
-    this.assertTargetSet();
-    return from(this.contract.getProject(projectId)).pipe(
+  public getProject(projectId: number, address: string): Observable<DataTypes.ProjectViewStructOutput> {
+    const contract = this.setContract(address);
+    return from(contract.getProject(projectId)).pipe(
       catchError(() => {
-        throw new Error('Mio error' + projectId + ' ' + this.contract!.address);
+        throw new Error('Error getting project: ' + projectId + ' ' + contract.address);
       })
     );
   }
 
-  public isProjectMember(projectId: number, profileId: number): Observable<boolean> {
-    this.assertTargetSet();
-    return from(this.contract.isProjectMember(projectId, profileId));
+  public isProjectMember(projectId: number, profileId: number, address: string): Observable<boolean> {
+    const contract = this.setContract(address);
+    return from(contract.isProjectMember(projectId, profileId));
   }
 
-  public getProjects(): Observable<DataTypes.ProjectViewStructOutput[]> {
-    return from(this.getProjectCount()).pipe(
+  public getProjects(address: string): Observable<DataTypes.ProjectViewStructOutput[]> {
+    return from(this.getProjectCount(address)).pipe(
       mergeMap(total => {
         if (total === 0) return of([]);
         const requests = [];
-        console.log('requesting for', this.contract!.address);
-
         for (let i = 0; i < total; i++) {
-          requests.push(this.getProject(i));
+          requests.push(this.getProject(i, address));
         }
         return forkJoin(requests);
       })
@@ -115,24 +114,25 @@ export class OrganizationContractService {
 
   public updateProject(
     projectId: BigNumber,
-    project: DataTypes.UpdateProjectStruct
+    project: DataTypes.UpdateProjectStruct,
+    address: string
   ): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.updateProject(projectId, project)).pipe(switchMap(this.wait));
+    const contract = this.setContract(address);
+    return from(contract.updateProject(projectId, project)).pipe(switchMap(this.wait));
   }
 
-  public getMemberCount(): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getMemberCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  public getMemberCount(address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getMemberCount()).pipe(map(bigNumber => bigNumber.toNumber()));
   }
 
-  public getMembers(): Observable<number[]> {
-    return from(this.getMemberCount()).pipe(
+  public getMembers(address: string): Observable<number[]> {
+    return from(this.getMemberCount(address)).pipe(
       mergeMap(count => {
         const requests = [];
-        this.assertTargetSet();
+        const contract = this.setContract(address);
         for (let i = 0; i < count; i++) {
-          requests.push(this.contract.getMember(i));
+          requests.push(contract.getMember(i));
         }
         return forkJoin(requests);
       }),
@@ -142,37 +142,36 @@ export class OrganizationContractService {
     );
   }
 
-  public getManagersCount(): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getWhitelistCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  public getManagersCount(address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getWhitelistCount()).pipe(map(bigNumber => bigNumber.toNumber()));
   }
 
-  public getManagers(): Observable<string[]> {
-    return from(this.getManagersCount()).pipe(
+  public getManagers(address: string): Observable<string[]> {
+    return from(this.getManagersCount(address)).pipe(
       mergeMap(count => {
         const requests = [];
-        this.assertTargetSet();
+        const contract = this.setContract(address);
         for (let i = 0; i < count; i++) {
-          requests.push(this.contract.getWhitelistMember(i));
+          requests.push(contract.getWhitelistMember(i));
         }
         return forkJoin(requests);
       })
     );
   }
 
-  public getPendingMemberCount(): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getPendingMemberCount()).pipe(map(bigNumber => bigNumber.toNumber()));
+  public getPendingMemberCount(address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getPendingMemberCount()).pipe(map(bigNumber => bigNumber.toNumber()));
   }
 
-  public getPendingMembers(): Observable<number[]> {
-    this.assertTargetSet();
-    return from(this.getPendingMemberCount()).pipe(
+  public getPendingMembers(address: string): Observable<number[]> {
+    return from(this.getPendingMemberCount(address)).pipe(
       mergeMap(count => {
         const requests: Observable<ethers.BigNumber>[] = [];
-        this.assertTargetSet();
+        const contract = this.setContract(address);
         for (let i = 0; i < count; i++) {
-          requests.push(from(this.contract.getPendingMember(i)));
+          requests.push(from(contract.getPendingMember(i)));
         }
         return forkJoin(requests);
       }),
@@ -182,18 +181,18 @@ export class OrganizationContractService {
     );
   }
 
-  public getProjectMemberCount(projectId: number): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getProjectMemberCount(projectId)).pipe(map(value => value.toNumber()));
+  public getProjectMemberCount(projectId: number, address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getProjectMemberCount(projectId)).pipe(map(value => value.toNumber()));
   }
 
-  public getProjectMembers(projectId: number): Observable<number[]> {
-    return this.getProjectMemberCount(projectId).pipe(
+  public getProjectMembers(projectId: number, address: string): Observable<number[]> {
+    return this.getProjectMemberCount(projectId, address).pipe(
       mergeMap(total => {
         const requests = [];
         for (let i = 0; i < total; i++) {
-          this.assertTargetSet();
-          requests.push(from(this.contract.getProjectMember(projectId, i)));
+          const contract = this.setContract(address);
+          requests.push(from(contract.getProjectMember(projectId, i)));
         }
         return forkJoin(requests);
       }),
@@ -203,19 +202,18 @@ export class OrganizationContractService {
     );
   }
 
-  public getTaskMemberCount(taskId: number): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getTaskMemberCount(taskId)).pipe(map(value => value.toNumber()));
+  public getTaskMemberCount(taskId: number, address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getTaskMemberCount(taskId)).pipe(map(value => value.toNumber()));
   }
 
-  public getTaskLoggedTime(taskId: number): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getTaskLoggedTimeCount(taskId)).pipe(
+  public getTaskLoggedTime(taskId: number, address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getTaskLoggedTimeCount(taskId)).pipe(
       mergeMap(total => {
         const requests = [];
         for (let i = 0; i < total.toNumber(); i++) {
-          this.assertTargetSet();
-          requests.push(from(this.contract.getTaskLoggedTime(taskId, i)));
+          requests.push(from(contract.getTaskLoggedTime(taskId, i)));
         }
         return forkJoin(requests);
       }),
@@ -225,27 +223,32 @@ export class OrganizationContractService {
     );
   }
 
-  public getTaskLoggedTimeOfProfile(taskId: number, profileId: number): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.getTaskLoggedTimeOfProfile(taskId, profileId)).pipe(
+  public getTaskLoggedTimeOfProfile(taskId: number, profileId: number, address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.getTaskLoggedTimeOfProfile(taskId, profileId)).pipe(
       map(bigNumber => bigNumber.toNumber()),
       //if an user did not logged time, it throws an error instead of returning zero
       catchError(() => of(0))
     );
   }
 
-  public updateTaskTime(taskId: number, profileId: number, hours: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.updateTaskTime(taskId, profileId, hours)).pipe(switchMap(this.wait));
+  public updateTaskTime(
+    taskId: number,
+    profileId: number,
+    hours: number,
+    address: string
+  ): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.updateTaskTime(taskId, profileId, hours)).pipe(switchMap(this.wait));
   }
 
-  public getTaskMembers(taskId: number): Observable<number[]> {
-    return this.getTaskMemberCount(taskId).pipe(
+  public getTaskMembers(taskId: number, address: string): Observable<number[]> {
+    return this.getTaskMemberCount(taskId, address).pipe(
       mergeMap(total => {
         const requests = [];
-        this.assertTargetSet();
+        const contract = this.setContract(address);
         for (let i = 0; i < total; i++) {
-          requests.push(this.contract.getTaskMember(taskId, i));
+          requests.push(contract.getTaskMember(taskId, i));
         }
         return forkJoin(requests);
       }),
@@ -255,52 +258,50 @@ export class OrganizationContractService {
     );
   }
 
-  public isMember(profileId: number): Observable<boolean> {
-    this.assertTargetSet();
-    return from(this.contract.isMember(profileId));
+  public isMember(profileId: number, address: string): Observable<boolean> {
+    const contract = this.setContract(address);
+    return from(contract.isMember(profileId));
   }
 
-  public isTaskMember(taskId: number, profileId: number): Observable<boolean> {
-    this.assertTargetSet();
-    return from(this.contract.isTaskMember(taskId, profileId));
+  public isTaskMember(taskId: number, profileId: number, address: string): Observable<boolean> {
+    const contract = this.setContract(address);
+    return from(contract.isTaskMember(taskId, profileId));
   }
 
-  public isPendingMember(profileId: number): Observable<boolean> {
-    this.assertTargetSet();
-    return from(this.contract.isPendingMember(profileId));
+  public isPendingMember(profileId: number, address: string): Observable<boolean> {
+    const contract = this.setContract(address);
+    return from(contract.isPendingMember(profileId));
   }
-  public getTask(projectId: number, taskId: number): Observable<DataTypes.TaskViewStructOutput> {
-    this.assertTargetSet();
-    return from(this.contract['getTask(uint256,uint256)'](projectId, taskId));
-  }
-
-  public getTaskById(taskId: number): Observable<DataTypes.TaskViewStructOutput> {
-    this.assertTargetSet();
-    return from(this.contract['getTask(uint256)'](taskId));
+  public getTask(projectId: number, taskId: number, address: string): Observable<DataTypes.TaskViewStructOutput> {
+    const contract = this.setContract(address);
+    return from(contract['getTask(uint256,uint256)'](projectId, taskId));
   }
 
-  public getTasks(projectId: number): Observable<DataTypes.TaskViewStructOutput[]> {
-    this.assertTargetSet();
-    return from(this.contract.getTaskCount(projectId)).pipe(
+  public getTaskById(taskId: number, address: string): Observable<DataTypes.TaskViewStructOutput> {
+    const contract = this.setContract(address);
+    return from(contract['getTask(uint256)'](taskId));
+  }
+
+  public getTasks(projectId: number, address: string): Observable<DataTypes.TaskViewStructOutput[]> {
+    const contract = this.setContract(address);
+    return from(contract.getTaskCount(projectId)).pipe(
       mergeMap(count => {
         const total = count.toNumber();
         const requests: Observable<DataTypes.TaskViewStructOutput>[] = [];
-        this.assertTargetSet();
         for (let i = 0; i < total; i++) {
-          requests.push(this.getTask(projectId, i));
+          requests.push(this.getTask(projectId, i, address));
         }
         return forkJoin(requests);
       })
     );
   }
 
-  public createTask(projectId: number, taskStruct: DataTypes.CreateTaskStruct): Observable<number> {
+  public createTask(projectId: number, taskStruct: DataTypes.CreateTaskStruct, address: string): Observable<number> {
     const hexValue = ethers.utils.hexValue(projectId);
-    this.assertTargetSet();
-    return from(this.contract.createTask(ethers.BigNumber.from(hexValue), taskStruct)).pipe(
+    const contract = this.setContract(address);
+    return from(contract.createTask(ethers.BigNumber.from(hexValue), taskStruct)).pipe(
       switchMap(this.wait),
       map(receipt => {
-        this.assertTargetSet();
         const event = this.findEvent(receipt, 'TaskCreated');
         if (!event) {
           throw new Error('Event not found in transaction receipt');
@@ -310,17 +311,20 @@ export class OrganizationContractService {
     );
   }
 
-  public updateTask(taskId: BigNumber, task: DataTypes.UpdateTaskStruct): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.updateTask(taskId, task)).pipe(switchMap(this.wait));
+  public updateTask(
+    taskId: BigNumber,
+    task: DataTypes.UpdateTaskStruct,
+    address: string
+  ): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.updateTask(taskId, task)).pipe(switchMap(this.wait));
   }
 
-  public createProject(projectStruct: DataTypes.CreateProjectStruct): Observable<number> {
-    this.assertTargetSet();
-    return from(this.contract.createProject(projectStruct)).pipe(
+  public createProject(projectStruct: DataTypes.CreateProjectStruct, address: string): Observable<number> {
+    const contract = this.setContract(address);
+    return from(contract.createProject(projectStruct)).pipe(
       switchMap(this.wait),
       map(receipt => {
-        this.assertTargetSet();
         const event = this.findEvent(receipt, 'ProjectCreated');
         if (!event) {
           throw new Error('Event not found in transaction receipt');
@@ -330,26 +334,21 @@ export class OrganizationContractService {
     );
   }
 
-  public addProjectMember(projectId: number, profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.addProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
+  public addProjectMember(projectId: number, profileId: number, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.addProjectMember(projectId, profileId)).pipe(switchMap(this.wait));
   }
 
-  public addTaskMember(taskId: number, profileId: number): Observable<ethers.ContractReceipt> {
-    this.assertTargetSet();
-    return from(this.contract.addTaskMember(taskId, profileId)).pipe(switchMap(this.wait));
+  public addTaskMember(taskId: number, profileId: number, address: string): Observable<ethers.ContractReceipt> {
+    const contract = this.setContract(address);
+    return from(contract.addTaskMember(taskId, profileId)).pipe(switchMap(this.wait));
   }
 
   private wait(tx: ethers.ContractTransaction): Observable<ethers.ContractReceipt> {
     return from(tx.wait());
   }
 
-  private assertTargetSet(): asserts this is { contract: Organization } {
-    if (this.contract === undefined) throw new Error('Target address not set');
-  }
-
   private findEvent(receipt: ethers.ContractReceipt, name: string, emitterAddress?: string) {
-    this.assertTargetSet();
     const contractInterface = Events__factory.createInterface();
 
     const events = receipt.logs;

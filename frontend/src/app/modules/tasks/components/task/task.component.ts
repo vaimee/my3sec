@@ -55,12 +55,15 @@ export class TaskComponent implements OnInit {
   }
 
   public setUp() {
-    this.organizationService.setTarget(this.organizationAddress);
-    this.isManager$ = this.organizationService.isCurrentUserManager();
-    this.isMember$ = this.organizationService.isCurrentUserTaskMember(this.taskId);
-    this.task$ = this.organizationService.getTaskById(this.taskId);
+    this.isManager$ = this.organizationService.isCurrentUserManager(this.organizationAddress);
+    this.isMember$ = this.organizationService.isCurrentUserTaskMember(this.taskId, this.organizationAddress);
+    this.task$ = this.organizationService.getTaskById(this.taskId, this.organizationAddress);
     this.pageNotFoundCheck(this.task$);
-    this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
+    this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(
+      this.taskId,
+      this.task$,
+      this.organizationAddress
+    );
     this.hasNotWithdrawnReward$ = this.my3secHub
       .hasCurrentUserWithdrawnExperience(this.organizationAddress, this.taskId)
       .pipe(map(hasWithdrawnReward => !hasWithdrawnReward));
@@ -87,7 +90,7 @@ export class TaskComponent implements OnInit {
     };
     const numericId = Number(task.id);
     this.loadingService.show();
-    this.organizationService.updateTask(numericId, taskStruct).subscribe({
+    this.organizationService.updateTask(numericId, taskStruct, this.organizationAddress).subscribe({
       next: () => this.handleObservable('Task updated!'),
       error: err => this.handleObservable('failed to update task', err),
     });
@@ -116,7 +119,11 @@ export class TaskComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(changed => {
       if (!changed) return;
-      this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
+      this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(
+        this.taskId,
+        this.task$,
+        this.organizationAddress
+      );
     });
   }
 
@@ -136,18 +143,24 @@ export class TaskComponent implements OnInit {
     dialogRef.afterClosed().subscribe((showMembersOutput: ShowMembersOutput) => {
       if (showMembersOutput.profileId) return this.router.navigate(['/profiles', showMembersOutput.profileId]);
       if (!showMembersOutput.changed) return;
-      this.task$ = this.organizationService.getTask(this.projectId, this.taskId);
-      this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(this.taskId, this.task$);
+      this.task$ = this.organizationService.getTask(this.projectId, this.taskId, this.organizationAddress);
+      this.profilesLoggedTime$ = this.organizationService.getTaskLoggedTimeOfProfiles(
+        this.taskId,
+        this.task$,
+        this.organizationAddress
+      );
       return;
     });
   }
 
   public remove(profileId: string) {
     this.loadingService.show();
-    return this.organizationService.removeTaskMember(this.taskId, Number(profileId)).subscribe({
-      next: () => this.handleObservable('member removed'),
-      error: err => this.handleObservable('failed to remove member', err),
-    });
+    return this.organizationService
+      .removeTaskMember(this.taskId, Number(profileId), this.organizationAddress)
+      .subscribe({
+        next: () => this.handleObservable('member removed'),
+        error: err => this.handleObservable('failed to remove member', err),
+      });
   }
 
   public secondsToHours(seconds: number) {

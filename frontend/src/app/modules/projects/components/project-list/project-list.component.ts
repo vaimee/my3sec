@@ -27,8 +27,7 @@ export class ProjectListComponent implements OnInit {
   }
   ngOnInit(): void {
     if (this.projects$ === undefined) {
-      this.organizationService.setTarget(this.organizationAddress);
-      this.projects$ = this.organizationService.getProjects();
+      this.projects$ = this.organizationService.getProjects(this.organizationAddress);
     }
     this.loadingService.waitForObservables([this.projects$]);
   }

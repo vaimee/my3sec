@@ -50,24 +50,23 @@ export class ShowMembersComponent implements OnInit {
   }
   public isMemberManager(address: string): Observable<boolean> {
     if (this.areMembersManager[address]) return this.areMembersManager[address];
-    this.areMembersManager[address] = this.organizationService.isManager(address);
+    this.areMembersManager[address] = this.organizationService.isManager(address, this.organizationAddress);
     return this.areMembersManager[address];
   }
 
   private dialogSetUp() {
-    this.organizationService.setTarget(this.organizationAddress);
     switch (this.memberType) {
       case 'member':
-        this.members$ = this.organizationService.getMembers();
+        this.members$ = this.organizationService.getMembers(this.organizationAddress);
         this.title = 'Member';
         return;
       case 'manager':
-        this.members$ = this.organizationService.getManagers();
-        this.owner$ = this.organizationService.getOwnerAddress();
+        this.members$ = this.organizationService.getManagers(this.organizationAddress);
+        this.owner$ = this.organizationService.getOwnerAddress(this.organizationAddress);
         this.title = 'Manager';
         return;
       case 'pendingMember':
-        this.members$ = this.organizationService.getPendingMembers();
+        this.members$ = this.organizationService.getPendingMembers(this.organizationAddress);
         this.title = 'Pending Member';
         return;
       default:
@@ -78,7 +77,7 @@ export class ShowMembersComponent implements OnInit {
   public promoteToManager(memberAddress: string) {
     this.loadingService.show();
     if (this.memberType === 'member')
-      return this.organizationService.promoteToManager(memberAddress).subscribe({
+      return this.organizationService.promoteToManager(memberAddress, this.organizationAddress).subscribe({
         next: () => this.handleObservable('member promoted'),
         error: err => this.handleObservable('failed to promote member', err),
       });
@@ -89,7 +88,7 @@ export class ShowMembersComponent implements OnInit {
   public approvePendingMember(profileId: string) {
     this.loadingService.show();
     if (this.memberType === 'pendingMember')
-      return this.organizationService.approvePendingMember(Number(profileId)).subscribe({
+      return this.organizationService.approvePendingMember(Number(profileId), this.organizationAddress).subscribe({
         next: () => this.handleObservable('member approved'),
         error: err => this.handleObservable('failed to approve member', err),
       });
@@ -100,7 +99,7 @@ export class ShowMembersComponent implements OnInit {
   public remove(profileId: string) {
     this.loadingService.show();
     if (this.memberType === 'pendingMember')
-      return this.organizationService.rejectPendingMember(Number(profileId)).subscribe({
+      return this.organizationService.rejectPendingMember(Number(profileId), this.organizationAddress).subscribe({
         next: () => this.handleObservable('pending member removed'),
         error: err => this.handleObservable('failed to remove pending member', err),
       });

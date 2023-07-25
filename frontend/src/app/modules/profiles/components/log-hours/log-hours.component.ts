@@ -29,10 +29,6 @@ export class LogHoursComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadForm();
-    this.organizationService.getOrganizationsOfProfile(7).subscribe(data => {
-      console.log(data);
-    });
-    this.affiliations$ = this.organizationService.getCurrentUserAffiliations();
   }
   reset() {
     this.submitted = false;

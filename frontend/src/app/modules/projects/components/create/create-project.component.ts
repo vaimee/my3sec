@@ -46,8 +46,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadForm();
-    this.organizationService.setTarget(this.organizationAddress);
-    this.memberChip.items$ = this.organizationService.getMembers();
+    this.memberChip.items$ = this.organizationService.getMembers(this.organizationAddress);
     this.memberChip.items$.subscribe(members => {
       this.memberChip.all = members;
     });
@@ -100,8 +99,8 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
 
     const createProject$ =
       this.memberChip.selectedItems.length === 0
-        ? this.organizationService.createProjectWithoutMembers(formValue)
-        : this.organizationService.createProject(formValue, this.memberChip.selectedItems);
+        ? this.organizationService.createProjectWithoutMembers(formValue, this.organizationAddress)
+        : this.organizationService.createProject(formValue, this.memberChip.selectedItems, this.organizationAddress);
 
     createProject$.subscribe({
       next: projectId => {
