@@ -9,7 +9,13 @@ import { MetamaskService } from '@auth/services/metamask.service';
 
 import { Events, Events__factory, My3SecHub, My3SecHub__factory } from '@vaimee/my3sec-contracts/dist';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/My3SecHub';
-import { CertificateIssuedEvent } from '@vaimee/my3sec-contracts/dist/contracts/common/libraries/Events';
+import {
+  CertificateIssuedEvent,
+  OrganizationJoinedEvent,
+  ProfileCreatedEvent,
+  ProjectMemberAddedEvent,
+  ProjectMemberRemovedEvent,
+} from '@vaimee/my3sec-contracts/dist/contracts/common/libraries/Events';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +57,31 @@ export class My3secHubContractService {
 
   public getCertificates(profileId: number): Observable<CertificateIssuedEvent[]> {
     const filter = this.events.filters.CertificateIssued(null, profileId);
+    return from(this.events.queryFilter(filter));
+  }
+
+  public getProfiles(): Observable<ProfileCreatedEvent[]> {
+    const filter = this.events.filters.ProfileCreated(null, null);
+    return from(this.events.queryFilter(filter));
+  }
+
+  public getOrganizationsJoined(profileId: number): Observable<OrganizationJoinedEvent[]> {
+    const filter = this.events.filters['PendingMemberApproved(address,uint256)'](null, profileId);
+    return from(this.events.queryFilter(filter));
+  }
+
+  public getOrganizationsLeft(profileId: number): Observable<OrganizationJoinedEvent[]> {
+    const filter = this.events.filters.OrganizationLeft(null, profileId);
+    return from(this.events.queryFilter(filter));
+  }
+
+  public getProjectsAdded(profileId: number): Observable<ProjectMemberAddedEvent[]> {
+    const filter = this.events.filters['ProjectMemberAdded(address,uint256,uint256)'](null, null, profileId);
+    return from(this.events.queryFilter(filter));
+  }
+
+  public getProjectsRemoved(profileId: number): Observable<ProjectMemberRemovedEvent[]> {
+    const filter = this.events.filters.ProjectMemberRemoved(null, null, profileId);
     return from(this.events.queryFilter(filter));
   }
 
