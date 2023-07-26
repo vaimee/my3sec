@@ -166,14 +166,10 @@ export class ProfileService {
   }
 
   public getProfiles(): Observable<Profile[]> {
-    return this.getProfileCount().pipe(
-      mergeMap(total => {
-        const requests = [];
-        for (let i = 1; i <= total; i++) {
-          requests.push(this.getProfile(i));
-        }
-        return forkJoin(requests);
-      })
+    return this.my3secHub.getProfiles().pipe(
+      concatMap(data => data),
+      mergeMap(profileCreateEvent => this.getProfile(profileCreateEvent.args[0].toNumber())),
+      toArray()
     );
   }
 

@@ -16,8 +16,7 @@ export const managerGuard = () => {
     switchMap(() => {
       const url = window.location.pathname;
       const organizationAddress = url.split('/')[2];
-      organizationService.setTarget(organizationAddress);
-      return organizationService.isManager(metamaskService.userAddress);
+      return organizationService.isManager(metamaskService.userAddress, organizationAddress);
     }),
     switchMap(isManager => (isManager ? of(true) : of(location.back()))),
     catchError(error => {

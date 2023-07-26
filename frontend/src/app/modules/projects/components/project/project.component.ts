@@ -45,10 +45,9 @@ export class ProjectComponent implements OnInit {
   }
 
   public setUp() {
-    this.organizationService.setTarget(this.organizationAddress);
-    this.project$ = this.organizationService.getProject(this.projectId);
+    this.project$ = this.organizationService.getProject(this.projectId, this.organizationAddress);
     this.pageNotFoundCheck(this.project$);
-    this.isManager$ = this.organizationService.isCurrentUserManager();
+    this.isManager$ = this.organizationService.isCurrentUserManager(this.organizationAddress);
 
     forkJoin([this.project$, this.isManager$])
       .pipe(filter(([project, isManager]) => project.status === Status.IN_PROGRESS && isManager))
@@ -75,7 +74,7 @@ export class ProjectComponent implements OnInit {
 
   public updateProject(status: Status) {
     this.loadingService.show();
-    this.organizationService.updateProject(this.projectId, status).subscribe({
+    this.organizationService.updateProject(this.projectId, status, this.organizationAddress).subscribe({
       next: () => this.handleObservable('project updated'),
       error: err => this.handleObservable('failed to update project', err),
     });

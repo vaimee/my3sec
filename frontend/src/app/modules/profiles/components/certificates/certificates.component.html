@@ -1,22 +1,15 @@
-<div class="certificateCardBlock p-4 bg-white skill-min-height">
-  <h2 class="d-flex justify-content-between align-items-center mb-3">Certificates</h2>
-  <ng-container *ngIf="certificates.length > 0; else noCertificates">
-    <mat-card
-      class="border p-3 cards bg-dark text-white rounded-3 mb-3 border-0"
-      *ngFor="let certificate of certificates">
-      <div class="d-flex align-items-center">
-        <div class="flex-shrink-0">
-          <mat-icon class="text-dark">{{ certificate?.image }}</mat-icon>
-        </div>
-        <div class="flex-grow-1 ms-3">
-          <h6>{{ certificate?.name }}</h6>
-          <small class="text-Light text-end d-block">{{ certificate?.date | date }} </small>
-        </div>
-      </div>
-      <div class="certificatesItemIcon">
-        <mat-icon class="text-black">{{ certificate?.image }}</mat-icon>
-      </div>
-    </mat-card>
+<ng-container *ngIf="certificates$ | async as certificates">
+  <ng-container *ngIf="certificates.length > 0">
+    <div class="mt-4 bg-white p-4">
+      <h2 class="mb-3">Certificates</h2>
+      <mat-list>
+        <mat-list-item *ngFor="let certificate of certificates">
+          <img class="round-image" matListItemAvatar src="{{ certificate.image }}" alt="{{ certificate.name }} icon" />
+          <span matListItemTitle>{{ certificate.name }}</span>
+          <p matListItemLine>{{ certificate.description }}</p>
+        </mat-list-item>
+      </mat-list>
+      <ng-template #noCertificates> No certificates found </ng-template>
+    </div>
   </ng-container>
-  <ng-template #noCertificates> No certificates found </ng-template>
-</div>
+</ng-container>
