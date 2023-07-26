@@ -12,7 +12,6 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      
       <form class="d-flex ms-auto me-auto" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
         <!--
                 Temporary disabled search bar. We have to find a way to search for organizations and profiles.
@@ -31,19 +30,33 @@
         </button>
         -->
       </form>
-     
+
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item d-flex align-items-center">
-          <button mat-icon-button (click)="redirectToExplore()">
+          <button
+            mat-icon-button
+            matTooltip="Explore"
+            matTooltipPosition="below"
+            matTooltipHideDelay="500"
+            (click)="redirectToExplore()">
             <mat-icon class="text-white">explore</mat-icon>
           </button>
         </li>
-        <li class="nav-item d-flex align-items-center">
+        <li
+          class="nav-item d-flex align-items-center"
+          matTooltip="free/total energy"
+          matTooltipPosition="below"
+          matTooltipHideDelay="500">
           <a class="nav-link" aria-current="page">{{ freeEnergy | async }} / {{ totalEnergy | async }}</a>
           <mat-icon class="text-white">flash_on</mat-icon>
         </li>
         <li class="nav-item d-flex align-items-center add-button">
-          <button mat-icon-button [matMenuTriggerFor]="menu">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            matTooltip="Options"
+            matTooltipPosition="below"
+            matTooltipHideDelay="500">
             <mat-icon>add</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
@@ -51,7 +64,7 @@
               <mat-icon>groups</mat-icon>
               <span>New Organization</span>
             </button>
-           <!--  Temporary disabled Log Hours Component. We have to implement the feature to list tasks of an user.
+            <!--  Temporary disabled Log Hours Component. We have to implement the feature to list tasks of an user.
             <button mat-menu-item (click)="redirectToLogHours()">
               <mat-icon>hourglass_top</mat-icon>
               <span>Log Hours</span>
