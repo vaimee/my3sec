@@ -1,16 +1,16 @@
-  <mat-list>
-    <mat-list-item *ngFor="let profile of profiles$ | async" (click)="goTo(profile.id)">
-      <img matListItemAvatar src="{{ profile.profileImage }}" alt="{{ profile.firstName }} icon" />
-      <span matListItemTitle>{{ profile.firstName }} {{ profile.surname }}</span>
-      <button
-        mat-icon-button
-        #tooltip="matTooltip"
-        matTooltip="Go to profile"
-        matTooltipPosition="below"
-        matTooltipHideDelay="500"
-        matListItemMeta
-        color="primary">
-        <mat-icon>login</mat-icon>
-      </button>
-    </mat-list-item>
-  </mat-list>
+<mat-list>
+  <mat-list-item class="clickable" *ngFor="let profile of profiles$ | async" (click)="goTo(profile.id)">
+    <img matListItemAvatar src="{{ profile.profileImage }}" alt="{{ profile.firstName }} icon" />
+    <span matListItemTitle>{{ profile.firstName }} {{ profile.surname }}</span>
+    <button
+      mat-icon-button
+      #tooltip="matTooltip"
+      matTooltip="Go to profile"
+      matTooltipPosition="below"
+      matTooltipHideDelay="500"
+      matListItemMeta
+      color="primary">
+      <mat-icon>login</mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>
