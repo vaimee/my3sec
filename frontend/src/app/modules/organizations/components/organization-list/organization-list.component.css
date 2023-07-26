@@ -1,3 +1,7 @@
 .line-icon {
   vertical-align: middle;
 }
+
+.clickable {
+  cursor: pointer !important;
+}

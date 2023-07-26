@@ -9,7 +9,7 @@ import { Status } from '@shared/enums';
 import { Profile } from '@shared/interfaces';
 import { Project } from '@shared/interfaces/project.interface';
 import { LoadingService } from '@shared/services/loading.service';
-import { NavbarService } from '@shared/services/navbar.services';
+import { NavbarService } from '@shared/services/navbar.service';
 import { OrganizationService } from '@shared/services/organization.service';
 
 import { ShowMembersInput, ShowMembersOutput } from '@projects/interfaces';

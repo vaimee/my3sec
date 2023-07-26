@@ -430,7 +430,7 @@ export class OrganizationService {
   public getPendingMembers(address: string): Observable<Profile[]> {
     return this.contractService.getPendingMembers(address).pipe(
       concatMap(data => data),
-      switchMap(id => this.profileService.getProfile(id)),
+      mergeMap(id => this.profileService.getProfile(id)),
       toArray()
     );
   }

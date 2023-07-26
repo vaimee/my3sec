@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Organization, Profile, Project } from '@shared/interfaces';
 import { LoadingService } from '@shared/services/loading.service';
-import { NavbarService } from '@shared/services/navbar.services';
+import { NavbarService } from '@shared/services/navbar.service';
 import { OrganizationService } from '@shared/services/organization.service';
 import { ProfileService } from '@shared/services/profile.service';
 

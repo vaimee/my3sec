@@ -1,3 +1,7 @@
 img {
-    object-fit: cover;
+  object-fit: cover;
+}
+
+.clickable {
+  cursor: pointer !important;
 }
