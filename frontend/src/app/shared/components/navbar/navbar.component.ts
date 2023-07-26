@@ -3,7 +3,7 @@ import { Observable, Subject, filter, takeUntil } from 'rxjs';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
@@ -42,7 +42,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private navBarService: NavbarService,
     private energyWallet: EnergyWalletContractService,
     private metaMaskService: MetamaskService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -97,6 +98,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   redirectToExplore() {
     this.router.navigate(['/explore']);
+  }
+
+  redirectToIssueCertificates() {
+    this.router.navigate(['/issue-certificate', { relativeTo: this.route }]);
   }
 
   handleItemClick(item: MenuItem): void {
