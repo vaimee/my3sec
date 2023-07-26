@@ -9,7 +9,7 @@ import { MetamaskService } from '@auth/services/metamask.service';
 
 import { Profile } from '@shared/interfaces';
 import { EnergyWalletContractService } from '@shared/services/energy-wallet-contract.service';
-import { NavbarService } from '@shared/services/navbar.services';
+import { NavbarService } from '@shared/services/navbar.service';
 import { ProfileService } from '@shared/services/profile.service';
 
 import { MenuItem } from '../../interfaces/menu-item.interface';
