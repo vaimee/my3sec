@@ -3,7 +3,7 @@ import { Observable, Subject, filter, takeUntil } from 'rxjs';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 
 import { MetamaskService } from '@auth/services/metamask.service';
 
@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
+        filter(event => event instanceof NavigationStart),
         takeUntil(this.destroyed$)
       )
       .subscribe(() => {
