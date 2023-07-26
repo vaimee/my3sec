@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { ProfileMetadata } from '@shared/interfaces';
 import { ImageConversionService } from '@shared/services/image-conversion.service';

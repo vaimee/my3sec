@@ -54,11 +54,11 @@ export class OrganizationComponent implements OnInit {
     this.loadingService.waitForObservables([this.organization$]);
     this.pageNotFoundCheck(this.organization$);
 
-    this.projects$ = this.organizationService.getProjects();
-    this.isMember$ = this.organizationService.isCurrentUserMember();
-    this.isPendingMember$ = this.organizationService.isCurrentUserPendingMember();
-    this.isManager$ = this.organizationService.isCurrentUserManager();
-    this.isOwner$ = this.organizationService.isCurrentUserOwner();
+    this.projects$ = this.organizationService.getProjects(this.organizationAddress);
+    this.isMember$ = this.organizationService.isCurrentUserMember(this.organizationAddress);
+    this.isPendingMember$ = this.organizationService.isCurrentUserPendingMember(this.organizationAddress);
+    this.isManager$ = this.organizationService.isCurrentUserManager(this.organizationAddress);
+    this.isOwner$ = this.organizationService.isCurrentUserOwner(this.organizationAddress);
 
     this.userId$ = this.profileService.getUserId();
     this.userRole$ = this.getUserRole();

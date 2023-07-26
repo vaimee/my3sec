@@ -47,8 +47,7 @@ export class IssueCertificateComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadForm();
-    this.organizationService.setTarget(this.organizationAddress);
-    this.memberChip.items$ = this.organizationService.getMembers();
+    this.memberChip.items$ = this.organizationService.getMembers(this.organizationAddress);
     this.memberChip.items$.subscribe(members => {
       this.memberChip.all = members;
     });

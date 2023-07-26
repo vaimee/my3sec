@@ -45,25 +45,32 @@ export class ShowMembersComponent implements OnInit {
   }
 
   private dialogSetUp() {
-    this.organizationService.setTarget(this.organizationAddress);
-    if (this.isAddMember) this.members$ = this.organizationService.getOrganizationMembersNotInProject(this.projectId);
-    else this.members$ = this.organizationService.getProjectMembers(this.projectId);
+    if (this.isAddMember)
+      this.members$ = this.organizationService.getOrganizationMembersNotInProject(
+        this.projectId,
+        this.organizationAddress
+      );
+    else this.members$ = this.organizationService.getProjectMembers(this.projectId, this.organizationAddress);
   }
 
   public remove(profileId: string) {
     this.loadingService.show();
-    return this.organizationService.removeProjectMember(this.projectId, Number(profileId)).subscribe({
-      next: () => this.handleObservable('member removed'),
-      error: err => this.handleObservable('failed to remove member', err),
-    });
+    return this.organizationService
+      .removeProjectMember(this.projectId, Number(profileId), this.organizationAddress)
+      .subscribe({
+        next: () => this.handleObservable('member removed'),
+        error: err => this.handleObservable('failed to remove member', err),
+      });
   }
 
   public add(profileId: string) {
     this.loadingService.show();
-    return this.organizationService.addProjectMember(this.projectId, Number(profileId)).subscribe({
-      next: () => this.handleObservable('member added'),
-      error: err => this.handleObservable('failed to add member', err),
-    });
+    return this.organizationService
+      .addProjectMember(this.projectId, Number(profileId), this.organizationAddress)
+      .subscribe({
+        next: () => this.handleObservable('member added'),
+        error: err => this.handleObservable('failed to add member', err),
+      });
   }
 
   public close() {

@@ -1,4 +1,4 @@
-import { map, of, startWith } from 'rxjs';
+import { map, startWith } from 'rxjs';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -55,9 +55,8 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadForm();
-    this.organizationService.setTarget(this.organizationAddress);
     this.skillChip.items$ = this.skillService.getSkills();
-    this.memberChip.items$ = this.organizationService.getProjectMembers(this.projectId);
+    this.memberChip.items$ = this.organizationService.getProjectMembers(this.projectId, this.organizationAddress);
 
     this.skillChip.items$.subscribe(skills => {
       this.skillChip.all = skills;
@@ -120,12 +119,18 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
 
     const createTask$ =
       this.memberChip.selectedItems.length === 0
-        ? this.organizationService.createTaskWithoutMembers(this.projectId, formValue, this.skillChip.selectedItems)
+        ? this.organizationService.createTaskWithoutMembers(
+            this.projectId,
+            formValue,
+            this.skillChip.selectedItems,
+            this.organizationAddress
+          )
         : this.organizationService.createTask(
             this.projectId,
             formValue,
             this.skillChip.selectedItems,
-            this.memberChip.selectedItems
+            this.memberChip.selectedItems,
+            this.organizationAddress
           );
 
     createTask$.subscribe({

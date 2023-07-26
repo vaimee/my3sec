@@ -43,13 +43,16 @@ export class ShowMembersComponent implements OnInit {
   }
 
   private dialogSetUp() {
-    this.organizationService.setTarget(this.organizationAddress);
-    this.members$ = this.organizationService.getProjectMembersNotInTask(this.projectId, this.taskId);
+    this.members$ = this.organizationService.getProjectMembersNotInTask(
+      this.projectId,
+      this.taskId,
+      this.organizationAddress
+    );
   }
 
   public add(profileId: string) {
     this.loadingService.show();
-    return this.organizationService.addTaskMember(this.taskId, Number(profileId)).subscribe({
+    return this.organizationService.addTaskMember(this.taskId, Number(profileId), this.organizationAddress).subscribe({
       next: () => this.handleObservable('member added'),
       error: err => this.handleObservable('failed to add member', err),
     });
