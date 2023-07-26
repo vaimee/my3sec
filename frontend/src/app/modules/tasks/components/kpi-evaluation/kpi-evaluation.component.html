@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Task Evaluation</h1>
+<div mat-dialog-content>
+  <mat-chip-listbox aria-label="KPI Evaluation" [(ngModel)]="selectedOption">
+    <mat-chip-option [class.bg-dark]="selectedOption === '0'" [class.text-white]="selectedOption === '0'" value="0"
+      >Not Satisfy</mat-chip-option
+    >
+    <mat-chip-option [class.bg-dark]="selectedOption === '1'" [class.text-white]="selectedOption === '1'" value="1"
+      >Under the expectations</mat-chip-option
+    >
+    <mat-chip-option [class.bg-dark]="selectedOption === '2'" [class.text-white]="selectedOption === '2'" value="2"
+      >Satisfy</mat-chip-option
+    >
+    <mat-chip-option [class.bg-dark]="selectedOption === '3'" [class.text-white]="selectedOption === '3'" value="3"
+      >Over the expectations</mat-chip-option
+    >
+    <mat-chip-option [class.bg-dark]="selectedOption === '4'" [class.text-white]="selectedOption === '4'" value="4"
+      >Excellent</mat-chip-option
+    >
+  </mat-chip-listbox>
+</div>
+<div mat-dialog-actions>
+  <small class="bg-dark text-white p-2 rounded ms-4 clickable" (click)="onSubmit()">COMPLETE TASK</small>
+  <button mat-button mat-dialog-close>Close</button>
+</div>

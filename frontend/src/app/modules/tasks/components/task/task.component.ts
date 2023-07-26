@@ -15,6 +15,7 @@ import { Skill } from '@profiles/interfaces';
 import { DataTypes } from '@vaimee/my3sec-contracts/dist/contracts/organizations/Organization';
 
 import { ShowMembersInput, ShowMembersOutput } from '../../interfaces';
+import { KpiEvaluationComponent } from '../kpi-evaluation/kpi-evaluation.component';
 import { LogHoursDialogComponent } from '../log-hours-dialog/log-hours-dialog.component';
 import { ShowMembersComponent } from '../show-members/show-members.component';
 import { LogHoursInput } from './../../interfaces/log-hours.interface';
@@ -89,10 +90,24 @@ export class TaskComponent implements OnInit {
       skills: skills.map(skill => skill.id),
     };
     const numericId = Number(task.id);
+
+    if (status === Status.COMPLETED) return this.openKPIEvaluationDialog(numericId, taskStruct);
     this.loadingService.show();
     this.organizationService.updateTask(numericId, taskStruct, this.organizationAddress).subscribe({
       next: () => this.handleObservable('Task updated!'),
       error: err => this.handleObservable('failed to update task', err),
+    });
+  }
+
+  public openKPIEvaluationDialog(id: number, taskStruct: DataTypes.UpdateTaskStruct): void {
+    const dialogRef = this.dialog.open(KpiEvaluationComponent, {
+      width: '750px',
+      data: { id: id, closeTaskStruct: taskStruct, organizationAddress: this.organizationAddress },
+    });
+
+    dialogRef.afterClosed().subscribe(changed => {
+      if (!changed) return;
+      this.task$ = this.organizationService.getTaskById(this.taskId, this.organizationAddress);
     });
   }
 
