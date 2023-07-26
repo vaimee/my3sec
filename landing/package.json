@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^2.29.3",
+    "tailwind-scrollbar": "^3.0.4",
     "tailwindcss": "^3.3.3"
   }
 }
