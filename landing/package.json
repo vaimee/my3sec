@@ -1,6 +1,6 @@
 {
   "name": "my3sec-landing",
-  "version": "1.0.0",
+  "version": "1.0.4-landing",
   "description": "The landing page of my3sec project",
   "main": "index.html",
   "scripts": {
