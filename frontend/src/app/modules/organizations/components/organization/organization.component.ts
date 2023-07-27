@@ -67,10 +67,17 @@ export class OrganizationComponent implements OnInit {
         label: 'New Project',
         icon: 'workspaces',
       },
+      {
+        label: 'Issue Certificate',
+        icon: 'grade',
+      },
     ]);
     this.navBarService.getMenuClickedEvent().subscribe(item => {
       if (item.label === 'New Project') {
         this.goToCreateProject();
+      }
+      if (item.label === 'Issue Certificate') {
+        this.goToIssueCertificate();
       }
     });
   }
@@ -147,6 +154,10 @@ export class OrganizationComponent implements OnInit {
 
   public goToCreateProject() {
     this.router.navigate(['projects', 'new'], { relativeTo: this.route });
+  }
+
+  public goToIssueCertificate() {
+    this.router.navigate(['issue-certificate'], { relativeTo: this.route });
   }
 
   private pageNotFoundCheck<T>(observable$: Observable<T>) {
